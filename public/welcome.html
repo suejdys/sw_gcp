@@ -1,0 +1,24 @@
+<!-- welcome.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+</head>
+<body>
+    <h2>Welcome!</h2>
+    <p id="welcomeMessage">Loading...</p>  <!-- 사용자 이름을 표시할 곳 -->
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('username');
+
+        if (username) {
+            document.getElementById('welcomeMessage').textContent = `Hello, ${username}!`;
+        } else {
+            document.getElementById('welcomeMessage').textContent = 'Hello';
+        }
+    </script>
+</body>
+</html>
