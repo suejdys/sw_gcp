@@ -1,65 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&display=swap" rel="stylesheet">
-    <title>회원가입</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <style>
+        /* 전체 화면 컨테이너 스타일 */
+        .container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 반응형 폼 크기 조정 */
+        form {
+            width: 100%;
+            max-width: 346px;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        /* 로그인 텍스트 위치 및 스타일 */
+        .login-title {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            text-align: center;
+            color: #000;
+            font-family: "Bowlby One SC", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        /* 입력 필드 및 버튼 스타일 */
+        .input-label {
+            font-size: 14px;
+            font-weight: 700;
+            text-align: left;
+            color: #000;
+            margin-bottom: 5px;
+        }
+
+        .input-field {
+            width: 100%;
+            height: 51px;
+            border-radius: 6px;
+            background: #f2f3f5;
+            font-size: 14px;
+            color: #a4a3a3;
+            padding-left: 10px;
+            border: none;
+            box-sizing: border-box;
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 53px;
+            border-radius: 6px;
+            background: #d4d4d4;
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* 회원가입 링크 스타일 */
+        .register-link {
+            font-size: 13px;
+            text-align: center;
+            color: #000;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+
+        /* 작은 화면에 대한 반응형 폰트 크기 및 레이아웃 조정 */
+        @media (max-width: 480px) {
+            .login-title {
+                font-size: 1.8rem;
+                top: 10px;
+            }
+            form {
+                padding: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div style="width: 100%; height: 100vh; position: relative; overflow: hidden; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;">
+    <div class="container">
+        <!-- Login Form -->
+        <form action="/register" method="POST">
+            <p class="login-title">Register</p>
 
-        <!-- Registration Form -->
-
-        <form action="/register" method="POST" style="width: 100%; max-width: 346px;">
-            <p class="login-title 
-                position: absolute;
-                top: 60px;
-                left: 50%;
-                transform: translateX(-50%);
-                font-size: 2rem;
-                text-align: center;
-                color: #000;
-                font-family: 'Bowlby One SC', sans-serif;
-                font-weight: 400;
-                font-style: normal;
-            ">회원가입</p>
             <div style="margin-bottom: 10px;">
-                <p style="font-size: 14px; font-weight: 700; text-align: left; color: #000; margin-bottom: 5px;">
-                    이메일
-                </p>
+                <p class="input-label">이메일</p>
                 <input
                     type="text"
                     placeholder="아이디"
                     id="username"
-                    name="username" required
-                    style="width: 100%; height: 51px; border-radius: 6px; background: #f2f3f5; font-size: 14px; color: #a4a3a3; padding-left: 10px; border: none;"
+                    name="username"
+                    required
+                    class="input-field"
                 />
             </div>
-
             <div style="margin-bottom: 10px;">
-                <p style="font-size: 14px; font-weight: 700; text-align: left; color: #000; margin-bottom: 5px;">
-                    비밀번호
-                </p>
+                <p class="input-label">비밀번호</p>
                 <input
                     type="password"
                     id="password"
-                    name="password" required
+                    name="password"
+                    required
                     placeholder="숫자, 영문, 특수문자 조합 최소 8자~20자"
-                    style="width: 100%; height: 51px; border-radius: 6px; background: #f2f3f5; font-size: 14px; color: #a4a3a3; padding-left: 10px; border: none;"
+                    class="input-field"
                 />
             </div>
 
-            <button type="submit" style="width: 100%; height: 53px; border-radius: 6px; background: #d4d4d4; font-size: 15px; font-weight: 700; color: #fff; border: none; cursor: pointer;">
-                회원가입
-            </button>
+            <button type="submit" class="submit-btn">로그인</button>
         </form>
-        <a href="/" style="font-size: 13px; text-align: center; color: #000; margin-top: 10px; text-decoration: none;">
-            로그인
-        </a>
 
+        <a href="register.html" class="register-link">회원가입</a>
     </div>
 </body>
 </html>
