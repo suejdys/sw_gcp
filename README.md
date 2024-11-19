@@ -1,5 +1,9 @@
-# sw_gcp
-# sw_gcp
-# sw_gcp
-# 장현빈
-# 최수혁 공듀님
+## 사용된 기술
+* node.js
+* npm 사용
+
+## 사용 라이브러리
+* express
+* bcrypt
+* mysql
+* 등등
