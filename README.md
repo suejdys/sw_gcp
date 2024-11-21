@@ -6,4 +6,5 @@
 * express
 * bcrypt
 * mysql
+* FullCalendar(API)
 * 등등
