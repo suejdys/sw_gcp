@@ -1,6 +1,6 @@
-// È¸¿ø°¡ÀÔ Ã³¸®
+// È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
-    e.preventDefault(); // ±âº» Æû Á¦Ãâ µ¿ÀÛ ¹æÁö
+    e.preventDefault(); // ï¿½âº» ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     
     const username = document.querySelector('[name="username"]').value;
     const password = document.querySelector('[name="password"]').value;
@@ -14,15 +14,15 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     const result = await response.text();
     alert(result);
 
-    // È¸¿ø°¡ÀÔ ¼º°ø ÈÄ ·Î±×ÀÎ ÆäÀÌÁö·Î ¸®´ÙÀÌ·ºÆ®
-    if (response.ok) {
-        window.location.href = "/";  // ·Î±×ÀÎ ÆäÀÌÁö·Î ÀÌµ¿
-    }
+    // // È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®
+    // if (response.ok) {
+    //     window.location.href = "/";  // ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
+    // }
 });
 
-// ·Î±×ÀÎ Ã³¸®
+// ï¿½Î±ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
-    e.preventDefault(); // ±âº» Æû Á¦Ãâ µ¿ÀÛ ¹æÁö
+    e.preventDefault(); // ï¿½âº» ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     
     const username = document.querySelector('[name="username"]').value;
     const password = document.querySelector('[name="password"]').value;
@@ -34,10 +34,10 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     });
 
     const result = await response.json();
-    alert(result.message); // ·Î±×ÀÎ ¸Þ½ÃÁö alert
+    alert(result.message); // ï¿½Î±ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ alert
     
-    // ·Î±×ÀÎ ¼º°ø ÈÄ, welcome.html·Î ¸®´ÙÀÌ·ºÆ®
+    // ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½, welcome.htmlï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®
     if (response.ok) {
-        window.location.href = `/welcome?username=${result.username}`; // »ç¿ëÀÚ ÀÌ¸§À» URL Äõ¸® ÆÄ¶ó¹ÌÅÍ·Î Àü´Þ
+        window.location.href = `/welcome?username=${result.username}`; // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ URL ï¿½ï¿½ï¿½ï¿½ ï¿½Ä¶ï¿½ï¿½ï¿½Í·ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 });
