@@ -7,4 +7,5 @@
 * bcrypt
 * mysql
 * FullCalendar(API)
+* chart.js  
 * 등등
