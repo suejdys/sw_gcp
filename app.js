@@ -51,8 +51,8 @@ app.post('/login', async (req, res) => {
                 const match = await bcrypt.compare(password, user.password);
 
                 if (match) {
-                    req.session.username = username; // Store username in session
-                    res.status(200).send('Login successful');
+                    req.session.username = username;  // Store username in session
+                    res.redirect('/welcome');         // Redirect to welcome page
                 } else {
                     res.status(400).send('Invalid username or password');
                 }
