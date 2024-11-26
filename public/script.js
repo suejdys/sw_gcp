@@ -11,7 +11,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
         body: JSON.stringify({ username, password })
     });
 
-    const result = response.text();
+    const result = await response.text();
     alert(result);
 
     // // ȸ������ ���� �� �α��� �������� �����̷�Ʈ
