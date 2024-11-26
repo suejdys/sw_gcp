@@ -27,7 +27,6 @@ app.post('/register', async (req, res) => {
         const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
         db.query(query, [username, hashedPassword], (err, result) => {
             if (err) {
-                
                 res.status(500).json({ message: 'Error registering user' });
             } else {
                 alert("register successsful");
