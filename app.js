@@ -27,13 +27,13 @@ app.post('/register', async (req, res) => {
         const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
         db.query(query, [username, hashedPassword], (err, result) => {
             if (err) {
-                res.status(500).send('Error registering user');
+                res.status(500).json({ success: false, message: 'Error registering user' });
             } else {
-                res.status(200).send('Registration successful');
+                res.status(200).json({ success: true, message: 'Registration successful' });
             }
         });
     } catch (error) {
-        res.status(500).send('Server error');
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 });
 
@@ -51,7 +51,8 @@ app.post('/login', async (req, res) => {
                 const match = await bcrypt.compare(password, user.password);
 
                 if (match) {
-                    req.session.username = username;  // Store username in session
+                    req.session.username = username;
+                    res.status(200).json({ success: true, message: 'Login successful', username });  // Store username in session
                     res.redirect('/welcome');         // Redirect to welcome page
                 } else {
                     res.status(400).send('Invalid username or password');
