@@ -1,3 +1,23 @@
+// app.js
+const express = require('express');
+const session = require('express-session');
+const bcrypt = require('bcrypt');
+const db = require('./db');
+const app = express();
+const PORT = 3000;  
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+
+// Configure session
+app.use(session({
+    secret: 'yourSecretKey',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set true if using HTTPS
+}));
+
 // Register route
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
@@ -41,4 +61,27 @@ app.post('/login', async (req, res) => {
     } catch (error) {
         res.status(500).send('Server error');
     }
+});
+
+// Welcome route
+app.get('/welcome', (req, res) => {
+    if (req.session.username) {
+        res.sendFile(__dirname + '/public/welcome.html');
+    } else {
+        res.redirect('/');
+    }
+});
+
+// Session username route
+app.get('/session-username', (req, res) => {
+    if (req.session.username) {
+        res.json({ username: req.session.username });
+    } else {
+        res.status(401).send('Unauthorized');
+    }
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
 });
