@@ -21,7 +21,7 @@ app.use(session({
 // Register route
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
-
+    
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
