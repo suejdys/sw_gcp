@@ -27,10 +27,10 @@ app.post('/register', async (req, res) => {
         const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
         db.query(query, [username, hashedPassword], (err, result) => {
             if (err) {
-                res.status(500).json({ message: 'Error registering user' });
+                res.status(500).send('Error registering user' );
             } else {
                 alert("register successsful");
-                res.status(200).json({ message: 'Registration successful' });
+                res.status(200).send('Registration successful' );
             }
         });
     } catch (error) {
@@ -46,7 +46,7 @@ app.post('/login', async (req, res) => {
         const query = 'SELECT * FROM users WHERE username = ?';
         db.query(query, [username], async (err, results) => {
             if (err || results.length === 0) {
-                res.status(400).json({ message: 'Invalid username or password' });
+                res.status(400).send('Invalid username or password');
             } else {
                 const user = results[0];
                 const match = await bcrypt.compare(password, user.password);
@@ -54,14 +54,14 @@ app.post('/login', async (req, res) => {
                 if (match) {
                     req.session.username = username;  // Store username in session
                     
-                    res.status(200).send({ message: 'Login successful', username });
+                    res.status(200).send('Login successful', username );
                 } else {
-                    res.status(400).send({ message: 'Invalid username or password' });
+                    res.status(400).send('Invalid username or password' );
                 }
             }
         });
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).send('Server error' );
     }
 });
 
