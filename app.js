@@ -1,4 +1,3 @@
-// app.js
 const express = require('express');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
@@ -27,14 +26,13 @@ app.post('/register', async (req, res) => {
         const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
         db.query(query, [username, hashedPassword], (err, result) => {
             if (err) {
-                res.status(500).json('Error registering user' );
+                return res.status(500).json({ message: 'Error registering user', error: err });
             } else {
-                alert("register successsful");
-                res.status(200).json('Registration successful' );
+                return res.status(200).json({ message: 'Registration successful' });
             }
         });
     } catch (error) {
-        res.status(500).json('Server error');
+        return res.status(500).json({ message: 'Server error', error: error });
     }
 });
 
@@ -46,7 +44,7 @@ app.post('/login', async (req, res) => {
         const query = 'SELECT * FROM users WHERE username = ?';
         db.query(query, [username], async (err, results) => {
             if (err || results.length === 0) {
-                res.status(400).json('Invalid username or password');
+                return res.status(400).json({ message: 'Invalid username or password' });
             } else {
                 const user = results[0];
                 const match = await bcrypt.compare(password, user.password);
@@ -54,17 +52,16 @@ app.post('/login', async (req, res) => {
                 if (match) {
                     req.session.username = username;  // Store username in session
                     
-                    res.status(200).json('Login successful', username );
+                    return res.status(200).json({ message: 'Login successful', username: user.username });
                 } else {
-                    res.status(400).json('Invalid username or password' );
+                    return res.status(400).json({ message: 'Invalid username or password' });
                 }
             }
         });
     } catch (error) {
-        res.status(500).json('Server error' );
+        return res.status(500).json({ message: 'Server error', error: error });
     }
 });
-
 
 // Welcome route
 app.get('/welcome', (req, res) => {
@@ -80,7 +77,7 @@ app.get('/session-username', (req, res) => {
     if (req.session.username) {
         res.json({ username: req.session.username });
     } else {
-        res.status(401).json('Unauthorized');
+        res.status(401).json({ message: 'Unauthorized' });
     }
 });
 
