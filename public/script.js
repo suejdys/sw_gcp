@@ -34,13 +34,9 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         body: JSON.stringify({ username, password })
     });
 
-    const result = await response.text();
-    try {
-        const parsedResult = JSON.parse(result); // 텍스트를 JSON으로 파싱
-        alert(parsedResult.message); // 메시지만 alert로 출력
-    } catch (e) {
-        alert(result); // JSON 파싱 실패 시 원본 텍스트 출력
-    }
+    const result = await response.text(); // 응답을 텍스트로 가져옴
+    alert(result); // 그대로 알림에 띄움
+    
     // �α��� ���� ��, welcome.html�� �����̷�Ʈ
     if (response.ok) {
         window.location.href = `/welcome?username=${result.username}`; // ����� �̸��� URL ���� �Ķ���ͷ� ����

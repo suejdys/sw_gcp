@@ -54,9 +54,9 @@ app.post('/login', async (req, res) => {
                 if (match) {
                     req.session.username = username;  // Store username in session
                     
-                    res.status(200).json({ message: 'Login successful', username });
+                    res.status(200).send({ message: 'Login successful', username });
                 } else {
-                    res.status(400).json({ message: 'Invalid username or password' });
+                    res.status(400).send({ message: 'Invalid username or password' });
                 }
             }
         });
