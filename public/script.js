@@ -11,8 +11,8 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
         body: JSON.stringify({ username, password })
     });
 
-    const resultText = await response.json();
-    console.log(result);
+    const result = await response.json();
+    console.log(result.message);
 
     // // ȸ������ ���� �� �α��� �������� �����̷�Ʈ
     // if (response.ok) {
@@ -35,7 +35,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     });
 
     const result = await response.json(); // 응답을 텍스트로 가져옴
-    console.log(result); // 그대로 알림에 띄움
+    console.log(result.message); // 그대로 알림에 띄움
 
     // �α��� ���� ��, welcome.html�� �����̷�Ʈ
     if (response.ok) {
