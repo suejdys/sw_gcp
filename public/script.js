@@ -1,49 +1,65 @@
 // 회원가입 처리
-document.getElementById("registerForm").addEventListener("submit", async (e) => {
-    e.preventDefault(); // �⺻ �� ���� ���� ����
-    
-    const username = document.querySelector('[name="username"]').value;
-    const password = document.querySelector('[name="password"]').value;
+document.addEventListener("DOMContentLoaded", () => {
+    const registerForm = document.getElementById("registerForm");
+    if (registerForm) {
+        registerForm.addEventListener("submit", async (e) => {
+            e.preventDefault(); // 기본 폼 제출 동작 방지
+            
+            // 사용자 입력값 가져오기
+            const username = document.querySelector('#registerForm [name="username"]').value;
+            const password = document.querySelector('#registerForm [name="password"]').value;
 
-    const response = await fetch('/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-    });
+            try {
+                // 서버에 회원가입 요청
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
 
-    const result = await response.json();
-    console.log(result.message);
+                const result = await response.json(); // JSON 응답 파싱
+                alert(result.message);
 
-    // // ȸ������ ���� �� �α��� �������� �����̷�Ʈ
-    // if (response.ok) {
-    //     window.location.href = "/";  // �α��� �������� �̵�
-    // }
+                // 회원가입 성공 시, 로그인 페이지로 이동
+                if (response.ok) {
+                    window.location.href = "/"; // 로그인 페이지로 리다이렉트
+                }
+            } catch (error) {
+                console.error("Error during registration:", error);
+                alert("회원가입 중 오류가 발생했습니다.");
+            }
+        });
+    }
 });
 
 // 로그인 처리
+document.addEventListener("DOMContentLoaded", () => {
+    const loginForm = document.getElementById("loginForm");
+    if (loginForm) {
+        loginForm.addEventListener("submit", async (event) => {
+            event.preventDefault(); // 기본 폼 제출 동작 방지 (GET 요청 방지)
 
-document.getElementById("loginForm").addEventListener("submit", async function(event) {
-    event.preventDefault(); // �⺻ �� ���� ���� ����
-    
-    const username = document.querySelector('[name="username"]').value;
-    const password = document.querySelector('[name="password"]').value;
+            const username = document.querySelector('#loginForm [name="username"]').value;
+            const password = document.querySelector('#loginForm [name="password"]').value;
 
-    const response = await fetch('/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-    });
-    if (response.ok) {
-        alert(result.message); // 성공 메시지 표시
-    } else {
-        console.log(response.status, response.statusText); // 상태 코드와 텍스트 확인
-        alert(result.message || "Login failed");
-    }
-    const result = await response.json(); // 응답을 텍스트로 가져옴
-    console.log(result); // 그대로 알림에 띄움
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST', // POST 요청으로 설정
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password }) // JSON 데이터 전송
+                });
 
-    // �α��� ���� ��, welcome.html�� �����̷�Ʈ
-    if (response.ok) {
-        window.location.href = `/welcome?username=${result.username}`; // ����� �̸��� URL ���� �Ķ���ͷ� ����
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message);
+                    window.location.href = `/welcome?username=${encodeURIComponent(result.username)}`;
+                } else {
+                    alert(result.message || "로그인에 실패했습니다.");
+                }
+            } catch (error) {
+                console.error("Error during login:", error);
+                alert("로그인 중 오류가 발생했습니다.");
+            }
+        });
     }
 });
