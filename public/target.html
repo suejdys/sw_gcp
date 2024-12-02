@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Responsive UI</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
     <style>
       body {
         display: flex;
@@ -49,20 +50,13 @@
     </style>
   </head>
   <body>
-    <div class="relative bg-white w-full max-w-[390px] h-[844px] overflow-hidden">
+    <div class="relative bg-white w-full max-w-[390px] h-screen overflow-hidden flex flex-col items-center">
       <!-- Back Arrow -->
-      <svg
-        class="absolute top-5 left-5 w-6 h-6"
-        viewBox="0 0 25 25"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        <path
-          d="M17.3119 3.11459C16.8015 2.60418 15.9786 2.60418 15.4681 3.11459L6.81189 11.7708C6.40564 12.1771 6.40564 12.8333 6.81189 13.2396L15.4681 21.8958C15.9786 22.4063 16.8015 22.4063 17.3119 21.8958C17.8223 21.3854 17.8223 20.5625 17.3119 20.0521L9.77022 12.5L17.3223 4.94793C17.8223 4.44793 17.8223 3.61459 17.3119 3.11459Z"
-          fill="black"
-        ></path>
-      </svg>
+      <button
+        class="absolute top-10 left-5 w-6 h-6">
+        <span class="material-symbols-rounded">arrow_back_ios</span>
+      </button>
+
 
       <!-- Title -->
       <div class="mt-32 text-center px-5">
