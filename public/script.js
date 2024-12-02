@@ -22,8 +22,8 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
 
 // 로그인 처리
 
-document.getElementById("loginForm").addEventListener("submit", async (e) => {
-    e.preventDefault(); // �⺻ �� ���� ���� ����
+document.getElementById("loginForm").addEventListener("submit", async function(event) {
+    event.preventDefault(); // �⺻ �� ���� ���� ����
     
     const username = document.querySelector('[name="username"]').value;
     const password = document.querySelector('[name="password"]').value;
