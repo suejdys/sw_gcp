@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>메인 페이지</title>
+    <title>메인 화면</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
@@ -67,6 +67,7 @@
 
 
     <script>
+      let selectedDate;
       document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -83,11 +84,21 @@
         return arg.date.getDate(); // 날짜 숫자만 표시
         },
         dateClick: function(info) {
-        console.log('Clicked on:' + info.dateStr);
+      selectedDate = info.dateStr; // 클릭한 날짜를 selectedDate에 저장
+      console.log('Clicked on:' + selectedDate);
+    }
+  });
+  calendar.render();
+});
+
+function openNewPage() {
+  if (selectedDate) {
+    // 날짜가 선택되었을 때 URL에 날짜 전달
+    window.location.href = `goalsetting.html?date=${selectedDate}`;
+  } else {
+    alert('날짜를 선택해 주세요');
   }
-        }); 
-        calendar.render();
-      });
+}
     </script>
 
   </head>
@@ -122,7 +133,7 @@
         <p
           class="absolute left-[9px] top-[3px] font-semibold text-sm text-gray-900"
         >
-          목표 대비 +4.5kg
+          전 측정 대비 +4.5kg
         </p>
       </div>
 
@@ -132,6 +143,12 @@
       class="absolute w-12 h-12 left-[320px] top-[700px] flex items-center justify-center bg-gray-700 text-white rounded-full shadow-lg hover: bg-gray-500   focus:outline-none transform hover:scale-110 transition-all duration-300">
         <span class="material-symbols-rounded">add</span>
       </button>
+
+
+
+
+
+
 
       <!-- 하단 영역 (캘린더) -->
       <div
@@ -149,7 +166,7 @@
     
         <!-- 그래프 아이콘 -->
         <div class="flex flex-col items-center text-purple-500">
-            <button class="w-10 h-10 flex items-center justify-center focus:outline-none" onclick="location.href='graph.html'">
+            <button class="w-10 h-10 flex items-center justify-center focus:outline-none">
                 <span class="material-symbols-rounded">show_chart</span>
             </button>
             <p class="text-xs">그래프</p>
@@ -157,7 +174,7 @@
     
         <!-- 캘린더 아이콘 -->
         <div class="flex flex-col items-center text-gray-500">
-            <button class="w-10 h-10 flex items-center justify-center focus:outline-none" onclick="location.href='main.html'">
+            <button class="w-10 h-10 flex items-center justify-center focus:outline-none">
                 <span class="material-symbols-rounded">calendar_month</span>
             </button>
             <p class="text-xs">캘린더</p>
@@ -165,7 +182,7 @@
     
         <!-- 메모장 아이콘 -->
         <div class="flex flex-col items-center text-gray-500">
-            <button class="w-10 h-10 flex items-center justify-center focus:outline-none" onclick="location.href='memo.html'">
+            <button class="w-10 h-10 flex items-center justify-center focus:outline-none">
                 <span class="material-symbols-rounded">description</span>
             </button>
             <p class="text-xs">메모장</p>
@@ -173,7 +190,7 @@
     
         <!-- 목표 설정 아이콘 -->
         <div class="flex flex-col items-center text-gray-500">
-            <button class="w-10 h-10 flex items-center justify-center focus:outline-none" onclick="location.href='target.html'">
+            <button class="w-10 h-10 flex items-center justify-center focus:outline-none">
                 <span class="material-symbols-rounded">person</span>
             </button>
             <p class="text-xs">목표 설정</p>

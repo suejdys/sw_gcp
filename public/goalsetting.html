@@ -1,29 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>New Page</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
-  <style>
-    /* Tailwind으로 기본 스타일 적용 */
-  </style>
-  <script>
-    function closePage() {
-      // 이전 페이지로 돌아가기
-      window.history.back();
-    }
-  </script>
-</head>
-<body class="flex justify-center items-center bg-gray-100 h-screen">
-  <div class="bg-white w-full max-w-[390px] h-[844px] flex flex-col items-center justify-center">
-    <h1 class="text-xl font-bold mb-4">새 페이지</h1>
-    <button
-      onclick="closePage()"
-      class="w-24 h-12 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
-      닫기
-    </button>
-  </div>
-</body>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>goalsetting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: #f9f9f9;
+        margin: 0;
+      }
+
+      .container {
+        text-align: center;
+      }
+
+      #myTextBox {
+        background: transparent;
+        border: none;
+        font-weight: 600;
+        font-size: 75px; /* 기본 텍스트 크기 */
+        text-align: center;
+        color: #aaa; /* 기본 값 회색 */
+        width: 120px; /* 넉넉한 너비 */
+        padding: 5px;
+        cursor: pointer;
+        outline: none;
+        margin-top: 85px;
+        transition: font-size 0.2s ease-in-out, color 0.3s ease-in-out, border 0.3s ease-in-out;
+      }
+
+      #myTextBox:focus {
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        color: #000; /* 입력 시 색 변경 */
+      }
+
+      .kg-text {
+        font-size: 40px; /* kg 텍스트 크기 */
+        color: #333;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="relative bg-white w-full max-w-[390px] h-[844px] overflow-hidden flex flex-col items-center">
+      <!-- Back Arrow -->
+      <button
+        class="absolute top-10 left-5 w-6 h-6">
+        <span class="material-symbols-rounded">arrow_back_ios</span>
+      </button>
+
+      <!-- Title -->
+      <div class="mt-32 text-center px-5">
+        <p class="text-2xl font-bold text-black">현재 몸무게를 기록해주세요</p>
+        <p id="selectedDate" class="mt-4 text-lg font-semibold text-gray-600"></p> <!--날짜 띄우기 -->
+      </div>
+
+      <!-- 텍스트 박스 -->
+      <div class="container">
+        <input
+          type="text"
+          id="myTextBox"
+          value=""
+          placeholder="70"
+          onfocus="handleFocus(this)"
+          onblur="handleBlur(this)"
+          oninput="adjustFontSize(this)"
+        />
+        <span class="kg-text">kg</span>
+      </div>
+
+      <!-- Button -->
+      <div class="absolute bottom-5 w-[90%]">
+        <button
+          class="w-full py-4 bg-teal-500 text-white text-center text-lg font-medium rounded-lg hover:bg-teal-600 transition-all"
+        >
+          기록하기
+        </button>
+      </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            // URL에서 날짜 정보를 가져옵니다
+            const urlParams = new URLSearchParams(window.location.search);
+            const selectedDate = urlParams.get('date'); // 'date' 파라미터 값 가져오기
+
+            // 날짜를 페이지에 표시
+            document.getElementById('selectedDate').innerText = `선택된 날짜: ${selectedDate}`;}
+    </script>
+
+    <script>
+      const placeholderText = "70";
+
+      function handleFocus(input) {
+        // 포커스 시 회색 예시 제거
+        if (input.placeholder === placeholderText) {
+          input.placeholder = "";
+          input.style.color = "#000"; // 검정색으로 변경
+        }
+      }
+
+      function handleBlur(input) {
+        // 포커스를 벗어났을 때 값이 없으면 다시 예시 표시
+        if (input.value.trim() === "") {
+          input.placeholder = placeholderText;
+          input.style.color = "#aaa"; // 회색으로 변경
+        }
+      }
+
+      function adjustFontSize(input) {
+        // 숫자만 입력 가능, 3자리 제한
+        input.value = input.value.replace(/[^0-9]/g, "").slice(0, 3);
+
+        // 글자 길이에 따라 크기 및 너비 조정
+        const length = input.value.length;
+        if (length <= 2) {
+          input.style.fontSize = "75px";
+          input.style.width = "120px";
+        } else if (length === 3) {
+          input.style.fontSize = "75px";
+          input.style.width = "155px";
+        }
+      }
+    </script>
+  </body>
 </html>
