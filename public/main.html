@@ -133,7 +133,7 @@ function openNewPage() {
         <p
           class="absolute left-[9px] top-[3px] font-semibold text-sm text-gray-900"
         >
-          목표 대비 +4.5kg
+          전 측정 대비 +4.5kg
         </p>
       </div>
 
@@ -153,21 +153,20 @@ function openNewPage() {
       <!-- 하단 영역 (캘린더) -->
       <div
       id="calendar"
-      class="absolute left-1/2 top-[137.45px] w-[392px] h-[430px] transform -translate-x-1/2"
-    ></div>
+      class="absolute left-1/2 top-[137.45px] w-full h-[430px] transform -translate-x-1/2"
+      ></div>
     <div class="absolute bottom-0 left-0 w-full max-w-[390px] h-[78px] bg-white border-t border-gray-200 flex items-center justify-around">
-    
         <!-- 그래프 아이콘 -->
         <div class="flex flex-col items-center text-gray-500">
-            <button class="w-10 h-10 flex items-center justify-center focus:outline-none" onclick="location.href='graph.html'">
+            <button class="w-11 h-11 flex items-center justify-center focus:outline-none">
                 <span class="material-symbols-rounded">show_chart</span>
             </button>
-            <p class="text-xs">그래프</p>
+            <p class="text-xs">그래프</p> 
         </div>
     
         <!-- 캘린더 아이콘 -->
         <div class="flex flex-col items-center text-teal-600">
-            <button class="w-10 h-10 flex items-center justify-center focus:outline-none" onclick="location.href='main.html'">
+            <button class="w-11 h-11 flex items-center justify-center focus:outline-none">
                 <span class="material-symbols-rounded">calendar_month</span>
             </button>
             <p class="text-xs">캘린더</p>
@@ -175,7 +174,7 @@ function openNewPage() {
     
         <!-- 메모장 아이콘 -->
         <div class="flex flex-col items-center text-gray-500">
-            <button class="w-10 h-10 flex items-center justify-center focus:outline-none" onclick="location.href='memo.html'">
+            <button class="w-11 h-11 flex items-center justify-center focus:outline-none">
                 <span class="material-symbols-rounded">description</span>
             </button>
             <p class="text-xs">메모장</p>
@@ -183,7 +182,7 @@ function openNewPage() {
     
         <!-- 목표 설정 아이콘 -->
         <div class="flex flex-col items-center text-gray-500">
-            <button class="w-10 h-10 flex items-center justify-center focus:outline-none" onclick="location.href='target.html'">
+            <button class="w-11 h-11 flex items-center justify-center focus:outline-none">
                 <span class="material-symbols-rounded">person</span>
             </button>
             <p class="text-xs">목표 설정</p>
