@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>메인 화면</title>
+    <title>Responsive UI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
@@ -70,6 +70,7 @@
       let selectedDate;
       document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
+        if (calendarEl.offsetWidth > 0 && calendarEl.offsetHeight > 0) {
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
           selectable: true,
@@ -89,6 +90,9 @@
     }
   });
   calendar.render();
+} else {
+    console.error('Calendar container not properly sized.');
+  }
 });
 
 function openNewPage() {
