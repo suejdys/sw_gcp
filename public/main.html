@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Responsive UI</title>
+    <title>메인 페이지</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
@@ -78,10 +78,6 @@
             center: 'title',    // 중앙에는 제목(년도/월)만 표시
             right: 'next',          // 오른쪽에는 아무 것도 표시하지 않음
           },
-          touch: {
-            // 터치 이벤트 활성화
-            enabled: true
-        },
           dayCellContent: function (arg) {
         // 날짜에서 "일" 제거
         return arg.date.getDate(); // 날짜 숫자만 표시
@@ -89,7 +85,6 @@
         dateClick: function(info) {
         console.log('Clicked on:' + info.dateStr);
   }
-  
         }); 
         calendar.render();
       });
@@ -127,7 +122,7 @@
         <p
           class="absolute left-[9px] top-[3px] font-semibold text-sm text-gray-900"
         >
-          전 측정 대비 +4.5kg
+          목표 대비 +4.5kg
         </p>
       </div>
 
@@ -137,12 +132,6 @@
       class="absolute w-12 h-12 left-[320px] top-[700px] flex items-center justify-center bg-gray-700 text-white rounded-full shadow-lg hover: bg-gray-500   focus:outline-none transform hover:scale-110 transition-all duration-300">
         <span class="material-symbols-rounded">add</span>
       </button>
-
-
-
-
-
-
 
       <!-- 하단 영역 (캘린더) -->
       <div
@@ -176,7 +165,7 @@
     
         <!-- 메모장 아이콘 -->
         <div class="flex flex-col items-center text-gray-500">
-            <button class="w-10 h-10 flex items-center justify-center focus:outline-none">
+            <button class="w-10 h-10 flex items-center justify-center focus:outline-none" onclick="location.href='memo.html'">
                 <span class="material-symbols-rounded">description</span>
             </button>
             <p class="text-xs">메모장</p>
@@ -184,7 +173,7 @@
     
         <!-- 목표 설정 아이콘 -->
         <div class="flex flex-col items-center text-gray-500">
-            <button class="w-10 h-10 flex items-center justify-center focus:outline-none">
+            <button class="w-10 h-10 flex items-center justify-center focus:outline-none" onclick="location.href='target.html'">
                 <span class="material-symbols-rounded">person</span>
             </button>
             <p class="text-xs">목표 설정</p>
