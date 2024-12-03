@@ -64,7 +64,7 @@
           원하는 목표치를 입력해주세요
         </p>
       </div>
-
+      <form id="target" method="POST">
       <!-- 텍스트 박스 -->
       <div class="container">
         <input
@@ -72,6 +72,7 @@
           id="myTextBox"
           value=""
           placeholder="70"
+          required
           onfocus="handleFocus(this)"
           onblur="handleBlur(this)"
           oninput="adjustFontSize(this)"
@@ -81,13 +82,15 @@
 
       <!-- Button -->
       <div class="absolute bottom-5 w-[90%]" >
-        <button
+        <button type="submit"
           class="w-full py-4 bg-teal-500 text-white text-center text-lg font-medium rounded-lg hover:bg-teal-600 transition-all" onclick="location.href='main.html'"
         >
           다음
         </button>
       </div>
+    </form>
     </div>
+
 
     <script>
       const placeholderText = "70";
