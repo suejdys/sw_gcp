@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+  <style>
+    /* Tailwind으로 기본 스타일 적용 */
+  </style>
+  <script>
+    function closePage() {
+      // 이전 페이지로 돌아가기
+      window.history.back();
+    }
+  </script>
+</head>
+<body class="flex justify-center items-center bg-gray-100 h-screen">
+  <div class="bg-white w-full max-w-[390px] h-[844px] flex flex-col items-center justify-center">
+    <h1 class="text-xl font-bold mb-4">새 페이지</h1>
+    <button
+      onclick="closePage()"
+      class="w-24 h-12 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
+      닫기
+    </button>
+  </div>
+</body>
+</html>
