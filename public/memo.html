@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memo App</title>
+  <style>
+    /* 기본적인 body 스타일 설정 */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 20px;
+    }
+
+    /* 메모 리스트 및 작성 폼을 감싸는 메인 영역 스타일 */
+    .main {
+      width: 400px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* 메모 제목, 내용, 버튼 및 각 메모 항목 스타일 */
+    .memo-title, .memo-content, .memo-btn, .memo-list article {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    /* 메모 내용 영역 크기 설정 및 크기 조절 금지 */
+    .memo-content {
+      height: 100px; /* 높이 설정 */
+      resize: none;  /* 크기 조절 금지 */
+    }
+
+    /* 메모 추가 버튼 스타일 */
+    .memo-btn {
+      background-color: #d3d3d3;
+      color: white;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    /* 버튼 hover 효과 */
+    .memo-btn:hover {
+      background-color: #a9a9a9;
+    }
+
+    /* 메모 항목의 스타일 */
+    .memo-list article {
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #f9f9f9;
+    }
+
+    /* 메모 제목, 날짜, 내용, 버튼들의 마진 제거 */
+    .memo-list h2, .memo-list span, .memo-list p {
+      margin: 0;
+    }
+
+    /* 메모 수정 및 삭제 버튼 스타일 */
+    .memo-list button {
+      margin-right: 5px;
+    }
+
+    /* 동그라미 버튼을 화면 오른쪽 하단에 고정 */
+    .circle-btn {
+      width: 50px;
+      height: 50px;
+      background-color: #3498db;
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 50px;
+      cursor: pointer;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+    }
+
+    /* 메모 작성 폼 기본적으로 숨김 처리 */
+    .memo-form {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <!-- 메모 리스트 영역 (여기에 메모 항목들이 동적으로 추가됨) -->
+    <div class="memo-list"></div>
+
+    <!-- 메모 작성 폼 (메모 추가 시 표시됨) -->
+    <div class="memo-form">
+      <h2>메모 작성</h2>
+      <input type="text" class="memo-title" placeholder="메모 제목">
+      <textarea class="memo-content" placeholder="메모 내용을 입력하세요"></textarea>
+      <button class="memo-btn">메모 추가</button>
+    </div>
+  </div>
+
+  <!-- 동그라미 버튼 (메모 작성 폼을 보여주는 역할) -->
+  <button class="circle-btn" onclick="showMemoForm()">+</button>
+
+  <script>
+    // 주요 DOM 요소들
+    const main = document.querySelector('.main');
+    const memoList = document.querySelector('.memo-list');
+    const memoForm = document.querySelector('.memo-form');
+    const memoBtn = document.querySelector('.memo-btn');
+
+    // 로컬 스토리지에서 메모 목록 불러오기
+    let memos = JSON.parse(localStorage.getItem('memos')) || [];
+    let editingMemo = null; // 수정 중인 메모를 저장
+
+    // 메모 목록을 화면에 갱신하는 함수
+    const setMemo = () => {
+      memoList.innerHTML = '';  // 기존의 메모 리스트 초기화
+      memos.slice().reverse().forEach(memo => {  // 최근 추가된 메모부터 표시
+        const article = document.createElement('article');
+        article.setAttribute('data-id', memo.id);
+
+        const title = document.createElement('h2');
+        title.textContent = memo.title;
+
+        const date = document.createElement('span');
+        date.textContent = memo.date;
+
+        const content = document.createElement('p');
+        content.textContent = memo.content;
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = '삭제';
+        deleteBtn.addEventListener('click', () => setDeleteBtn(memo.id));  // 삭제 처리
+
+        const editBtn = document.createElement('button');
+        editBtn.textContent = '수정';
+        editBtn.addEventListener('click', (e) => setEditBtn(e));  // 수정 처리
+
+        // 각 요소들을 article에 추가
+        article.append(title, date, content, editBtn, deleteBtn);
+        memoList.appendChild(article);
+      });
+    };
+
+    // 메모 삭제 처리 함수
+    const setDeleteBtn = (id) => {
+      memos = memos.filter(memo => memo.id !== id);  // 삭제할 메모 제거
+      localStorage.setItem('memos', JSON.stringify(memos));  // 변경된 메모 목록을 로컬 스토리지에 저장
+      setMemo();  // 화면 갱신
+    };
+
+    // 메모 수정 버튼 클릭 시 수정 폼으로 메모 내용을 불러오기
+    const setEditBtn = (e) => {
+      const targetId = e.target.parentNode.dataset.id;  // 클릭한 메모의 ID
+      editingMemo = memos.find(memo => memo.id == targetId);  // 해당 메모 찾기
+
+      if (editingMemo) {
+        // 수정 폼에 기존 메모 제목과 내용을 채움
+        document.querySelector('.memo-title').value = editingMemo.title;
+        document.querySelector('.memo-content').value = editingMemo.content;
+
+        // 메모 작성 폼 보이기
+        memoForm.style.display = 'block';
+
+        // 기존 '메모 추가' 버튼을 'Save'로 변경하고, 클릭 이벤트 수정
+        memoBtn.textContent = 'Save';
+        memoBtn.onclick = function () {
+          // 수정된 내용으로 메모 업데이트
+          editingMemo.title = document.querySelector('.memo-title').value;
+          editingMemo.content = document.querySelector('.memo-content').value;
+
+          // 로컬 스토리지에 변경된 메모 목록 저장
+          localStorage.setItem('memos', JSON.stringify(memos));
+          setMemo();  // 화면 갱신
+
+          // 입력창 초기화 및 버튼 텍스트 복구
+          document.querySelector('.memo-title').value = '';
+          document.querySelector('.memo-content').value = '';
+          memoBtn.textContent = '메모 추가';
+          memoBtn.onclick = addMemo;  // 메모 추가 함수로 복귀
+
+          // 메모 작성 폼 숨기기
+          memoForm.style.display = 'none';
+        };
+      }
+    };
+
+    // 새로운 메모를 추가하는 함수
+    const addMemo = () => {
+      const title = document.querySelector('.memo-title').value;
+      const content = document.querySelector('.memo-content').value;
+
+      // 제목과 내용이 비어있으면 알림
+      if (!title || !content) {
+        alert("제목과 내용을 입력해주세요!");
+        return;
+      }
+
+      // 새로운 메모 객체 생성
+      const newMemo = {
+        id: Date.now(),  // 고유한 ID는 현재 시간으로 설정
+        title: title,
+        content: content,
+        date: new Date().toLocaleDateString()  // 현재 날짜
+      };
+
+      memos.push(newMemo);  // 메모 배열에 추가
+      localStorage.setItem('memos', JSON.stringify(memos));  // 로컬 스토리지에 저장
+      setMemo();  // 화면 갱신
+
+      // 입력창 초기화 및 폼 숨기기
+      document.querySelector('.memo-title').value = '';
+      document.querySelector('.memo-content').value = '';
+      memoForm.style.display = 'none';
+    };
+
+    // 동그라미 버튼 클릭 시 메모 작성 폼 보이기
+    const showMemoForm = () => {
+      memoForm.style.display = 'block';  // 메모 작성 폼 표시
+      memoBtn.textContent = '메모 추가';  // 버튼 텍스트 설정
+      memoBtn.onclick = addMemo;  // 메모 추가 함수로 설정
+    };
+
+    // 페이지 로딩 시 메모 목록을 불러와서 화면에 표시
+    setMemo();
+  </script>
+</body>
+</html>
