@@ -122,6 +122,21 @@ app.delete('/delete-note/:id', (req, res) => {
     });
 });
 
+//메모 수정 API
+app.put('/update notes/:id', (req, res) => {
+    const memo_id = req.params.id;
+    const { title, content } = req.body;
+    const query = 'UPDATE notes SET title = ?, content = ? WHERE id = ?';
+    
+    db.query(query, [title, content, memo_id], (err, result) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.status(200).send({ message: 'notes updated successfully!' });
+      }
+    });
+  });
+
 // Session username route
 app.get('/session-username', (req, res) => {
     if (req.session.username) {

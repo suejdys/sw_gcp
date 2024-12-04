@@ -194,6 +194,10 @@
         const content = document.createElement('p');
         content.textContent = memo.contents;
 
+        const editBtn = document.createElement('button');
+        editBtn.textContent = '수정';
+        editBtn.addEventListener('click', () => editMemo(memo));
+
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = '삭제';
         deleteBtn.addEventListener('click', () => deleteMemo(memo.id));
@@ -203,6 +207,17 @@
       });
     }
 
+    function editMemo(memo) {
+      // 메모 수정 폼 표시
+      memoInputContainer.classList.add('active');
+      document.querySelector('.memo-title').value = memo.title;
+      document.querySelector('.memo-content').value = memo.contents;
+      memoBtn.textContent = '메모 수정';
+      editingMemoId = memo.id; // 수정 중인 메모 ID 저장
+      memoBtn.onclick = updateMemo;
+    }
+  
+    // 메모 삭제 기능
     async function deleteMemo(id) {
       try {
         const response = await fetch(`/delete-note/${id}`, { method: 'DELETE' });
@@ -216,6 +231,36 @@
       } catch (err) {
         console.error('Error:', err);
         alert('메모 삭제 중 오류가 발생했습니다.');
+      }
+    }
+    // 메모 수정 기능
+    async function updateMemo() {
+      const memoTitle = document.querySelector('.memo-title').value;
+      const memoContent = document.querySelector('.memo-content').value;
+
+      if (!memoTitle || !memoContent) {
+        alert("제목과 내용을 입력해주세요!");
+        return;
+      }
+
+      try {
+        const response = await fetch(`/update notes/${editingMemoId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: memoTitle, content: memoContent })
+        });
+
+        if (response.ok) {
+          alert('메모가 수정되었습니다!');
+          fetchMemos();
+          toggleMemoInput();
+        } else {
+          const error = await response.json();
+          alert(error.message);
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        alert('메모 수정 중 오류가 발생했습니다.');
       }
     }
 
