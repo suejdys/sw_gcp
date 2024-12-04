@@ -126,7 +126,7 @@ app.delete('/delete-note/:id', (req, res) => {
 app.put('/update-notes/:id', (req, res) => {
     const memo_id = req.params.id;
     const { title, content } = req.body;
-    const query = 'UPDATE notes SET title = ?, content = ? WHERE id = ?';
+    const query = 'UPDATE notes SET title = ?, contents = ? WHERE id = ?';
 
     db.query(query, [title, content, memo_id], (err, result) => {
       if (err) {
