@@ -246,7 +246,7 @@
       }
 
       try {
-        const response = await fetch(`/update notes/${editingMemoId}`, {
+        const response = await fetch(`/update-notes/${editingMemoId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ title: memoTitle, content: memoContent })
