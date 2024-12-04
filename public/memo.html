@@ -122,6 +122,7 @@
   <script>
     const memoBtn = document.querySelector('.memo-btn');
     const memoInputContainer = document.querySelector('.memo-input-container');
+    let editingMemoId = null; // 수정 중인 메모 ID 저장
 
     function toggleMemoInput() {
       memoInputContainer.classList.toggle('active');
@@ -129,6 +130,7 @@
       document.querySelector('.memo-content').value = '';
       memoBtn.textContent = '메모 추가';
       memoBtn.onclick = addMemo;
+      editingMemoId = null; // 수정 상태 초기화
     }
 
     async function addMemo() {
