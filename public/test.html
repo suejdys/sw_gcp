@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memo App</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .back-button {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      width: 40px;
+      height: 40px;
+      background-color: #d3d3d3;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .back-button img {
+      width: 20px;
+      height: 20px;
+    }
+    .back-button:hover {
+      background-color: #a9a9a9;
+    }
+    .main {
+      width: 100%;
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .memo-title, .memo-content, .memo-btn, .memo-list article {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .memo-content {
+      height: 100px;
+      resize: none;
+    }
+    .memo-btn {
+      background-color: #d3d3d3;
+      color: white;
+      cursor: pointer;
+      text-align: center;
+    }
+    .memo-btn:hover {
+      background-color: #a9a9a9;
+    }
+    .add-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #d3d3d3;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .add-button:hover {
+      background-color: #a9a9a9;
+    }
+    .memo-list article {
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #f9f9f9;
+    }
+    .memo-list h2, .memo-list span, .memo-list p {
+      margin: 0;
+    }
+    .memo-list button {
+      margin-right: 5px;
+    }
+    .memo-input-container {
+      display: none;
+    }
+    .memo-input-container.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- 뒤로가기 버튼 -->
+  <button class="back-button" onclick="location.href='main.html'">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/back.png" alt="뒤로가기">
+  </button>
+
+  <div class="main">
+    <div class="memo-input-container">
+      <input type="text" class="memo-title" placeholder="메모 제목">
+      <textarea class="memo-content" placeholder="메모 내용을 입력하세요"></textarea>
+      <button class="memo-btn">메모 추가</button>
+    </div>
+    <div class="memo-list"></div>
+    <button class="add-button" onclick="toggleMemoInput()">+</button>
+  </div>
+
+  <script>
+    const memoBtn = document.querySelector('.memo-btn');
+    const memoInputContainer = document.querySelector('.memo-input-container');
+
+    function toggleMemoInput() {
+      memoInputContainer.classList.toggle('active');
+      document.querySelector('.memo-title').value = '';
+      document.querySelector('.memo-content').value = '';
+      memoBtn.textContent = '메모 추가';
+      memoBtn.onclick = addMemo;
+    }
+
+    async function addMemo() {
+      const memoTitle = document.querySelector('.memo-title').value;
+      const memoContent = document.querySelector('.memo-content').value;
+
+      if (!memoTitle || !memoContent) {
+        alert("제목과 내용을 입력해주세요!");
+        return;
+      }
+
+      try {
+        const response = await fetch('/add-note', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: memoTitle, contents: memoContent })
+        });
+
+        if (response.ok) {
+          alert('메모가 추가되었습니다!');
+          fetchMemos();
+          toggleMemoInput();
+        } else {
+          const error = await response.json();
+          alert(error.message);
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        alert('메모 추가 중 오류가 발생했습니다.');
+      }
+    }
+
+    async function fetchMemos() {
+      try {
+        const response = await fetch('/get-notes');
+        if (response.ok) {
+          const memos = await response.json();
+          displayMemos(memos);
+        } else {
+          const error = await response.json();
+          alert(error.message);
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        alert('메모를 불러오는 중 오류가 발생했습니다.');
+      }
+    }
+
+    function displayMemos(memos) {
+      const memoList = document.querySelector('.memo-list');
+      memoList.innerHTML = '';
+
+      memos.reverse().forEach(memo => {
+        const article = document.createElement('article');
+        article.setAttribute('data-id', memo.id);
+
+        const title = document.createElement('h2');
+        title.textContent = memo.title;
+
+        const date = document.createElement('span');
+        date.textContent = new Date(memo.created_at).toLocaleDateString();
+
+        const content = document.createElement('p');
+        content.textContent = memo.contents;
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = '삭제';
+        deleteBtn.addEventListener('click', () => deleteMemo(memo.id));
+
+        article.append(title, date, content, deleteBtn);
+        memoList.append(article);
+      });
+    }
+
+    async function deleteMemo(id) {
+      try {
+        const response = await fetch(`/delete-note/${id}`, { method: 'DELETE' });
+        if (response.ok) {
+          alert('메모가 삭제되었습니다!');
+          fetchMemos();
+        } else {
+          const error = await response.json();
+          alert(error.message);
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        alert('메모 삭제 중 오류가 발생했습니다.');
+      }
+    }
+
+    fetchMemos();
+  </script>
+</body>
+</html>
