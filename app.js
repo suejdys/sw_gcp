@@ -63,13 +63,63 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// Welcome route
-app.get('/welcome', (req, res) => {
-    if (req.session.username) {
-        res.sendFile(__dirname + '/public/welcome.html');
-    } else {
-        res.redirect('/');
+// 메모 추가 API
+app.post('/add-note', (req, res) => {
+    if (!req.session.username) {
+        return res.status(401).json({ message: 'Unauthorized' });
     }
+
+    const { title, contents } = req.body;
+    const query = 'SELECT id FROM users WHERE username = ?';
+    
+    db.query(query, [req.session.username], (err, results) => {
+        if (err || results.length === 0) {
+            return res.status(500).json({ message: 'User not found' });
+        }
+
+        const userId = results[0].id;
+        const insertQuery = 'INSERT INTO notes (user_id, title, contents) VALUES (?, ?, ?)';
+        
+        db.query(insertQuery, [userId, title, contents], (err, result) => {
+            if (err) {
+                return res.status(500).json({ message: 'Error adding note', error: err });
+            }
+            return res.status(200).json({ message: 'Note added successfully' });
+        });
+    });
+});
+
+// 메모 조회 API
+app.get('/get-notes', (req, res) => {
+    if (!req.session.username) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const query = 'SELECT notes.id, notes.title, notes.contents, notes.created_at FROM notes INNER JOIN users ON notes.user_id = users.id WHERE users.username = ?';
+
+    db.query(query, [req.session.username], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error fetching notes', error: err });
+        }
+        res.status(200).json(results);
+    });
+});
+
+// 메모 삭제 API
+app.delete('/delete-note/:id', (req, res) => {
+    if (!req.session.username) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+    
+    const noteId = req.params.id;
+    const deleteQuery = 'DELETE FROM notes WHERE id = ?';
+
+    db.query(deleteQuery, [noteId], (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error deleting note', error: err });
+        }
+        res.status(200).json({ message: 'Note deleted successfully' });
+    });
 });
 
 // Session username route
