@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Info</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #user-info {
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: white;
+            text-align: center;
+            width: 300px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+            color: #333;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="user-info">
+        <h1>Welcome</h1>
+        <p id="username">Loading...</p>
+        <p id="error-message" class="error" style="display: none;">You are not logged in.</p>
+    </div>
+
+    <script>
+        async function fetchUsername() {
+            try {
+                // Request the username from the session
+                const response = await fetch('/session-username');
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('username').textContent = `Hello, ${data.username}!`;
+                } else {
+                    throw new Error('No session or user not logged in.');
+                }
+            } catch (error) {
+                // Handle errors (e.g., no session or server issues)
+                document.getElementById('username').style.display = 'none';
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        // Fetch the username on page load
+        fetchUsername();
+    </script>
+</body>
+</html>

@@ -11,7 +11,7 @@ app.use(express.static('public'));
 
 // Configure session
 app.use(session({
-    secret: 'yourSecretKey',
+    secret: 'abcdef',
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false } // Set true if using HTTPS
