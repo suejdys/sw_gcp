@@ -204,7 +204,7 @@
         deleteBtn.textContent = '삭제';
         deleteBtn.addEventListener('click', () => deleteMemo(memo.id));
 
-        article.append(title, date, content, deleteBtn);
+        article.append(title, date, content, editBtn, deleteBtn);
         memoList.append(article);
       });
     }
