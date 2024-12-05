@@ -66,7 +66,7 @@ app.post('/login', async (req, res) => {
 // 메모 추가 API
 app.post('/add-note', (req, res) => {
     if (!req.session.username) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        return res.status(401).json({ message: '로그인이 필요합니다' });
     }
 
     const { title, contents } = req.body;
@@ -92,7 +92,7 @@ app.post('/add-note', (req, res) => {
 // 메모 조회 API
 app.get('/get-notes', (req, res) => {
     if (!req.session.username) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        return res.status(401).json({ message: '로그인이 필요합니다' });
     }
 
     const query = 'SELECT notes.id, notes.title, notes.contents, notes.created_at FROM notes INNER JOIN users ON notes.user_id = users.id WHERE users.username = ?';
@@ -108,7 +108,7 @@ app.get('/get-notes', (req, res) => {
 // 메모 삭제 API
 app.delete('/delete-note/:id', (req, res) => {
     if (!req.session.username) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        return res.status(401).json({ message: '로그인이 필요합니다' });
     }
     
     const noteId = req.params.id;
@@ -122,7 +122,7 @@ app.delete('/delete-note/:id', (req, res) => {
     });
 });
 
-//메모 수정 API
+// 메모 수정 API
 app.put('/update-notes/:id', (req, res) => {
     const memo_id = req.params.id;
     const { title, content } = req.body;
@@ -137,10 +137,10 @@ app.put('/update-notes/:id', (req, res) => {
     });
   });
 
-  // Save target weight API
+  // 목표 몸무게 설정 API
 app.post("/save-target-weight", (req, res) => {
   if (!req.session.username) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: "로그인이 필요합니다" });
   }
 
   const { targetWeight } = req.body;
@@ -158,10 +158,10 @@ app.post("/save-target-weight", (req, res) => {
   });
 });
 
-// 목표 몸무게 저장
+// 목표 몸무게 저장 API
 app.post("/save-target-weight", (req, res) => {
     if (!req.session.username) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: "로그인이 필요합니다" });
     }
   
     const { targetWeight } = req.body;
@@ -178,13 +178,32 @@ app.post("/save-target-weight", (req, res) => {
       res.status(200).json({ message: "Success" });
     });
   });
+
+// 날짜와 몸무게 저장 API
+app.post('/save-weight', (req, res) => {
+    const { date, weight } = req.body;
+    const userId = req.session.userId; // 현재 로그인한 사용자 ID
   
+    if (!userId) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
+  
+    const query = `INSERT INTO DateWeight (user_id, date, weight) VALUES (?, ?, ?)`;
+    db.query(query, [userId, date, weight], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: '서버 오류 발생' });
+      }
+      res.json({ message: '저장 성공' });
+    });
+  });
+
 // Session username route
 app.get('/session-username', (req, res) => {
     if (req.session.username) {
         res.json({ username: req.session.username });
     } else {
-        res.status(401).json({ message: 'Unauthorized' });
+        res.status(401).json({ message: '로그인이 필요합니다' });
     }
 });
 
