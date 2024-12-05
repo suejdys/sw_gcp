@@ -92,6 +92,22 @@
   calendar.render();
 }, 100);}
 );
+function fetchWeight(date) {
+    fetch(`/get-weight?date=${date}`)
+        .then(response => response.json())
+        .then(data => {
+            const weightElement = document.getElementById('weight_sql');
+            if (data.weight !== null) {
+                weightElement.textContent = `${data.weight}`; // weight 값 표시
+            } else {
+                weightElement.textContent = '데이터 없음'; // 데이터가 없는 경우
+            }
+        })
+        .catch(error => {
+            console.error('데이터 가져오기 오류:', error);
+            location.href = "index.html";
+        });
+}
 
 function openNewPage() {
   if (selectedDate) {
@@ -123,7 +139,7 @@ function openNewPage() {
           kg
         </p>
         <p
-          class="absolute left-[25px] top-[625.5px] font-bold text-black text-5xl"
+          class="absolute left-[25px] top-[625.5px] font-bold text-black text-5xl" id ="weight_sql"
         >
           68.7
         </p>
