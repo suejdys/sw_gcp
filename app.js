@@ -158,7 +158,6 @@ app.post("/save-target-weight", (req, res) => {
   });
 });
 
-
 // 날짜와 몸무게 저장 또는 수정 API
 app.post('/save-weight', (req, res) => {
     if (!req.session.username) {
@@ -193,7 +192,7 @@ app.post('/save-weight', (req, res) => {
                         console.error(err);
                         return res.status(500).json({ message: '데이터 업데이트 중 오류가 발생했습니다.', error: err });
                     }
-                    return res.status(200).json({ message: '몸무게 정보가 업데이트되었습니다.' });
+                    return res.status(200).json({ message: '저장 성공' });
                 });
             } else {
                 // 기존 기록이 없으면 INSERT
@@ -203,7 +202,7 @@ app.post('/save-weight', (req, res) => {
                         console.error(err);
                         return res.status(500).json({ message: '데이터 저장 중 오류가 발생했습니다.', error: err });
                     }
-                    return res.status(200).json({ message: '몸무게 정보가 저장되었습니다.' });
+                    return res.status(200).json({ message: '저장 성공' });
                 });
             }
         });
