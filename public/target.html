@@ -82,7 +82,7 @@
       <!-- Button -->
       <div class="absolute bottom-5 w-[90%]" >
         <button
-          class="w-full py-4 bg-teal-500 text-white text-center text-lg font-medium rounded-lg hover:bg-teal-600 transition-all" onclick="location.href='main.html'"
+          class="w-full py-4 bg-teal-500 text-white text-center text-lg font-medium rounded-lg hover:bg-teal-600 transition-all" onclick="saveTargetWeight()"
         >
           다음
         </button>
@@ -93,6 +93,36 @@
 
     <script>
       const placeholderText = "70";
+      function saveTargetWeight() {
+  const targetWeight = document.getElementById("myTextBox").value;
+
+  if (targetWeight.trim() === "") {
+    alert("목표 몸무게를 입력해주세요.");
+    return;
+  }
+
+  fetch("/save-target-weight", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ targetWeight }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.message === "Success") {
+        // 저장 성공 시 main.html로 이동
+        location.href = "main.html";
+      } else {
+        alert("저장 중 오류가 발생했습니다. 다시 시도해주세요.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("서버와 연결할 수 없습니다. 나중에 다시 시도해주세요.");
+    });
+}
+
 
       function handleFocus(input) {
         // 포커스 시 회색 예시 제거

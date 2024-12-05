@@ -137,6 +137,48 @@ app.put('/update-notes/:id', (req, res) => {
     });
   });
 
+  // Save target weight API
+app.post("/save-target-weight", (req, res) => {
+  if (!req.session.username) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const { targetWeight } = req.body;
+  if (!targetWeight) {
+    return res.status(400).json({ message: "Invalid target weight" });
+  }
+
+  const query = "UPDATE users SET target_weight = ? WHERE username = ?";
+  db.query(query, [targetWeight, req.session.username], (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: "Error updating target weight", error: err });
+    }
+
+    res.status(200).json({ message: "Success" });
+  });
+});
+
+// 목표 몸무게 저장
+app.post("/save-target-weight", (req, res) => {
+    if (!req.session.username) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+  
+    const { targetWeight } = req.body;
+    if (!targetWeight) {
+      return res.status(400).json({ message: "Invalid target weight" });
+    }
+  
+    const query = "UPDATE users SET target_weight = ? WHERE username = ?";
+    db.query(query, [targetWeight, req.session.username], (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: "Error updating target weight", error: err });
+      }
+  
+      res.status(200).json({ message: "Success" });
+    });
+  });
+  
 // Session username route
 app.get('/session-username', (req, res) => {
     if (req.session.username) {
