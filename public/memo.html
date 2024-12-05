@@ -156,11 +156,12 @@
         } else {
           const error = await response.json();
           alert(error.message);
-          location.href = "index.html"
+          location.href = "index.html";
         }
       } catch (err) {
         console.error('Error:', err);
         alert('메모 추가 중 오류가 발생했습니다.');
+        location.href = "index.html";
       }
     }
 
@@ -173,10 +174,13 @@
         } else {
           const error = await response.json();
           alert(error.message);
+          location.href = "index.html";
         }
       } catch (err) {
         console.error('Error:', err);
         alert('메모를 불러오는 중 오류가 발생했습니다.');
+        location.href = "index.html";
+        
       }
     }
 
@@ -230,10 +234,12 @@
         } else {
           const error = await response.json();
           alert(error.message);
+          location.href = "index.html";
         }
       } catch (err) {
         console.error('Error:', err);
         alert('메모 삭제 중 오류가 발생했습니다.');
+        location.href = "index.html";
       }
     }
     // 메모 수정 기능
@@ -264,6 +270,7 @@
       } catch (err) {
         console.error('Error:', err);
         alert('메모 수정 중 오류가 발생했습니다.');
+        location.href = "index.html";
       }
     }
 
