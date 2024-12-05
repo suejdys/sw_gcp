@@ -99,7 +99,10 @@ function fetchWeight(date) {
         .then(data => {
             const weightElement = document.getElementById('weight_sql');
             const targetWeightElement = document.getElementById('target_weight');
-            
+
+            const dayOfWeek = date.format('dddd'); // 요일 가져오기
+            const date = document.getElementById('date').textContent = date;
+            const ddd = document.getElementById('ddd').textContent = `(${dayOfWeek})`;
             if (data.currentWeight !== null) {
                 // 현재 체중을 표시
                 weightElement.textContent = `${data.currentWeight}kg`;
@@ -143,8 +146,8 @@ function openNewPage() {
         <p
           class="absolute left-[28px] top-[590px] font-bold text-black text-lg"
         >
-          <span class="text-xl">2024.02.17 </span>
-          <span class="text-lg">(수)</span>
+          <span class="text-xl" id = "date">2024.02.17 </span>
+          <span class="text-lg" id="ddd">(수)</span>
         </p>
         <p
           class="absolute left-[135px] top-[640.5px] font-bold text-black text-2xl"
@@ -153,7 +156,7 @@ function openNewPage() {
         <p
           class="absolute left-[25px] top-[625.5px] font-bold text-black text-5xl" id ="weight_sql"
         >
-          68.7
+          
         </p>
       </div>
 
@@ -163,7 +166,7 @@ function openNewPage() {
         <p
           class="absolute left-[9px] top-[3px] font-semibold text-sm text-gray-900" id="target_weight"
         >
-        목표 대비 +4.5kg
+        
         </p>
       </div>
 
