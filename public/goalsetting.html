@@ -100,9 +100,9 @@
     <script>
       const placeholderText = "70";
       function saveWeight() {
-  const targetWeight = document.getElementById("myTextBox").value;
-  const urlParams = new URLSearchParams(window.location.search);
-  const selectedDate = urlParams.get("date"); // 'date' 파라미터 값 가져오기
+        const targetWeight = document.getElementById("myTextBox").value;
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedDate = urlParams.get("date"); // 'date' 파라미터 값 가져오기
 
   if (targetWeight.trim() === "") {
     alert("몸무게를 입력해주세요.");
@@ -115,6 +115,7 @@
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ date: selectedDate, weight: targetWeight }),
+    credentials: 'include',
   })
     .then((response) => response.json())
     .then((data) => {
