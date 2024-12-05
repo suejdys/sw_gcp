@@ -98,10 +98,22 @@ function fetchWeight(date) {
         .then(response => response.json())
         .then(data => {
             const weightElement = document.getElementById('weight_sql');
-            if (data.weight !== null) {
-                weightElement.textContent = `${data.weight}`; // weight 값 표시
+            const targetWeightElement = document.getElementById('target_weight');
+            
+            if (data.currentWeight !== null) {
+                // 현재 체중을 표시
+                weightElement.textContent = `${data.currentWeight}kg`;
+                
+                // 목표 체중 대비 차이 계산
+                const weightDifference = data.weightDifference !== null ? data.weightDifference : 0;
+
+                // 목표 대비 체중 차이 표시
+                const sign = weightDifference >= 0 ? '+' : ''; // 차이가 0 이상일 경우 '+' 표시
+                targetWeightElement.textContent = `목표 대비 ${sign}${weightDifference}kg`;
             } else {
-                weightElement.textContent = '데이터 없음'; // 데이터가 없는 경우
+                // 데이터가 없을 경우 기본값 설정
+                weightElement.textContent = '0';
+                targetWeightElement.textContent = '목표 대비 0kg';
             }
         })
         .catch(error => {
@@ -137,7 +149,6 @@ function openNewPage() {
         <p
           class="absolute left-[135px] top-[640.5px] font-bold text-black text-2xl"
         >
-          kg
         </p>
         <p
           class="absolute left-[25px] top-[625.5px] font-bold text-black text-5xl" id ="weight_sql"
@@ -150,7 +161,7 @@ function openNewPage() {
       <div class="absolute w-[135px] h-[25px] left-[27.5px] top-[688.5px]">
         <div class="w-full h-full bg-blue-200 rounded-md"></div>
         <p
-          class="absolute left-[9px] top-[3px] font-semibold text-sm text-gray-900"
+          class="absolute left-[9px] top-[3px] font-semibold text-sm text-gray-900" id="target_weight"
         >
         목표 대비 +4.5kg
         </p>
