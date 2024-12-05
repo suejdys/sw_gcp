@@ -87,6 +87,7 @@
         dateClick: function(info) {
       selectedDate = info.dateStr; // 클릭한 날짜를 selectedDate에 저장
       console.log('Clicked on:' + selectedDate);
+      fetchWeight(selectedDate);
     }
   });
   calendar.render();
