@@ -189,7 +189,7 @@ app.post('/save-weight', (req, res) => {
     });
 });
 
-// 날짜별 몸무게 불러오기
+// 날짜별 몸무게와 목표 대비 차이 조회
 app.get('/get-weight', (req, res) => {
     const { date } = req.query; // 클라이언트에서 날짜 전달받음
     const username = req.session.username; // 세션에서 사용자명 가져오기
@@ -198,37 +198,41 @@ app.get('/get-weight', (req, res) => {
         return res.status(401).json({ error: '로그인 필요' });
     }
 
-    // 사용자 ID 조회
-    const getUserIdQuery = 'SELECT id FROM users WHERE username = ?';
-    db.query(getUserIdQuery, [username], (err, userResults) => {
+    // 사용자 ID와 목표 몸무게 조회
+    const getUserInfoQuery = 'SELECT id, weight FROM users WHERE username = ?';
+    db.query(getUserInfoQuery, [username], (err, userResults) => {
         if (err) {
             console.error(err);
-            return res.status(500).json({ error: '사용자 ID 조회 실패' });
+            return res.status(500).json({ error: '사용자 정보 조회 실패' });
         }
 
         if (userResults.length === 0) {
             return res.status(404).json({ error: '사용자를 찾을 수 없습니다' });
         }
 
-        const userId = userResults[0].id;
+        const { id: userId, weight: targetWeight } = userResults[0];
 
-        // 날짜별 weight 조회
+        // 날짜별 몸무게 조회
         const getWeightQuery = 'SELECT weight FROM DateWeight WHERE user_id = ? AND date = ?';
         db.query(getWeightQuery, [userId, date], (err, weightResults) => {
             if (err) {
                 console.error(err);
-                return res.status(500).json({ error: '데이터 조회 실패' });
+                return res.status(500).json({ error: '날짜별 데이터 조회 실패' });
             }
 
-            if (weightResults.length > 0) {
-                res.json({ weight: weightResults[0].weight }); // weight 반환
-            } else {
-                res.json({ weight: null }); // 해당 날짜 데이터 없음
-            }
+            const currentWeight = weightResults.length > 0 ? weightResults[0].weight : null;
+
+            // 목표 대비 차이 계산
+            const weightDifference = currentWeight !== null ? currentWeight - targetWeight : null;
+
+            res.json({
+                targetWeight,
+                currentWeight, // 데이터가 없을 경우 null 반환
+                weightDifference, // 데이터가 없을 경우 null 반환
+            });
         });
     });
 });
-
 
 // Session username route
 app.get('/session-username', (req, res) => {
