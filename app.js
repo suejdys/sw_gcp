@@ -137,26 +137,59 @@ app.put('/update-notes/:id', (req, res) => {
     });
   });
 
-  // 목표 몸무게 설정 API
-app.post("/save-target-weight", (req, res) => {
-  if (!req.session.username) {
-    return res.status(401).json({ message: "로그인이 필요합니다" });
-  }
-
-  const { targetWeight } = req.body;
-  if (!targetWeight) {
-    return res.status(400).json({ message: "Invalid target weight" });
-  }
-
-  const query = "UPDATE users SET target_weight = ? WHERE username = ?";
-  db.query(query, [targetWeight, req.session.username], (err, result) => {
-    if (err) {
-      return res.status(500).json({ message: "Error updating target weight", error: err });
+// 날짜와 몸무게 저장/수정 API
+app.post('/save-weight', (req, res) => {
+    if (!req.session.username) {
+        return res.status(401).json({ message: '로그인이 필요합니다.' });
     }
 
-    res.status(200).json({ message: "Success" });
-  });
+    const { date, weight } = req.body;
+
+    // 날짜와 사용자 이름을 통해 사용자 ID 조회
+    const query = 'SELECT id FROM users WHERE username = ?';
+
+    db.query(query, [req.session.username], (err, results) => {
+        if (err || results.length === 0) {
+            console.error(err || 'User not found');
+            return res.status(500).json({ message: '사용자를 찾을 수 없습니다.' });
+        }
+
+        const userId = results[0].id; // 조회된 user_id
+
+        // 해당 날짜와 user_id에 대한 데이터가 있는지 확인
+        const checkQuery = 'SELECT * FROM DateWeight WHERE user_id = ? AND date = ?';
+
+        db.query(checkQuery, [userId, date], (err, checkResults) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: '데이터 조회 중 오류가 발생했습니다.', error: err });
+            }
+
+            if (checkResults.length > 0) {
+                // 데이터가 이미 존재하면 UPDATE
+                const updateQuery = 'UPDATE DateWeight SET weight = ? WHERE user_id = ? AND date = ?';
+                db.query(updateQuery, [weight, userId, date], (err, result) => {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).json({ message: '데이터 수정 중 오류가 발생했습니다.', error: err });
+                    }
+                    return res.status(200).json({ message: '체중 업데이트 성공' });
+                });
+            } else {
+                // 데이터가 없으면 INSERT
+                const insertQuery = 'INSERT INTO DateWeight (user_id, date, weight) VALUES (?, ?, ?)';
+                db.query(insertQuery, [userId, date, weight], (err, result) => {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).json({ message: '데이터 저장 중 오류가 발생했습니다.', error: err });
+                    }
+                    return res.status(200).json({ message: '저장 성공' });
+                });
+            }
+        });
+    });
 });
+
 
 
 // 날짜와 몸무게 저장 API
