@@ -176,8 +176,8 @@ app.post('/save-weight', (req, res) => {
             return res.status(500).json({ message: '사용자를 찾을 수 없습니다.' });
         }
 
-        const userId = results[0].id; // 조회된 user_id 
-        const insertQuery = `UPDATE DateWeight SET weight = ? WHERE user_id = ? AND date = ?`;
+        const userId = results[0].id; // 조회된 user_id
+        const insertQuery = `INSERT INTO DateWeight (user_id, date, weight) VALUES (?, ?, ?)`;
 
         // userId를 사용해 DateWeight 테이블에 삽입
         db.query(insertQuery, [userId, date, weight], (err, result) => {
