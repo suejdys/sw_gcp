@@ -158,45 +158,37 @@ app.post("/save-target-weight", (req, res) => {
   });
 });
 
-// 목표 몸무게 저장 API
-app.post("/save-target-weight", (req, res) => {
-    if (!req.session.username) {
-      return res.status(401).json({ message: "로그인이 필요합니다" });
-    }
-  
-    const { targetWeight } = req.body;
-    if (!targetWeight) {
-      return res.status(400).json({ message: "Invalid target weight" });
-    }
-  
-    const query = "UPDATE users SET target_weight = ? WHERE username = ?";
-    db.query(query, [targetWeight, req.session.username], (err, result) => {
-      if (err) {
-        return res.status(500).json({ message: "Error updating target weight", error: err });
-      }
-  
-      res.status(200).json({ message: "Success" });
-    });
-  });
 
 // 날짜와 몸무게 저장 API
 app.post('/save-weight', (req, res) => {
-    const { date, weight } = req.body;
-    const userId = req.session.userId; // 현재 로그인한 사용자 ID
-  
-    if (!userId) {
-      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    if (!req.session.username) {
+        return res.status(401).json({ message: '로그인이 필요합니다.' });
     }
-  
-    const query = `INSERT INTO DateWeight (user_id, date, weight) VALUES (?, ?, ?)`;
-    db.query(query, [userId, date, weight], (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ message: '서버 오류 발생' });
-      }
-      res.json({ message: '저장 성공' });
+
+    const { date, weight } = req.body;
+    const query = 'SELECT id FROM users WHERE username = ?';
+
+    // username을 통해 userId를 조회
+    db.query(query, [req.session.username], (err, results) => {
+        if (err || results.length === 0) {
+            console.error(err || 'User not found');
+            return res.status(500).json({ message: '사용자를 찾을 수 없습니다.' });
+        }
+
+        const userId = results[0].id; // 조회된 user_id
+        const insertQuery = `INSERT INTO DateWeight (user_id, date, weight) VALUES (?, ?, ?)`;
+
+        // userId를 사용해 DateWeight 테이블에 삽입
+        db.query(insertQuery, [userId, date, weight], (err, result) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: '데이터 저장 중 오류가 발생했습니다.', error: err });
+            }
+            return res.status(200).json({ message: '저장 성공' });
+        });
     });
-  });
+});
+
 
 // Session username route
 app.get('/session-username', (req, res) => {
