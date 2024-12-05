@@ -156,6 +156,7 @@
         } else {
           const error = await response.json();
           alert(error.message);
+          location.href = "index.html"
         }
       } catch (err) {
         console.error('Error:', err);

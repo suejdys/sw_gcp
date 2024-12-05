@@ -121,14 +121,16 @@
     .then((data) => {
       if (data.message === "저장 성공") {
         alert("저장 성공!");
-        location.href = "index.html"; // main.html로 이동
+        location.href = "main.html"; // main.html로 이동
       } else {
         alert("저장 실패. 다시 시도해주세요.");
+        location.href = "index.html"
       }
     })
     .catch((error) => {
       console.error("Error:", error);
       alert("서버와 연결할 수 없습니다. 나중에 다시 시도해주세요.");
+      location.href = "index.html"
     });
 }
       function handleFocus(input) {
