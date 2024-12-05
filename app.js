@@ -199,7 +199,7 @@ app.get('/get-weight', (req, res) => {
     }
 
     // 사용자 ID와 목표 몸무게 조회
-    const getUserInfoQuery = 'SELECT id, weight FROM users WHERE username = ?';
+    const getUserInfoQuery = 'SELECT id, target_weight FROM users WHERE username = ?';
     db.query(getUserInfoQuery, [username], (err, userResults) => {
         if (err) {
             console.error(err);
@@ -210,7 +210,7 @@ app.get('/get-weight', (req, res) => {
             return res.status(404).json({ error: '사용자를 찾을 수 없습니다' });
         }
 
-        const { id: userId, weight: targetWeight } = userResults[0];
+        const { id: userId, target_weight: targetWeight } = userResults[0];
 
         // 날짜별 몸무게 조회
         const getWeightQuery = 'SELECT weight FROM DateWeight WHERE user_id = ? AND date = ?';
