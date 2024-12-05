@@ -166,7 +166,8 @@ app.post('/save-weight', (req, res) => {
     }
 
     const { date, weight } = req.body;
-    const query = 'SELECT id FROM users WHERE username = ?';
+    
+    const query = 'UPDATE DateWeight SET weight = ? WHERE user_id = (SELECT id FROM users WHERE username = ?) AND date = ?;';
 
     // username을 통해 userId를 조회
     db.query(query, [req.session.username], (err, results) => {
