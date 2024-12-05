@@ -112,6 +112,7 @@
     .then((data) => {
       if (data.message === "Success") {
         // 저장 성공 시 main.html로 이동
+        alert("저장 성공!"); // 저장 성공 알림
         location.href = "main.html";
       } else {
         alert("저장 중 오류가 발생했습니다. 다시 시도해주세요.");
