@@ -94,15 +94,18 @@
 }, 100);}
 );
 function fetchWeight(date) {
+  const dayOfWeek = date.format('dddd'); // 요일 가져오기
+  const date = document.getElementById('date').textContent = '${date}';
+  const ddd = document.getElementById('ddd').textContent = `(${dayOfWeek})`;
+  
     fetch(`/get-weight?date=${date}`)
         .then(response => response.json())
         .then(data => {
             const weightElement = document.getElementById('weight_sql');
             const targetWeightElement = document.getElementById('target_weight');
 
-            const dayOfWeek = date.format('dddd'); // 요일 가져오기
-            const date = document.getElementById('date').textContent = date;
-            const ddd = document.getElementById('ddd').textContent = `(${dayOfWeek})`;
+            
+
             if (data.currentWeight !== null) {
                 // 현재 체중을 표시
                 weightElement.textContent = `${data.currentWeight}kg`;
