@@ -113,8 +113,10 @@ function fetchWeight(date) {
             const targetWeightElement = document.getElementById('target_weight');
 
             if (data.currentWeight !== null) {
-                // 현재 체중을 표시
-                weightElement.textContent = `${data.currentWeight}`;
+            weightElement.innerHTML = `
+            ${data.currentWeight}
+            <span style="margin-left: 5px; font-size: 14px;">kg</span>
+            `;
                 
                 // 목표 체중 대비 차이 계산
                 const weightDifference = data.weightDifference !== null ? data.weightDifference : 0;
