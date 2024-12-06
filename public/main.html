@@ -115,7 +115,7 @@ function fetchWeight(date) {
             if (data.currentWeight !== null) {
             weightElement.innerHTML = `
             ${data.currentWeight}
-            <span style="margin-left: 5px; font-size: 14px;">kg</span>
+            <span style="margin-left: 2px; font-size: 25px;">kg</span>
             `;
                 
                 // 목표 체중 대비 차이 계산
@@ -172,7 +172,7 @@ function openNewPage() {
         <p
           class="absolute left-[25px] top-[625.5px] font-bold text-black text-5xl" id ="weight_sql"
         >
-          0
+          null
         </p>
       </div>
 
