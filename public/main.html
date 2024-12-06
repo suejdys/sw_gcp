@@ -115,7 +115,7 @@ function fetchWeight(date) {
             if (data.currentWeight !== null) {
             weightElement.innerHTML = `
             ${data.currentWeight}
-            <span style="margin-left: 0.8px; font-size: 30px;">kg</span>
+            <span style=" font-size: 30px;">kg</span>
             `;
                 
                 // 목표 체중 대비 차이 계산
@@ -128,7 +128,7 @@ function fetchWeight(date) {
                 // 데이터가 없을 경우 기본값 설정
                 weightElement.innerHTML = `
             0
-            <span style="margin-left: 0.8px; font-size: 30px;">kg</span>
+            <span style=" font-size: 30px;">kg</span>
             `
                 targetWeightElement.textContent = '목표 대비 0kg';
             }
@@ -170,7 +170,7 @@ function openNewPage() {
         kg
         </p> -->
         <p
-          class="absolute left-[25px] top-[625.5px] font-bold text-black text-3xl" id ="weight_sql"
+          class="absolute left-[25px] top-[625.5px] font-bold text-black text-5xl" id ="weight_sql"
         >
           null
         </p>
