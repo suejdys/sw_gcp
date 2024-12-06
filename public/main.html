@@ -126,7 +126,7 @@ function fetchWeight(date) {
                 targetWeightElement.textContent = `목표 대비 ${sign}${weightDifference}kg`;
             } else {
                 // 데이터가 없을 경우 기본값 설정
-                weightElement.textContent = '0kg';
+                weightElement.textContent = '0';
                 targetWeightElement.textContent = '목표 대비 0kg';
             }
         })
@@ -161,11 +161,11 @@ function openNewPage() {
           <span class="text-xl" id = "date">2024.02.17 </span>
           <span class="text-lg" id="ddd">(수)</span>
         </p>
-        <p
-          class="absolute left-[100px] top-[640.5px] font-bold text-black text-2xl"
+        <!-- <p
+          class="absolute left-[135px] top-[640.5px] font-bold text-black text-2xl"
         >
         kg
-        </p>
+        </p> -->
         <p
           class="absolute left-[25px] top-[625.5px] font-bold text-black text-5xl" id ="weight_sql"
         >
