@@ -126,7 +126,10 @@ function fetchWeight(date) {
                 targetWeightElement.textContent = `목표 대비 ${sign}${weightDifference}kg`;
             } else {
                 // 데이터가 없을 경우 기본값 설정
-                weightElement.textContent = '0';
+                weightElement.innerHTML = `
+            0
+            <span style="margin-left: 5px; font-size: 14px;">kg</span>
+            `
                 targetWeightElement.textContent = '목표 대비 0kg';
             }
         })
