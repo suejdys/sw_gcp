@@ -114,7 +114,7 @@ function fetchWeight(date) {
 
             if (data.currentWeight !== null) {
                 // 현재 체중을 표시
-                weightElement.textContent = `${data.currentWeight}kg`;
+                weightElement.textContent = `${data.currentWeight}`;
                 
                 // 목표 체중 대비 차이 계산
                 const weightDifference = data.weightDifference !== null ? data.weightDifference : 0;
@@ -124,7 +124,7 @@ function fetchWeight(date) {
                 targetWeightElement.textContent = `목표 대비 ${sign}${weightDifference}kg`;
             } else {
                 // 데이터가 없을 경우 기본값 설정
-                weightElement.textContent = '0';
+                weightElement.textContent = '0kg';
                 targetWeightElement.textContent = '목표 대비 0kg';
             }
         })
@@ -162,12 +162,12 @@ function openNewPage() {
         <p
           class="absolute left-[135px] top-[640.5px] font-bold text-black text-2xl"
         >
-
+        kg
         </p>
         <p
           class="absolute left-[25px] top-[625.5px] font-bold text-black text-5xl" id ="weight_sql"
         >
-          0kg
+          0
         </p>
       </div>
 
