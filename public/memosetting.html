@@ -135,32 +135,7 @@
               openMemoPage();
             }
 
-            const memoToEdit = JSON.parse(localStorage.getItem('memoToEdit'));
-
-            // 로컬 스토리지에서 메모를 가져와서 입력 폼에 채웁니다.
-            document.querySelector('.memo-title').value = memoToEdit.title;
-            document.querySelector('.memo-content').value = memoToEdit.content;
-
-            // 메모 저장 버튼 클릭 시
-            const memoBtnSave = document.querySelector('.memo-btn');
-            memoBtn.addEventListener('click', function () {
-              // 수정된 제목과 내용을 로컬 스토리지에 반영합니다.
-              memoToEdit.title = document.querySelector('.memo-title').value;
-              memoToEdit.content = document.querySelector('.memo-content').value;
-
-              // 수정된 메모를 로컬 스토리지에 저장
-              let memos = JSON.parse(localStorage.getItem('memos')) || [];
-              const index = memos.findIndex(memo => memo.id === memoToEdit.id);
-              if (index !== -1) {
-                memos[index] = memoToEdit; // 수정된 메모로 갱신
-                localStorage.setItem('memos', JSON.stringify(memos)); // 로컬 스토리지에 저장
-              }
-
-              // 메모 목록 페이지로 돌아갑니다.
-              window.location.href = 'memo.html';
-            });
-
-
+            
           
             // 입력 이벤트 리스너 추가
             titleInput.addEventListener("input", updateButtonState);

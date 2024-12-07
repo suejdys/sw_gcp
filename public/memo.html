@@ -155,7 +155,7 @@
     <div class="bottom-icons">
       <!-- 그래프 아이콘 -->
       <div class="icon-button">
-        <button onclick="location.href='graph.html'">
+        <button>
           <span class="material-symbols-rounded">show_chart</span>
         </button>
         <p>그래프</p>
@@ -163,7 +163,7 @@
 
       <!-- 캘린더 아이콘 -->
       <div class="icon-button">
-        <button onclick="location.href='main.html'">
+        <button>
           <span class="material-symbols-rounded">calendar_month</span>
         </button>
         <p>캘린더</p>
@@ -171,7 +171,7 @@
 
       <!-- 메모장 아이콘 -->
       <div class="icon-button active">
-        <button onclick="location.href='memo.html'">
+        <button>
           <span class="material-symbols-rounded">description</span>
         </button>
         <p>메모장</p>
@@ -179,7 +179,7 @@
 
       <!-- 목표 설정 아이콘 -->
       <div class="icon-button">
-        <button onclick="location.href='target.html'">
+        <button>
           <span class="material-symbols-rounded">person</span>
         </button>
         <p>목표 설정</p>
@@ -237,11 +237,7 @@
 
         const editBtn = document.createElement('button');
         editBtn.textContent = '수정';
-        editBtn.addEventListener('click', () => {
-          // 현재 메모의 id를 URL 파라미터로 전달하여 memosetting.html로 이동
-          localStorage.setItem('memoToEdit', JSON.stringify(memo));
-          window.location.href = 'memosetting.html'; // memosetting.html로 이동
-        });
+        editBtn.addEventListener('click', () => editMemo(memo));
         editBtn.style.float = 'right'; // 오른쪽으로 배치
 
         article.append(date, title, content, editBtn, deleteBtn);
