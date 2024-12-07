@@ -234,11 +234,32 @@
         deleteBtn.textContent = '삭제';
         deleteBtn.addEventListener('click', () => deleteMemo(memo.id));
         deleteBtn.style.float = 'right'; // 오른쪽으로 배치
+        deleteBtn.style.color = 'black'
+        deleteBtn.style.backgroundColor = 'white'
+        deleteBtn.style.width = '40px'; // 너비 100px
+        deleteBtn.style.height = '22px'; // 높이 40px
+        deleteBtn.style.position = 'relative'; // 위치 기준 변경
+        deleteBtn.style.bottom = '4px'; // 현재 위치에서 아래로 10px
+        deleteBtn.style.border = '2px solid black'; // 2px, 실선, 검은색
+        deleteBtn.style.borderRadius = '7px'; // 둥근 모서리
+
+        
 
         const editBtn = document.createElement('button');
         editBtn.textContent = '수정';
         editBtn.addEventListener('click', () => editMemo(memo));
         editBtn.style.float = 'right'; // 오른쪽으로 배치
+        editBtn.style.color = 'black'
+        editBtn.style.backgroundColor = 'white'
+        editBtn.style.width = '40px'; // 너비 100px
+        editBtn.style.height = '22px'; // 높이 40px
+        editBtn .style.position = 'relative'; // 위치 기준 변경
+        editBtn.style.bottom = '4px'; // 현재 위치에서 아래로 10px
+        editBtn.style.border = '2px solid black'; // 2px, 실선, 검은색
+        editBtn.style.borderRadius = '7px'; // 둥근 모서리
+
+
+
 
         article.append(date, title, content, editBtn, deleteBtn);
         memoList.append(article);
