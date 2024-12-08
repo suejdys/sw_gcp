@@ -183,17 +183,13 @@ app.get('/get-graph', (req, res) => {
       }
   
       const userId = userResults[0].id; // userId 가져오기
-      console.log('User ID:', userId);
   
       // 주의 시작일(일요일)과 종료일(토요일) 계산
       const inputDate = new Date(date);
       const startOfWeek = new Date(inputDate);
-      startOfWeek.setDate(inputDate.getDate() - inputDate.getDay()); // 주 시작일 (일요일)
+      startOfWeek.setDate(inputDate.getDate() - inputDate.getDay());
       const endOfWeek = new Date(startOfWeek);
-      endOfWeek.setDate(startOfWeek.getDate() + 6); // 주 종료일 (토요일)
-  
-      console.log('Start of week:', startOfWeek.toISOString().split('T')[0]);
-      console.log('End of week:', endOfWeek.toISOString().split('T')[0]);
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
   
       // DB에서 해당 주의 데이터 조회
       const queryGraphData = `SELECT date, weight FROM DateWeight WHERE user_id = ? AND date BETWEEN ? AND ?`;
@@ -223,17 +219,22 @@ app.get('/get-graph', (req, res) => {
             allDatesInWeek.push(formattedDate);
           }
   
-          console.log('Week Dates to Compare:', allDatesInWeek);
+          // DB에서 반환된 날짜 값의 시간 정보 제거
+          const cleanedWeightResults = weightResults.map(row => ({
+            date: row.date.toISOString().split('T')[0], // 시간 정보 제거
+            weight: row.weight
+          }));
+  
+          console.log('Cleaned weight data:', cleanedWeightResults);
   
           // 클라이언트에서 반환할 weight 데이터를 매핑
           allDatesInWeek.forEach((date) => {
-            const weightForDate = weightResults.find((w) => w.date === date);
-            console.log(`Checking date ${date}, found weight:`, weightForDate ? weightForDate.weight : 0);
+            const weightForDate = cleanedWeightResults.find((w) => w.date === date);
             weekDates.push(date);
             weights.push(weightForDate ? weightForDate.weight : 0); // 존재하지 않는 데이터는 0 처리
           });
   
-          console.log('Final response:', { weekDates, weights });
+          console.log('Week Dates to Compare:', allDatesInWeek);
   
           // 클라이언트 응답 반환
           return res.status(200).json({ date: weekDates, weight: weights });
@@ -241,6 +242,7 @@ app.get('/get-graph', (req, res) => {
       );
     });
   });
+  
   
   
   
