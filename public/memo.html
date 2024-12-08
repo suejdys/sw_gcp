@@ -155,7 +155,7 @@
     <div class="bottom-icons">
       <!-- 그래프 아이콘 -->
       <div class="icon-button">
-        <button>
+        <button onclick="location.href='graph.html'">
           <span class="material-symbols-rounded">show_chart</span>
         </button>
         <p>그래프</p>
@@ -163,7 +163,7 @@
 
       <!-- 캘린더 아이콘 -->
       <div class="icon-button">
-        <button>
+        <button onclick="location.href='main.html'">
           <span class="material-symbols-rounded">calendar_month</span>
         </button>
         <p>캘린더</p>
@@ -171,7 +171,7 @@
 
       <!-- 메모장 아이콘 -->
       <div class="icon-button active">
-        <button>
+        <button onclick="location.href='memo.html'">
           <span class="material-symbols-rounded">description</span>
         </button>
         <p>메모장</p>
@@ -179,7 +179,7 @@
 
       <!-- 목표 설정 아이콘 -->
       <div class="icon-button">
-        <button>
+        <button onclick="location.href='target.html'">
           <span class="material-symbols-rounded">person</span>
         </button>
         <p>목표 설정</p>
@@ -204,12 +204,20 @@
     // 서버에서 메모 데이터 가져오기
     fetch('/get-notes')
         .then(response => {
+          if (response.status === 401) {
+            // 401 에러 처리
+            alert('로그인을 해주세요.');
+            window.location.href = 'index.html'; // index.html로 리디렉션
+            return; // 이후 코드 실행 방지
+        }
+          
             if (!response.ok) {
                 throw new Error('메모를 가져오는 데 실패했습니다.');
             }
             return response.json();
         })
         .then(memos => {
+          
             memos.slice().reverse().forEach((memo, index) => {
                 const article = document.createElement('article'); 
                 article.setAttribute('data-id', memo.id);
@@ -287,7 +295,7 @@
         return response.json();
     })
     .then(data => {
-        console.log(data.message); // 성공 메시지 출력
+        alert(data.message); // 성공 메시지 출력
         // UI에서 삭제된 메모 제거 (예: 다시 목록 불러오기)
         setMemo(); // 이 함수에서 메모 목록을 갱신하도록 구현
     })
