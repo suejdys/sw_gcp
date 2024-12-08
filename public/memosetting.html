@@ -143,9 +143,9 @@
 
 
       async function addMemo() {
-        const titleInput = document.getElementById("memoTitle");
-        const contentInput = document.getElementById("memoContent");
-        const memoBtn = document.getElementById("memoBtn");
+        const title = titleInput.value; // 메모 제목 내용
+        const content = contentInput.value; // 메모 내용
+
 
         if (!titleInput || !contentInput) {
           alert('제목과 내용을 모두 입력해주세요');
@@ -156,7 +156,7 @@
           const response = await fetch('/add-note', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: titleInput, contents: contentInput }),
+            body: JSON.stringify({ title: title, contents: content }),
           });
 
           const result = await response.json();
