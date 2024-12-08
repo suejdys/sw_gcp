@@ -1,150 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>memosetting</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
-    <style>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>memosetting</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+  <style>
     .memo-input-container {
-        position: absolute; /* 절대 위치 지정 */
-        top: 220px; /* 화면 하단에서 80px 위로 고정 */
-        left: 28px; /* 화면 왼쪽에서 20px */
-        right: 28px; /* 화면 오른쪽에서 20px */
-        }
+      position: absolute;
+      /* 절대 위치 지정 */
+      top: 220px;
+      /* 화면 하단에서 80px 위로 고정 */
+      left: 28px;
+      /* 화면 왼쪽에서 20px */
+      right: 28px;
+      /* 화면 오른쪽에서 20px */
+    }
 
     /* 메모 제목, 내용, 버튼, 메모 리스트 항목의 공통 스타일 */
     .memo-title {
-      width: 100%; /* 가로 폭을 100%로 설정 */
-      margin-bottom: 50px; /* 아래쪽 여백 */
-      padding: 10px; /* 안쪽 여백 */
-      font-size: 16px; /* 글씨 크기 */
+      width: 100%;
+      /* 가로 폭을 100%로 설정 */
+      margin-bottom: 50px;
+      /* 아래쪽 여백 */
+      padding: 10px;
+      /* 안쪽 여백 */
+      font-size: 16px;
+      /* 글씨 크기 */
       background-color: rgba(244, 244, 245, 1);
-      border-radius: 7px; /* 테두리 둥글게 처리 */
-      box-sizing: border-box; /* padding 포함한 전체 크기 설정 */
-      height: 55px; /* 높이 고정 */
-      resize: none; /* 크기 조절 불가 */
+      border-radius: 7px;
+      /* 테두리 둥글게 처리 */
+      box-sizing: border-box;
+      /* padding 포함한 전체 크기 설정 */
+      height: 55px;
+      /* 높이 고정 */
+      resize: none;
+      /* 크기 조절 불가 */
       font-size: 15px;
       font-weight: 400;
-      outline: none; /* 포커스 시 외곽선 제거 */
+      outline: none;
+      /* 포커스 시 외곽선 제거 */
     }
 
     /* 메모 내용 텍스트 영역 높이 설정 및 크기 조절 불가 설정 */
     .memo-content {
-      width: 100%; /* 가로 폭을 100%로 설정 */
-      margin-bottom: 20px; /* 아래쪽 여백 */
-      padding: 10px; /* 안쪽 여백 */
-      font-size: 16px; /* 글씨 크기 */
+      width: 100%;
+      /* 가로 폭을 100%로 설정 */
+      margin-bottom: 20px;
+      /* 아래쪽 여백 */
+      padding: 10px;
+      /* 안쪽 여백 */
+      font-size: 16px;
+      /* 글씨 크기 */
       background-color: rgba(244, 244, 245, 1);
-      border-radius: 7px; /* 테두리 둥글게 처리 */
-      box-sizing: border-box; /* padding 포함한 전체 크기 설정 */
-      height: 150px; /* 높이 고정 */
-      resize: none; /* 크기 조절 불가 */
+      border-radius: 7px;
+      /* 테두리 둥글게 처리 */
+      box-sizing: border-box;
+      /* padding 포함한 전체 크기 설정 */
+      height: 150px;
+      /* 높이 고정 */
+      resize: none;
+      /* 크기 조절 불가 */
       font-size: 15px;
       font-weight: 400;
-      outline: none; /* 포커스 시 외곽선 제거 */
+      outline: none;
+      /* 포커스 시 외곽선 제거 */
     }
 
     .memo-btn {
-      width: 100%; /* 가로 폭을 100%로 설정 */
-      padding: 10px; /* 안쪽 여백 */
-      font-size: 16px; /* 글씨 크기 */
+      width: 100%;
+      /* 가로 폭을 100%로 설정 */
+      padding: 10px;
+      /* 안쪽 여백 */
+      font-size: 16px;
+      /* 글씨 크기 */
       background-color: #d3d3d3;
-      color: white; /* 텍스트 색상 */
-      cursor: pointer; /* 마우스 커서를 포인터로 변경 */
-      border-radius: 7px; /* 테두리 둥글게 처리 */
-      text-align: center; /* 텍스트 가운데 정렬 */
+      color: white;
+      /* 텍스트 색상 */
+      cursor: pointer;
+      /* 마우스 커서를 포인터로 변경 */
+      border-radius: 7px;
+      /* 테두리 둥글게 처리 */
+      text-align: center;
+      /* 텍스트 가운데 정렬 */
       box-sizing: border-box;
-      height: 55px; /* 높이 고정 */
+      height: 55px;
+      /* 높이 고정 */
       cursor: not-allowed;
       transition: background-color 0.3s;
     }
 
     .memo-btn.active {
-        background-color: rgba(0, 184, 169, 1);
-        cursor: pointer;
-      }
-    </style>
+      background-color: rgba(0, 184, 169, 1);
+      cursor: pointer;
+    }
+  </style>
 
-  </head>
-  <body class="flex justify-center items-center bg-gray-100 h-screen">
-    <div class="relative bg-white w-full max-w-[390px] h-[844px] overflow-hidden">
-     <script>
+</head>
+
+<body class="flex justify-center items-center bg-gray-100 h-screen">
+  <div class="relative bg-white w-full max-w-[390px] h-[844px] overflow-hidden">
+    <script>
       function openMemoPage() {
-      // 새 창 열기 (메모 페이지로 이동)
-      window.location.href = "memo.html";
+        // 새 창 열기 (메모 페이지로 이동)
+        window.location.href = "memo.html";
       }
-     </script>
-    <button
-    onclick="openMemoPage()"
-    class="absolute top-24 left-5 w-6 h-6">
-    <span class="material-symbols-rounded">arrow_back_ios</span>
+    </script>
+    <button onclick="openMemoPage()" class="absolute top-24 left-5 w-6 h-6">
+      <span class="material-symbols-rounded">arrow_back_ios</span>
     </button>
     <span class="absolute top-24 left-1/2 transform -translate-x-1/2 text-lg font-semibold ">메모</span>
-            <span class="absolute absolute-position" style="top: 190px; left: 29px; font-size: 15px; font-weight: bold;">제목</span>
-            <div class="memo-input-container">
-            <input id="memoTitle" type="text" class="memo-title" placeholder="메모 제목">
-            <span class="absolute absolute-position" style="top: 75px; left: 1px; font-size: 15px; font-weight: bold;">내용</span>
-            <textarea id="memoContent" class="memo-content" placeholder="메모 내용을 입력하세요"></textarea>
-            <button id="memoBtn" class="memo-btn">메모 추가</button>
-          </div>
-          <script>
-          
-            // 제목과 내용 입력 감지
-            const titleInput = document.getElementById("memoTitle");
-            const contentInput = document.getElementById("memoContent");
-            const memoBtn = document.getElementById("memoBtn");
-          
-            function updateButtonState() {
-              // 제목과 내용이 비어있지 않으면 버튼 활성화
-              if (titleInput.value.trim() && contentInput.value.trim()) {
-                memoBtn.classList.add("active");
-                memoBtn.disabled = false;  // 버튼 활성화
-                memoBtn.onclick = addMemo;  // 버튼 클릭 시 addMemo 함수 호출
-              } else {
-                memoBtn.classList.remove("active");
-                memoBtn.disabled = true;  // 버튼 비활성화
-                memoBtn.onclick = null;   // 비활성화 상태에서는 클릭 이벤트 제거
-              }
-            }
-            
-          
-            function addMemo() {
-              const memoTitle = document.querySelector('.memo-title').value;
-              const memoContent = document.querySelector('.memo-content').value;
-          
-              if (!memoTitle || !memoContent) {
-                alert("제목과 내용을 입력해주세요!");
-                return;
-              }
+    <span class="absolute absolute-position"
+      style="top: 190px; left: 29px; font-size: 15px; font-weight: bold;">제목</span>
+    <div class="memo-input-container">
+      <input id="memoTitle" type="text" class="memo-title" placeholder="메모 제목">
+      <span class="absolute absolute-position"
+        style="top: 75px; left: 1px; font-size: 15px; font-weight: bold;">내용</span>
+      <textarea id="memoContent" class="memo-content" placeholder="메모 내용을 입력하세요"></textarea>
+      <button id="memoBtn" class="memo-btn">메모 추가</button>
+    </div>
+    <script>
 
-              const newMemo = {
-              id: Date.now(),
-              title: memoTitle,
-              content: memoContent,
-              date: new Date().toLocaleDateString()
-              };
-              
+      // 제목과 내용 입력 감지
+      const titleInput = document.getElementById("memoTitle");
+      const contentInput = document.getElementById("memoContent");
+      const memoBtn = document.getElementById("memoBtn");
 
-              let memos = JSON.parse(localStorage.getItem('memos')) || [];
-              memos.push(newMemo);
-              localStorage.setItem('memos', JSON.stringify(memos));
-          
-              // 메모 추가 후 페이지 이동
-              openMemoPage();
-            }
-
-            
-          
-            // 입력 이벤트 리스너 추가
-            titleInput.addEventListener("input", updateButtonState);
-            contentInput.addEventListener("input", updateButtonState);
-          </script>
+      function updateButtonState() {
+        // 제목과 내용이 비어있지 않으면 버튼 활성화
+        if (titleInput.value.trim() && contentInput.value.trim()) {
+          memoBtn.classList.add("active");
+          memoBtn.disabled = false;  // 버튼 활성화
+          memoBtn.onclick = addMemo;  // 버튼 클릭 시 addMemo 함수 호출
+        } else {
+          memoBtn.classList.remove("active");
+          memoBtn.disabled = true;  // 버튼 비활성화
+          memoBtn.onclick = null;   // 비활성화 상태에서는 클릭 이벤트 제거
+        }
+      }
 
 
+      async function addMemo() {
+        const memoTitle = document.querySelector('#memo-title').value;
+        const memoContent = document.querySelector('#memo-content').value;
 
-<!-- 
+        if (!memoTitle || !memoContent) {
+          alert('제목과 내용을 모두 입력해주세요');
+          return;
+        }
+
+        try {
+          const response = await fetch('/add-note', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: memoTitle, contents: memoContent }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            alert('메모가 성공적으로 추가되었습니다');
+            // 입력 필드 비우기
+            document.querySelector('#memo-title').value = '';
+            document.querySelector('#memo-content').value = '';
+          } else {
+            alert(`메모 추가 실패: ${result.message}`);
+          }
+        } catch (error) {
+          console.error('메모 추가 중 문제가 발생했습니다', error);
+          alert('메모 추가 중 문제가 발생했습니다');
+        }
+      }
+
+
+
+
+      // 입력 이벤트 리스너 추가
+      titleInput.addEventListener("input", updateButtonState);
+      contentInput.addEventListener("input", updateButtonState);
+    </script>
+
+
+
+    <!-- 
 
       하단 영역 (캘린더)
     <div class="absolute bottom-0 left-0 w-full max-w-[390px] h-[78px] bg-white border-t border-gray-200 flex items-center justify-around">
@@ -180,6 +220,6 @@
             <p class="text-xs">목표 설정</p>
         </div>
     </div> -->
-    </body>
-    </html>
-    
+</body>
+
+</html>
