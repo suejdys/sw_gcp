@@ -229,55 +229,66 @@ app.get('/get-graph', (req, res) => {
   
 
 // 날짜와 몸무게 저장 또는 수정 API
-app.post('/save-weight', (req, res) => {
-    if (!req.session.username) {
-        return res.status(401).json({ message: '로그인이 필요합니다.' });
+app.get('/get-graph', (req, res) => {
+    if (!req.session || !req.session.username) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
     }
-
-    const { date, weight } = req.body;
-
-    // username을 통해 userId를 조회
-    const query = 'SELECT id FROM users WHERE username = ? ';
-    db.query(query, [req.session.username], (err, results) => {
-        if (err || results.length === 0) {
-            console.error(err || 'User not found');
-            return res.status(500).json({ message: '사용자를 찾을 수 없습니다.' });
+  
+    const queryUserId = 'SELECT id FROM users WHERE username = ?';
+    db.query(queryUserId, [req.session.username], (err, userResults) => {
+      if (err || userResults.length === 0) {
+        console.error(err || '사용자를 찾을 수 없습니다.');
+        return res.status(500).json({ message: '사용자 조회 실패' });
+      }
+  
+      const userId = userResults[0].id;
+  
+      const queryGraphData = `SELECT date, weight FROM DateWeight WHERE user_id = ?`;
+      db.query(queryGraphData, [userId], (err, weightResults) => {
+        if (err) {
+          console.error('데이터 조회 중 에러', err);
+          return res.status(500).json({ message: '데이터 조회 실패' });
         }
-
-        const userId = results[0].id; // 조회된 user_id
-
-        // DateWeight 테이블에서 해당 userId와 date로 이미 존재하는지 확인
-        const checkQuery = 'SELECT * FROM DateWeight WHERE user_id = ? AND date = ?';
-        db.query(checkQuery, [userId, date], (err, existingRecord) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ message: '데이터 조회 중 오류가 발생했습니다.', error: err });
-            }
-
-            if (existingRecord.length > 0) {
-                // 기존 기록이 있으면 UPDATE
-                const updateQuery = 'UPDATE DateWeight SET weight = ? WHERE user_id = ? AND date = ?';
-                db.query(updateQuery, [weight, userId, date], (err, result) => {
-                    if (err) {
-                        console.error(err);
-                        return res.status(500).json({ message: '데이터 업데이트 중 오류가 발생했습니다.', error: err });
-                    }
-                    return res.status(200).json({ message: '저장 성공' });
-                });
-            } else {
-                // 기존 기록이 없으면 INSERT
-                const insertQuery = 'INSERT INTO DateWeight (user_id, date, weight) VALUES (?, ?, ?)';
-                db.query(insertQuery, [userId, date, weight], (err, result) => {
-                    if (err) {
-                        console.error(err);
-                        return res.status(500).json({ message: '데이터 저장 중 오류가 발생했습니다.', error: err });
-                    }
-                    return res.status(200).json({ message: '저장 성공' });
-                });
-            }
+  
+        console.log('Weight results from DB:', weightResults);
+  
+        const cleanedWeightResults = weightResults.map(row => ({
+          date: row.date.toISOString().split('T')[0], 
+          weight: row.weight,
+        }));
+  
+        const today = new Date();
+        const dayOfWeek = today.getDay();
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+  
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+  
+        const weekDates = [];
+        for (let d = new Date(startOfWeek); d <= endOfWeek; d.setDate(d.getDate() + 1)) {
+          let adjustedDate = new Date(d);
+          adjustedDate.setDate(d.getDate() + 1); // 날짜 값에 +1 추가
+          weekDates.push(adjustedDate.toISOString().split('T')[0]);
+        }
+  
+        console.log('Adjusted Week Dates to Compare:', weekDates);
+  
+        const result = weekDates.map(date => {
+          const weightForDate = cleanedWeightResults.find(w => w.date === date);
+          return {
+            date,
+            weight: weightForDate ? weightForDate.weight : 0,
+          };
         });
+  
+        console.log('Final Weekly Data:', result);
+  
+        return res.status(200).json({ date: weekDates, weight: result.map(r => r.weight) });
+      });
     });
-});
+  });
+  
 
 
 // 날짜별 몸무게와 목표 대비 차이 조회
