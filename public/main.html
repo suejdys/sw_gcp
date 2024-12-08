@@ -91,7 +91,7 @@
     document.addEventListener('DOMContentLoaded', function () {
       // 오늘 날짜 가져오기
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형태로 변환
+      const todayStr = today.toLocaleDateString('ko-KR'); // 한국 시간대로 오늘 날짜 출력 (yyyy-mm-dd 형식)
 
       // fetchWeight 함수 호출
       fetchWeight(todayStr);

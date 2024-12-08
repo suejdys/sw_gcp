@@ -37,6 +37,15 @@
       font-size: 18px;
       color: #555;
     }
+
+    #update-weight {
+      margin-top: 20px;
+    }
+
+    input {
+      padding: 8px;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
@@ -50,8 +59,16 @@
     <canvas id="weightChart"></canvas>
   </div>
 
+  <!-- 몸무게 수정 입력 -->
+  <div id="update-weight">
+    <label for="new-weight">새로운 몸무게:</label>
+    <input type="number" id="new-weight" placeholder="새 몸무게 입력" step="0.1">
+    <button onclick="updateWeight()">수정</button>
+  </div>
+
   <script>
     let chartInstance;
+    let targetWeight;
 
     // 목표 몸무게 조회
     async function fetchTargetWeight() {
@@ -71,7 +88,7 @@
         const data = await response.json();
 
         if (response.ok) {
-          const targetWeight = data.targetWeight;
+          targetWeight = data.targetWeight;
           if (targetWeight === null) {
             document.getElementById('target-weight').innerText = '목표 몸무게가 설정되지 않았습니다';
           } else {
@@ -85,42 +102,22 @@
       }
     }
 
-    // 체중 그래프 데이터 가져오기 (오늘 날짜 포함 1주일)
+    // 체중 그래프 데이터 가져오기 (오늘 날짜만 전송)
     async function fetchGraphData() {
       const today = new Date();
-      const formattedToday = today.toLocaleDateString('ko-KR'); // 한국 시간대로 오늘 날짜 출력 (yyyy-mm-dd 형식)
-      console.log(formattedToday)
-      const dates = [];
-      const weights = [];
-      const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
-
-      // 7일 동안 날짜 생성
-      for (let i = 6; i >= 0; i--) {
-        const date = new Date(today);
-        date.setDate(today.getDate() - i); // 오늘을 포함한 7일
-        dates.push(date.toLocaleDateString('ko-KR'));  // yyyy-mm-dd 형식으로 로컬 시간대 기준 날짜 추가
-
-      }
+      const formattedDate = today.toISOString().split('T')[0]; // 오늘 날짜 가져오기
 
       try {
-        // 날짜를 서버로 전송
-        const response = await fetch(`/get-graph?date=${formattedToday}`);
+        const response = await fetch(`/get-graph?date=${formattedDate}`);
         const data = await response.json();
 
         if (response.ok) {
-          // 체중 데이터 가져오기
-          data.forEach(item => {
-            weights.push(item.weight);
-          });
+          const weights = data.map(item => item.weight);
 
-          // 날짜 + 요일 추가
-          const labels = dates.map((dateStr, index) => {
-            const date = new Date(dateStr);
-            const day = daysOfWeek[date.getDay()];
-            return `${dateStr} (${day})`;
-          });
+          const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
+          const label = `${formattedDate} (${daysOfWeek[today.getDay()]})`;
 
-          renderGraph(labels, weights);  // 날짜와 체중 데이터를 그래프에 전달
+          renderGraph([label], weights); // 그래프 새로 그리기
         } else {
           alert('그래프 데이터를 가져오지 못했습니다.');
         }
@@ -153,7 +150,7 @@
             },
             {
               label: '목표 몸무게 (kg)',
-              data: Array(data.length).fill(parseFloat(document.getElementById('target-weight').innerText.split(' ')[2] || 0)), // 목표 몸무게로 채우기
+              data: Array(data.length).fill(targetWeight || 0), // 목표 몸무게로 채우기
               borderColor: 'rgba(255, 99, 132, 1)',
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
               borderWidth: 2,
@@ -188,6 +185,36 @@
           },
         },
       });
+    }
+
+    // 몸무게 수정 함수
+    async function updateWeight() {
+      const newWeight = parseFloat(document.getElementById('new-weight').value);
+
+      if (isNaN(newWeight)) {
+        alert('유효한 몸무게를 입력하세요.');
+        return;
+      }
+
+      try {
+        // DB에 새로운 몸무게 저장 요청
+        const response = await fetch('/update-weight', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ weight: newWeight }),
+        });
+
+        if (response.ok) {
+          console.log('몸무게가 성공적으로 수정되었습니다.');
+          
+          // 몸무게 수정 후 그래프 데이터를 새로 불러오기
+          fetchGraphData();
+        } else {
+          alert('몸무게 수정에 실패했습니다.');
+        }
+      } catch (error) {
+        console.error('몸무게 수정 중 오류 발생:', error);
+      }
     }
 
     // 페이지 로드 시 목표 몸무게 조회 및 그래프 데이터 가져오기
