@@ -295,6 +295,33 @@ db.query(query, [targetWeight, req.session.username], (err, result) => {
 });
 });
 
+// 목표 몸무게 조회 API
+app.get("/get-target-weight", (req, res) => {
+  // 로그인 여부 확인
+  if (!req.session.username) {
+    return res.status(401).json({ message: "로그인이 필요합니다" });
+  }
+
+  const query = "SELECT target_weight FROM users WHERE username = ?";
+  db.query(query, [req.session.username], (err, results) => {
+    if (err) {
+      return res.status(500).json({ message: "Error fetching target weight", error: err });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const targetWeight = results[0].target_weight;
+
+    if (targetWeight === null) {
+      return res.status(200).json({ message: "목표 몸무게가 설정되지 않았습니다", targetWeight: null });
+    }
+
+    res.status(200).json({ targetWeight });
+  });
+});
+
 // 날짜별 몸무게와 목표 대비 차이 조회
 app.get('/get-weight', (req, res) => {
     const { date } = req.query; // 클라이언트에서 날짜 전달받음
