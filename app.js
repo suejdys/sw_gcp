@@ -169,7 +169,7 @@ app.get('/get-graph', (req, res) => {
     }
   
     const requestedDate = req.query.date; // 요청된 날짜
-    console.log(`요청된 날짜: ${requestedDate}`); // 요청된 날짜 콘솔 출력
+    console.log(`요청된 날짜: ${requestedDate}`);
     const endDate = new Date(requestedDate); // 요청된 날짜를 종료일로 설정
     const startDate = new Date(endDate); // 시작일은 종료일로 설정
     startDate.setDate(startDate.getDate() - 6); // 1주일 전 날짜 계산 (6일 전)
@@ -188,10 +188,7 @@ app.get('/get-graph', (req, res) => {
       console.log(`사용자 ID: ${userId}`);
   
       // 날짜 범위에 대한 쿼리
-      const queryGraphData = `
-        SELECT date, weight FROM DateWeight 
-        WHERE user_id = ? AND date BETWEEN ? AND ?
-      `;
+      const queryGraphData = `SELECT date, weight FROM DateWeight WHERE user_id = ? AND date BETWEEN ? AND ?`;
       db.query(queryGraphData, [userId, startDate.toISOString().split('T')[0], endDate.toISOString().split('T')[0]], (err, weightResults) => {
         if (err) {
           console.error('데이터 조회 중 에러', err);
@@ -200,22 +197,26 @@ app.get('/get-graph', (req, res) => {
   
         console.log(`조회된 데이터 수: ${weightResults.length}`);
   
-        // 데이터가 없을 경우 0 반환
-        if (weightResults.length === 0) {
-          console.log('데이터가 없습니다. 0 반환');
-          return res.json({ weight: 0 });
+        // 날짜 범위 내 모든 날짜를 생성
+        const result = [];
+        const currentDate = new Date(startDate);
+        while (currentDate <= endDate) {
+          const dateString = currentDate.toISOString().split('T')[0];
+          const weightData = weightResults.find(result => result.date === dateString);
+          if (weightData) {
+            result.push({ date: dateString, weight: weightData.weight });
+          } else {
+            result.push({ date: dateString, weight: 0 }); // 데이터가 없으면 0으로 채움
+          }
+          currentDate.setDate(currentDate.getDate() + 1); // 하루씩 증가
         }
   
-        // 결과 반환
-        console.log('조회된 데이터:', weightResults);
-        return res.json(weightResults);
+        // 최종 결과 반환
+        console.log('최종 결과:', result);
+        return res.json(result);
       });
     });
   });
-  
-  
-
-  
   
 
 // 날짜와 몸무게 저장 또는 수정 API
