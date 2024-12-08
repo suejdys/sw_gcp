@@ -37,15 +37,6 @@
       font-size: 18px;
       color: #555;
     }
-
-    #update-weight {
-      margin-top: 20px;
-    }
-
-    input {
-      padding: 8px;
-      font-size: 16px;
-    }
   </style>
 </head>
 <body>
@@ -59,16 +50,9 @@
     <canvas id="weightChart"></canvas>
   </div>
 
-  <!-- 몸무게 수정 입력 -->
-  <div id="update-weight">
-    <label for="new-weight">새로운 몸무게:</label>
-    <input type="number" id="new-weight" placeholder="새 몸무게 입력" step="0.1">
-    <button onclick="updateWeight()">수정</button>
-  </div>
-
   <script>
     let chartInstance;
-    let targetWeight;
+    let targetWeight = null;
 
     // 목표 몸무게 조회
     async function fetchTargetWeight() {
@@ -187,33 +171,22 @@
       });
     }
 
-    // 몸무게 수정 함수
-    async function updateWeight() {
-      const newWeight = parseFloat(document.getElementById('new-weight').value);
-
-      if (isNaN(newWeight)) {
-        alert('유효한 몸무게를 입력하세요.');
-        return;
-      }
-
+    // 서버에서 수정된 데이터를 가져와 그래프 업데이트
+    async function updateGraphAfterCalendarEdit() {
       try {
-        // DB에 새로운 몸무게 저장 요청
-        const response = await fetch('/update-weight', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ weight: newWeight }),
-        });
+        const response = await fetch(`/get-graph?date=${new Date().toISOString().split('T')[0]}`); // 수정된 날짜의 데이터 불러오기
 
         if (response.ok) {
-          console.log('몸무게가 성공적으로 수정되었습니다.');
-          
-          // 몸무게 수정 후 그래프 데이터를 새로 불러오기
-          fetchGraphData();
+          const data = await response.json();
+
+          // 데이터가 수정된 이후 그래프를 업데이트
+          const weights = data.map(item => item.weight);
+          renderGraph([formattedDate], weights);
         } else {
-          alert('몸무게 수정에 실패했습니다.');
+          console.error('데이터를 불러오는 데 실패했습니다.');
         }
       } catch (error) {
-        console.error('몸무게 수정 중 오류 발생:', error);
+        console.error('그래프 데이터 불러오는 중 오류 발생:', error);
       }
     }
 
