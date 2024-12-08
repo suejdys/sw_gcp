@@ -82,7 +82,9 @@ app.post('/add-note', (req, res) => {
         
         db.query(insertQuery, [userId, title, contents], (err, result) => {
             if (err) {
+                console.error('Error during INSERT query:', err); // 메모 추가 오류 로그
                 return res.status(500).json({ message: 'Error adding note', error: err });
+                
             }
             return res.status(200).json({ message: 'Note added successfully' });
         });
