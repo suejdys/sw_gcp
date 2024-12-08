@@ -189,7 +189,7 @@ app.get('/get-graph', (req, res) => {
       const startOfWeek = new Date(inputDate);
       startOfWeek.setDate(inputDate.getDate() - inputDate.getDay());
       const endOfWeek = new Date(startOfWeek);
-      endOfWeek.setDate(startOfWeek.getDate() + 6);
+      endOfWeek.setDate(startOfWeek.getDate() + 7);
   
       // DB에서 해당 주의 데이터 조회
       const queryGraphData = `SELECT date, weight FROM DateWeight WHERE user_id = ? AND date BETWEEN ? AND ?`;
