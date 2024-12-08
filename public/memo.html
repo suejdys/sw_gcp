@@ -1,341 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>메모 설정</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+    <style>
+      .memo-title {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+      }
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
-  <title>Memo App</title>
+      .memo-content {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        height: 100px;
+      }
 
-  <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f7fafc;
-    }
+      .memo-btn {
+        padding: 10px;
+        cursor: pointer;
+        background-color: teal;
+        color: white;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
 
-    .main {
-      width: 100%;
-      max-width: 390px;
-      height: 844px;
-      background-color: white;
-      padding: 20px;
-      box-sizing: border-box;
-      position: relative;
-      overflow: auto;
-    }
+      .memo-btn:hover {
+        background-color: darkcyan;
+      }
+    </style>
+  </head>
 
-    .add-button {
-      position: absolute;
-      top: 700px;
-      left: 320px;
-      width: 48px;
-      height: 48px;
-      background-color: #4a5568;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-    }
+  <body class="flex justify-center items-center bg-gray-100 h-screen">
+    <div class="relative bg-white w-[500px] max-w-[90%] h-[600px] overflow-hidden p-4">
+      <h1 class="text-2xl font-semibold mb-4">메모 기능</h1>
 
-    .add-button:hover {
-      background-color: #a9a9a9;
-    }
-
-    .memo-list {
-      margin-top: 140px;
-      /* 원하는 만큼 아래로 내리기 */
-      max-height: calc(100vh - 170px);
-      /* 화면 높이에 맞춰 최대 높이 설정 */
-      overflow-y: auto;
-      /* 세로 스크롤 */
-      overflow-x: hidden;
-    }
-
-    *::-webkit-scrollbar {
-      display: none;
-    }
-
-    .memo-list article {
-      margin: 0 10px 15px;
-      /* 좌우 마진을 5px로 설정 */
-      padding: 20px;
-      border-radius: 15px;
-      min-height: 100px;
-      /* 최소 높이를 설정 */
-    }
-
-    .memo-list h2,
-    .memo-list span,
-    .memo-list p {
-      margin: 0;
-    }
-
-    .memo-list button {
-      margin-right: 5px;
-      border-radius: 7px;
-      border-color: none;
-    }
-
-    /* 하단 아이콘 영역 */
-    .bottom-icons {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      max-width: 390px;
-      height: 78px;
-      background-color: white;
-      border-top: 1px solid #e5e7eb;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-    }
-
-    .icon-button {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #6b7280;
-      /* text-gray-500에 해당하는 색상 */
-      text-align: center;
-      justify-content: center;
-      /* 세로로 중앙 정렬 */
-    }
-
-    .icon-button.active {
-      color: #319795;
-      /* text-teal-600 색상 */
-    }
-
-    .icon-button button {
-      width: 44px;
-      height: 44px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      background-color: transparent;
-      /* 배경을 투명으로 설정 */
-      border: none;
-      /* 테두리 제거 */
-      color: inherit;
-      /* 부모 색상 상속 */
-      outline: none;
-      /* 포커스 스타일 제거 */
-      margin: 0;
-      /* 버튼에 기본 마진 제거 */
-      transform: translateY(4px);
-      /* 아이콘을 아래로 내리기 위해 추가 */
-    }
-
-    .icon-button p {
-      font-size: 12px !important;
-      margin-top: 4px;
-    }
-
-    .memo-header {
-      position: relative;
-      /* 위치를 기준으로 조정 */
-      top: 100px;
-      /* 텍스트를 위로 이동 */
-      left: 8px;
-      font-weight: bold;
-      /* 강조 */
-    }
-
-    .memo-header p {
-      font-size: 25px;
-      /* 텍스트 크기 */
-      color: #2d3748;
-      /* 어두운 회색 텍스트 색상 */
-    }
-  </style>
-</head>
-
-<body>
-  <div class="main">
-    <div class="memo-header">
-      <p>메모장</p>
-    </div>
-    <!-- 메모 리스트 -->
-    <div class="memo-list"></div>
-    <!-- 추가 버튼 -->
-    <button class="add-button" onclick="openMemoSettingPage()">
-      <span class="material-symbols-rounded">add</span>
-    </button>
-
-    <!-- 하단 아이콘 영역 -->
-    <div class="bottom-icons">
-      <!-- 그래프 아이콘 -->
-      <div class="icon-button">
-        <button>
-          <span class="material-symbols-rounded">show_chart</span>
-        </button>
-        <p>그래프</p>
+      <!-- 메모 추가 영역 -->
+      <div>
+        <h3 class="text-lg font-semibold mb-2">새 메모 추가</h3>
+        <input id="memoTitle" class="memo-title" placeholder="메모 제목 입력" />
+        <textarea id="memoContent" class="memo-content" placeholder="내용 입력"></textarea>
+        <button id="memoBtn" class="memo-btn" onclick="addMemo()">메모 추가</button>
       </div>
 
-      <!-- 캘린더 아이콘 -->
-      <div class="icon-button">
-        <button>
-          <span class="material-symbols-rounded">calendar_month</span>
-        </button>
-        <p>캘린더</p>
-      </div>
+      <hr class="my-4">
 
-      <!-- 메모장 아이콘 -->
-      <div class="icon-button active">
-        <button>
-          <span class="material-symbols-rounded">description</span>
-        </button>
-        <p>메모장</p>
-      </div>
-
-      <!-- 목표 설정 아이콘 -->
-      <div class="icon-button">
-        <button>
-          <span class="material-symbols-rounded">person</span>
-        </button>
-        <p>목표 설정</p>
+      <!-- 노트 목록 영역 -->
+      <div>
+        <h3 class="text-lg font-semibold mb-2">저장된 메모 목록</h3>
+        <div id="notesContainer" class="space-y-2"></div>
       </div>
     </div>
-  </div>
 
-
-  <script>
-    const memoList = document.querySelector('.memo-list');
-
-    // 메모 가져오기
-    async function fetchMemos() {
-      try {
-        const response = await fetch('/get-notes', {
-          method: 'GET',
-          credentials: 'include',
-        });
-        if (response.ok) {
-          const memos = await response.json();
-          setMemo(memos);
-          alert('메모를 성공적으로 불러왔습니다.');
-        } else {
-          const error = await response.json();
-          alert(`메모를 불러오는 데 실패했습니다: ${error.message}`);
+    <script>
+      // 메모 목록 로드
+      async function loadNotes() {
+        try {
+          const response = await fetch('/get-notes');
+          const data = await response.json();
+          renderNotes(data);
+        } catch (error) {
+          alert('메모를 불러오는 중 오류가 발생했습니다');
+          console.error(error);
         }
-      } catch (error) {
-        alert('서버에 연결할 수 없습니다.');
-        console.error('Error fetching memos:', error);
       }
-    }
 
-    // 메모 UI 업데이트
-    function setMemo(memos) {
-      memoList.innerHTML = '';
-      const colors = ['#FE9B72', '#FDC771', '#E1EC8C', '#80DEEA', '#CF93D9'];
-      memos.slice().reverse().forEach((memo, index) => {
-        const article = document.createElement('article');
-        article.setAttribute('data-id', memo.id);
-        article.style.backgroundColor = colors[index % colors.length];
+      // 메모를 화면에 렌더링
+      function renderNotes(notes) {
+        const container = document.getElementById('notesContainer');
+        container.innerHTML = ''; // 기존 데이터 제거
 
-        const date = document.createElement('span');
-        date.textContent = new Date(memo.created_at).toLocaleString();
-
-        const title = document.createElement('h2');
-        title.textContent = memo.title;
-
-        const content = document.createElement('p');
-        content.textContent = memo.contents;
-
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = '삭제';
-        deleteBtn.addEventListener('click', () => deleteMemo(memo.id));
-
-        const editBtn = document.createElement('button');
-        editBtn.textContent = '수정';
-        editBtn.addEventListener('click', () => editMemo(memo));
-
-        article.append(date, title, content, editBtn, deleteBtn);
-        memoList.append(article);
-      });
-    }
-
-    // 메모 추가
-    async function addMemo(title, contents) {
-      try {
-        const response = await fetch('/add-note', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ title, contents }),
+        notes.forEach(memo => {
+          const memoEl = document.createElement('div');
+          memoEl.innerHTML = `
+            <div class="border p-3 bg-gray-50 rounded-md">
+              <h4 class="text-lg font-bold">${memo.title}</h4>
+              <p class="text-sm mb-2">${memo.contents}</p>
+              <div class="flex gap-2">
+                <button class="memo-btn" onclick="editMemo('${memo.id}', '${memo.title}', '${memo.contents}')">수정</button>
+                <button class="memo-btn" onclick="deleteMemo('${memo.id}')">삭제</button>
+              </div>
+            </div>
+          `;
+          container.appendChild(memoEl);
         });
-        const result = await response.json();
-        alert(result.message);
-        if (response.ok) fetchMemos(); // 추가 후 메모 목록 갱신
-      } catch (error) {
-        alert('메모 추가 중 오류가 발생했습니다.');
-        console.error('Error adding memo:', error);
-      }
-    }
-
-    // 메모 삭제
-    async function deleteMemo(id) {
-      try {
-        const response = await fetch(`/delete-note/${id}`, {
-          method: 'DELETE',
-          credentials: 'include',
-        });
-        const result = await response.json();
-        alert(result.message);
-        if (response.ok) fetchMemos(); // 삭제 후 메모 목록 갱신
-      } catch (error) {
-        alert('메모 삭제 중 오류가 발생했습니다.');
-        console.error('Error deleting memo:', error);
-      }
-    }
-
-    // 메모 수정
-    async function editMemo(memo) {
-      const newTitle = prompt('새 제목을 입력하세요:', memo.title);
-      const newContent = prompt('새 내용을 입력하세요:', memo.contents);
-
-      if (!newTitle || !newContent) {
-        alert('제목과 내용을 모두 입력해야 합니다.');
-        return;
       }
 
-      try {
-        const response = await fetch(`/update-notes/${memo.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ title: newTitle, content: newContent }),
-        });
-        const result = await response.json();
-        alert(result.message);
-        if (response.ok) fetchMemos(); // 수정 후 메모 목록 갱신
-      } catch (error) {
-        alert('메모 수정 중 오류가 발생했습니다.');
-        console.error('Error editing memo:', error);
+      // 메모 추가
+      async function addMemo() {
+        const title = document.getElementById('memoTitle').value.trim();
+        const content = document.getElementById('memoContent').value.trim();
+
+        if (!title || !content) {
+          alert('제목과 내용을 입력하세요');
+          return;
+        }
+
+        try {
+          const response = await fetch('/add-note', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, contents: content })
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            alert(result.message);
+            document.getElementById('memoTitle').value = '';
+            document.getElementById('memoContent').value = '';
+            loadNotes();
+          } else {
+            alert(result.message);
+          }
+        } catch (error) {
+          console.error('메모 추가 실패', error);
+          alert('메모 추가 중 오류');
+        }
       }
-    }
 
-    // 페이지 로드 시 메모 불러오기
-    window.onload = () => {
-      alert('메모 목록을 불러옵니다.');
-      fetchMemos();
-    };
-  </script>
+      // 메모 삭제
+      async function deleteMemo(id) {
+        try {
+          const response = await fetch(`/delete-note/${id}`, { method: 'DELETE' });
 
+          const result = await response.json();
+          if (response.ok) {
+            alert(result.message);
+            loadNotes();
+          } else {
+            alert('메모 삭제 중 실패');
+          }
+        } catch (error) {
+          alert('메모 삭제 중 오류');
+          console.error('삭제 실패', error);
+        }
+      }
 
-</body>
+      // 메모 수정
+      async function editMemo(id, title, content) {
+        const newTitle = prompt('새 제목을 입력하세요', title);
+        const newContent = prompt('새 내용을 입력하세요', content);
 
+        if (!newTitle || !newContent) return;
+
+        try {
+          const response = await fetch(`/update-notes/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: newTitle, content: newContent })
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            alert(result.message);
+            loadNotes();
+          } else {
+            alert('메모 수정 실패');
+          }
+        } catch (error) {
+          console.error('수정 중 오류', error);
+          alert('수정 중 오류');
+        }
+      }
+
+      // 페이지 로드 시 메모 목록 불러오기
+      window.onload = loadNotes;
+    </script>
+  </body>
 </html>
