@@ -168,12 +168,6 @@ app.get('/get-graph', (req, res) => {
       return res.status(401).json({ message: '로그인이 필요합니다.' });
     }
   
-    // 클라이언트에서 보낸 날짜 데이터 확인
-    const { date } = req.query;
-    if (!date) {
-      return res.status(400).json({ message: '날짜 데이터가 필요합니다.' });
-    }
-  
     // DB에서 사용자ID 조회
     const queryUserId = 'SELECT id FROM users WHERE username = ?';
     db.query(queryUserId, [req.session.username], (err, userResults) => {
@@ -184,12 +178,14 @@ app.get('/get-graph', (req, res) => {
   
       const userId = userResults[0].id; // userId 가져오기
   
-      // 주의 시작일(일요일)과 종료일(토요일) 계산
-      const inputDate = new Date(date);
-      const startOfWeek = new Date(inputDate);
-      startOfWeek.setDate(inputDate.getDate() - inputDate.getDay());
+      // 오늘 날짜를 기준으로 주간 범위를 계산
+      const today = new Date();
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - today.getDay() + 1); // 오늘 기준으로 월요일
       const endOfWeek = new Date(startOfWeek);
-      endOfWeek.setDate(startOfWeek.getDate() + 7);
+      endOfWeek.setDate(startOfWeek.getDate() + 6); // 일요일까지
+  
+      console.log("주간 범위 시작일:", startOfWeek, "종료일:", endOfWeek);
   
       // DB에서 해당 주의 데이터 조회
       const queryGraphData = `SELECT date, weight FROM DateWeight WHERE user_id = ? AND date BETWEEN ? AND ?`;
@@ -213,7 +209,7 @@ app.get('/get-graph', (req, res) => {
           const weights = [];
           const allDatesInWeek = [];
   
-          // 주간 날짜 범위 초기화 (일요일 ~ 토요일까지)
+          // 주간 날짜 범위 초기화 (월요일 ~ 일요일까지)
           for (let d = new Date(startOfWeek); d <= endOfWeek; d.setDate(d.getDate() + 1)) {
             const formattedDate = d.toISOString().split('T')[0];
             allDatesInWeek.push(formattedDate);
@@ -222,7 +218,7 @@ app.get('/get-graph', (req, res) => {
           // DB에서 반환된 날짜 값의 시간 정보 제거
           const cleanedWeightResults = weightResults.map(row => ({
             date: row.date.toISOString().split('T')[0], // 시간 정보 제거
-            weight: row.weight
+            weight: row.weight,
           }));
   
           console.log('Cleaned weight data:', cleanedWeightResults);
@@ -242,6 +238,8 @@ app.get('/get-graph', (req, res) => {
       );
     });
   });
+  
+  
   
   
   
