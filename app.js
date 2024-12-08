@@ -191,7 +191,7 @@ app.get('/get-graph', (req, res) => {
       endOfWeek.setDate(startOfWeek.getDate() + 6); // 주 종료일 (토요일)
   
       // DB에서 해당 주의 데이터 조회
-      const queryGraphData = `SELECT date, weight FROM weights WHERE user_id = ? AND date BETWEEN ? AND ?`;
+      const queryGraphData = `SELECT date, DateWeight FROM weight WHERE user_id = ? AND date BETWEEN ? AND ?`;
       db.query(
         queryGraphData,
         [
