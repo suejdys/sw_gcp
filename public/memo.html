@@ -283,6 +283,9 @@
             deleteBtn.style.fontSize = '12px';
             deleteBtn.style.writingMode = 'horizontal-tb'; // 텍스트를 가로 방향으로 설정 (기본값)
             deleteBtn.style.whiteSpace = 'nowrap'; // 텍스트 줄바꿈 방지
+            deleteBtn.style.display = 'flex';
+            deleteBtn.style.justifyContent = 'center'; // 가로 중앙 정렬
+            deleteBtn.style.alignItems = 'center'; // 세로 중앙 정렬
             
 
 
@@ -301,6 +304,9 @@
             editBtn.style.fontSize = '12px';
             editBtn.style.writingMode = 'horizontal-tb'; // 텍스트를 가로 방향으로 설정 (기본값)
             editBtn.style.whiteSpace = 'nowrap'; // 텍스트 줄바꿈 방지
+            editBtn.style.display = 'flex';
+            editBtn.style.justifyContent = 'center'; // 가로 중앙 정렬
+            editBtn.style.alignItems = 'center'; // 세로 중앙 정렬
           
             article.append(date, title, content, editBtn, deleteBtn);
             memoList.append(article);
