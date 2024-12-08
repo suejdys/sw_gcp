@@ -105,7 +105,7 @@
     <script>
       function openMemoPage() {
         // 새 창 열기 (메모 페이지로 이동)
-        window.location.href = "memo.html";
+        location.href = "memo.html";
       }
     </script>
     <button onclick="openMemoPage()" class="absolute top-24 left-5 w-6 h-6">
@@ -143,10 +143,9 @@
 
 
       async function addMemo() {
-        const memoTitle = document.querySelector('#memo-title').value;
-        const memoContent = document.querySelector('#memo-content').value;
+        
 
-        if (!memoTitle || !memoContent) {
+        if (!titleInput || !contentInput) {
           alert('제목과 내용을 모두 입력해주세요');
           return;
         }
@@ -155,14 +154,14 @@
           const response = await fetch('/add-note', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: memoTitle, contents: memoContent }),
+            body: JSON.stringify({ title: titleInput, contents: contentInput }),
           });
 
           const result = await response.json();
 
           if (response.ok) {
             alert('메모가 성공적으로 추가되었습니다');
-            // 입력 필드 비우기
+            location.href = "memo.html";
             document.querySelector('#memo-title').value = '';
             document.querySelector('#memo-content').value = '';
           } else {
