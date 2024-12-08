@@ -160,6 +160,78 @@ app.post("/save-target-weight", (req, res) => {
   });
 });
 
+// 그래프 데이터 반환(클라이언트가 보낸 날짜를 기준으로 해당 주 데이터 반환)
+app.get('/get-graph', (req, res) => {
+    // 세션 확인
+    if (!req.session || !req.session.username) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
+  
+    // 클라이언트에서 보낸 날짜 데이터 확인
+    const { date } = req.query;
+    if (!date) {
+      return res.status(400).json({ message: '날짜 데이터가 필요합니다.' });
+    }
+  
+    // DB에서 사용자ID 조회
+    const queryUserId = 'SELECT id FROM users WHERE username = ?';
+    db.query(queryUserId, [req.session.username], (err, userResults) => {
+      if (err || userResults.length === 0) {
+        console.error(err || '사용자를 찾을 수 없습니다.');
+        return res.status(500).json({ message: '사용자 조회 실패' });
+      }
+  
+      const userId = userResults[0].id; // userId 가져오기
+  
+      // 주의 시작일(일요일)과 종료일(토요일) 계산
+      const inputDate = new Date(date);
+      const startOfWeek = new Date(inputDate);
+      startOfWeek.setDate(inputDate.getDate() - inputDate.getDay()); // 주 시작일 (일요일)
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6); // 주 종료일 (토요일)
+  
+      // DB에서 해당 주의 데이터 조회
+      const queryGraphData = `SELECT date, weight FROM weights WHERE user_id = ? AND date BETWEEN ? AND ?`;
+      db.query(
+        queryGraphData,
+        [
+          userId,
+          startOfWeek.toISOString().split('T')[0],
+          endOfWeek.toISOString().split('T')[0],
+        ],
+        (err, weightResults) => {
+          if (err) {
+            console.error('데이터 조회 중 에러', err);
+            return res.status(500).json({ message: '데이터 조회 실패' });
+          }
+  
+          // 체중 데이터 처리
+          const weekDates = [];
+          const weights = [];
+          const allDatesInWeek = [];
+  
+          // 주간 날짜 범위 초기화 (일요일 ~ 토요일까지)
+          for (let d = new Date(startOfWeek); d <= endOfWeek; d.setDate(d.getDate() + 1)) {
+            const formattedDate = d.toISOString().split('T')[0];
+            allDatesInWeek.push(formattedDate);
+          }
+  
+          // 클라이언트에서 반환할 weight 데이터를 매핑
+          allDatesInWeek.forEach((date) => {
+            const weightForDate = weightResults.find((w) => w.date === date);
+            weekDates.push(date);
+            weights.push(weightForDate ? weightForDate.weight : 0); // 존재하지 않는 데이터는 0 처리
+          });
+  
+          // 클라이언트 응답 반환
+          return res.status(200).json({ date: weekDates, weight: weights });
+        }
+      );
+    });
+  });
+  
+  
+
 // 날짜와 몸무게 저장 또는 수정 API
 app.post('/save-weight', (req, res) => {
     if (!req.session.username) {
