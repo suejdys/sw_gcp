@@ -86,7 +86,7 @@ app.post('/add-note', (req, res) => {
                 return res.status(500).json({ message: 'Error adding note', error: err });
                 
             }
-            return res.status(200).json({ message: 'Note added successfully' });
+            return res.status(200).json({ message: '추가 완료' });
         });
     });
 });
@@ -120,7 +120,7 @@ app.delete('/delete-note/:id', (req, res) => {
         if (err) {
             return res.status(500).json({ message: 'Error deleting note', error: err });
         }
-        res.status(200).json({ message: 'Note deleted successfully' });
+        res.status(200).json({ message: '삭제 완료' });
     });
 });
 
@@ -134,7 +134,7 @@ app.put('/update-notes/:id', (req, res) => {
       if (err) {
         res.status(500).send(err);
       } else {
-        res.status(200).send({ message: 'notes updated successfully!' });
+        res.status(200).send({ message: '수정 완료' });
       }
     });
   });

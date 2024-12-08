@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const result = await response.json();
                 if (response.ok) {
-                    alert(result.message);
+                    console.log(result.message);
                     window.location.href = '/main.html';
                 } else {
                     alert(result.message || "로그인에 실패했습니다.");
