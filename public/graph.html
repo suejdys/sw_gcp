@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>오늘 체중 그래프</title>
+  <title>주간 체중 그래프</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
@@ -40,7 +40,7 @@
   </style>
 </head>
 <body>
-  <h1>오늘 체중 그래프</h1>
+  <h1>주간 체중 그래프</h1>
 
   <!-- 목표 몸무게 -->
   <div id="target-weight">목표 몸무게: 로딩 중...</div>
@@ -52,63 +52,66 @@
 
   <script>
     let chartInstance;
+    let targetWeight;
 
     // 목표 몸무게 조회
     async function fetchTargetWeight() {
       try {
         const response = await fetch('/get-target-weight', {
           method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include', // 로그인 세션 유지
         });
 
         if (response.status === 401) {
-          window.location.href = '/';
+          window.location.href = '/'; // 401 오류 발생 시 index.html로 리디렉션
         }
 
         const data = await response.json();
 
         if (response.ok) {
-          const targetWeight = data.targetWeight;
-          document.getElementById('target-weight').innerText = targetWeight
-            ? `목표 몸무게: ${targetWeight}kg`
-            : '목표 몸무게가 설정되지 않았습니다';
+          targetWeight = data.targetWeight;
+          if (targetWeight === null) {
+            document.getElementById('target-weight').innerText = '목표 몸무게가 설정되지 않았습니다';
+          } else {
+            document.getElementById('target-weight').innerText = `목표 몸무게: ${targetWeight}kg`;
+          }
         } else {
-          console.error('Failed to fetch target weight:', data.message);
+          console.error('목표 몸무게를 가져오는 데 실패했습니다:', data.message);
         }
       } catch (error) {
         console.error('Error fetching target weight:', error);
       }
     }
 
-    // 오늘 날짜 체중 그래프 데이터 가져오기
+    // 체중 그래프 데이터 가져오기 (오늘 날짜만)
     async function fetchGraphData() {
-      const today = new Date().toLocaleDateString('ko-KR'); // 한국 시간 기준으로 오늘 날짜
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0]; // 오늘 날짜 가져오기
+      const dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"][today.getDay()];
+      const label = `${formattedDate} (${dayOfWeek})`;
 
       try {
-        // 오늘 날짜만 서버로 전송
-        const response = await fetch(`/get-graph?date=${today}`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
-
+        const response = await fetch(`/get-graph?date=${formattedDate}`);
         const data = await response.json();
 
         if (response.ok) {
-          const weights = [data.weight]; // 서버에서 받은 체중 데이터
-          const labels = [`${today}`]; // 오늘 날짜만 레이블로 표시
-          initializeGraph(labels, weights);
+          const weights = data.map(item => item.weight);
+
+          renderGraph([label], weights); // 그래프 새로 그리기
         } else {
-          alert('오늘의 그래프 데이터를 가져오지 못했습니다.');
+          alert('그래프 데이터를 가져오지 못했습니다.');
         }
       } catch (error) {
-        console.error('Error fetching graph data:', error);
+        console.error('Error fetching data:', error);
         alert('데이터를 가져오는 중 오류가 발생했습니다.');
       }
     }
 
-    // 그래프 초기화
-    function initializeGraph(labels, data) {
+    // 그래프 그리기
+    function renderGraph(labels, data) {
       const ctx = document.getElementById('weightChart').getContext('2d');
 
       if (chartInstance) {
@@ -118,7 +121,7 @@
       chartInstance = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: labels,
+          labels: labels, // 날짜 + 요일 표시
           datasets: [
             {
               label: '체중 (kg)',
@@ -128,6 +131,15 @@
               borderWidth: 2,
               tension: 0.4,
             },
+            {
+              label: '목표 몸무게 (kg)',
+              data: Array(data.length).fill(targetWeight || 0), // 목표 몸무게로 채우기
+              borderColor: 'rgba(255, 99, 132, 1)',
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderWidth: 2,
+              tension: 0.4,
+              borderDash: [5, 5],  // 점선 스타일
+            }
           ],
         },
         options: {
@@ -140,14 +152,25 @@
             },
           },
           scales: {
-            x: { title: { display: true, text: '날짜' } },
-            y: { title: { display: true, text: '체중 (kg)' }, beginAtZero: false },
+            x: {
+              title: {
+                display: true,
+                text: '날짜',
+              },
+            },
+            y: {
+              title: {
+                display: true,
+                text: '체중 (kg)',
+              },
+              beginAtZero: false,
+            },
           },
         },
       });
     }
 
-    // 페이지 로드 시 데이터 조회
+    // 페이지 로드 시 목표 몸무게 조회 및 그래프 데이터 가져오기
     fetchTargetWeight();
     fetchGraphData();
   </script>
