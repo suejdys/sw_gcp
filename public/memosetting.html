@@ -163,7 +163,7 @@
             alert('메모가 성공적으로 추가되었습니다');
             location.href = "memo.html";
           } else {
-            alert(`메모 추가 실패: ${result}`);
+            alert(`메모 추가 실패: ${result.error}`);
           }
         } catch (error) {
           console.error('메모 추가 중 문제가 발생했습니다', error);
