@@ -280,6 +280,8 @@
             deleteBtn.style.bottom = '4px'; // 현재 위치에서 아래로 10px
             deleteBtn.style.border = '2px solid black'; // 2px, 실선, 검은색
             deleteBtn.style.borderRadius = '7px'; // 둥근 모서리
+            deleteBtn.style.fontSize = '13px';
+
 
             const editBtn = document.createElement('button');
             editBtn.textContent = '수정';
@@ -293,6 +295,7 @@
             editBtn.style.bottom = '4px'; // 현재 위치에서 아래로 10px
             editBtn.style.border = '2px solid black'; // 2px, 실선, 검은색
             editBtn.style.borderRadius = '7px'; // 둥근 모서리
+            editBtn.style.fontSize = '13px';
 
             article.append(date, title, content, editBtn, deleteBtn);
             memoList.append(article);
