@@ -229,11 +229,11 @@ app.get('/get-graph', (req, res) => {
   
 
 // 날짜와 몸무게 저장 또는 수정 API
-// 날짜와 몸무게 저장 또는 수정 API
 app.get('/get-graph', (req, res) => {
     const { date } = req.query; // 클라이언트가 주는 기준 날짜 (예: 2024-12-08)
-    console.log(date);
-    console.log(data);
+  
+    console.log('클라이언트에서 받은 날짜:', date); // 클라이언트로부터 받은 날짜를 서버 콘솔에 출력
+  
     if (!date) {
       return res.status(400).json({ message: '날짜를 선택해주세요.' });
     }
@@ -308,6 +308,7 @@ app.get('/get-graph', (req, res) => {
       );
     });
   });
+  
   
 
 // 날짜별 몸무게와 목표 대비 차이 조회
