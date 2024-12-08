@@ -32,10 +32,6 @@
       height: 400px;
     }
 
-    #controls {
-      margin: 20px;
-    }
-
     #target-weight {
       margin-top: 10px;
       font-size: 18px;
@@ -45,13 +41,6 @@
 </head>
 <body>
   <h1>주간 체중 그래프</h1>
-
-  <!-- 날짜 입력 -->
-  <div id="controls">
-    <label for="date">기준 날짜를 선택하세요:</label>
-    <input type="date" id="date" />
-    <button onclick="fetchGraphData()">그래프 가져오기</button>
-  </div>
 
   <!-- 목표 몸무게 -->
   <div id="target-weight">목표 몸무게: 로딩 중...</div>
@@ -94,24 +83,27 @@
 
     // 체중 그래프 데이터 가져오기
     async function fetchGraphData() {
-      const selectedDate = document.getElementById('date').value;
+      const today = new Date();
+      const startDate = new Date(today);
+      startDate.setDate(today.getDate() - 6);  // 1주일 전 날짜 계산
 
-      if (!selectedDate) {
-        alert('날짜를 선택해 주세요.');
-        return;
+      const dates = [];
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() + i);
+        dates.push(date.toISOString().split('T')[0]);  // yyyy-mm-dd 형식
       }
 
       try {
-        const response = await fetch(`/get-graph?date=${selectedDate}`);
+        const response = await fetch(`/get-graph?dates=${dates.join(',')}`);
         const data = await response.json();
 
         if (response.ok) {
-          const dates = data.map((item) => item.date);
           const weights = data.map((item) => item.weight);
 
           // 요일 추가
           const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
-          const labelsWithDays = dates.map((dateStr) => {
+          const labelsWithDays = dates.map((dateStr, index) => {
             const date = new Date(dateStr);
             const day = daysOfWeek[date.getDay()];
             return `${dateStr} (${day})`;
@@ -148,6 +140,15 @@
               borderWidth: 2,
               tension: 0.4,
             },
+            {
+              label: '목표 몸무게 (kg)',
+              data: Array(data.length).fill(parseFloat(document.getElementById('target-weight').innerText.split(' ')[2] || 0)), // 목표 몸무게로 채우기
+              borderColor: 'rgba(255, 99, 132, 1)',
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderWidth: 2,
+              tension: 0.4,
+              borderDash: [5, 5],  // 점선 스타일
+            }
           ],
         },
         options: {
@@ -178,8 +179,9 @@
       });
     }
 
-    // 페이지 로드 시 목표 몸무게 조회
+    // 페이지 로드 시 목표 몸무게 조회 및 그래프 데이터 가져오기
     fetchTargetWeight();
+    fetchGraphData();
   </script>
 </body>
 </html>
