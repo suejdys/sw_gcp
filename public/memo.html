@@ -280,11 +280,10 @@
             deleteBtn.style.bottom = '4px'; // 현재 위치에서 아래로 10px
             deleteBtn.style.border = '2px solid black'; // 2px, 실선, 검은색
             deleteBtn.style.borderRadius = '7px'; // 둥근 모서리
-            deleteBtn.style.fontSize = '13px';
+            deleteBtn.style.fontSize = '11px';
             deleteBtn.style.writingMode = 'horizontal-tb'; // 텍스트를 가로 방향으로 설정 (기본값)
-            deleteBtn.style.verticalAlign = 'middle'; // 텍스트 수직 정렬
             deleteBtn.style.whiteSpace = 'nowrap'; // 텍스트 줄바꿈 방지
-            deleteBtn.style.bottom = '1px';
+            
 
 
             const editBtn = document.createElement('button');
@@ -299,12 +298,10 @@
             editBtn.style.bottom = '4px'; // 현재 위치에서 아래로 10px
             editBtn.style.border = '2px solid black'; // 2px, 실선, 검은색
             editBtn.style.borderRadius = '7px'; // 둥근 모서리
-            editBtn.style.fontSize = '13px';
+            editBtn.style.fontSize = '11px';
             editBtn.style.writingMode = 'horizontal-tb'; // 텍스트를 가로 방향으로 설정 (기본값)
-            editBtn.style.verticalAlign = 'middle'; // 텍스트 수직 정렬
             editBtn.style.whiteSpace = 'nowrap'; // 텍스트 줄바꿈 방지
-            editBtn.style.bottom = '1px';
-
+          
             article.append(date, title, content, editBtn, deleteBtn);
             memoList.append(article);
           });
