@@ -200,9 +200,11 @@ app.get('/get-graph', (req, res) => {
         // 날짜 범위 내 모든 날짜를 생성
         const result = [];
         const currentDate = new Date(startDate);
+        console.log('날짜 범위 내 모든 날짜:');
         while (currentDate <= endDate) {
           const dateString = currentDate.toISOString().split('T')[0];
-          const weightData = weightResults.find(result => result.date === dateString);
+          console.log(dateString); // 생성된 날짜를 콘솔에 출력
+          const weightData = weightResults.find(result => result.date.split('T')[0] === dateString);
           if (weightData) {
             result.push({ date: dateString, weight: weightData.weight });
           } else {
