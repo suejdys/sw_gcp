@@ -89,13 +89,10 @@
     // 체중 그래프 데이터 가져오기
     async function fetchGraphData() {
       const today = new Date();
-      const todayFormatted = today.toISOString().split('T')[0]; // 오늘 날짜 가져오기
-      const lastWeek = new Date(today);
-      lastWeek.setDate(today.getDate() - 6); // 지난 7일(오늘 포함)의 시작 날짜
-      const startDateFormatted = lastWeek.toISOString().split('T')[0]; // 7일 전 날짜
+      const formattedDate = today.toLocaleDateString('ko-KR'); // 한국 시간대로 오늘 날짜 출력 (yyyy-mm-dd 형식)
 
       try {
-        const response = await fetch(`/get-graph?startDate=${startDateFormatted}&endDate=${todayFormatted}`);
+        const response = await fetch(`/get-graph?Date=${formattedDate}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -110,7 +107,7 @@
             date.setDate(today.getDate() - i);
             const formattedDate = date.toISOString().split('T')[0];
             const dayOfWeek = daysOfWeek[date.getDay()];
-            labels.push(`${formattedDate} (${dayOfWeek})`);
+            labels.push(`${formattedDate}`);
           }
 
           renderGraph(labels, weights); // 그래프 새로 그리기
