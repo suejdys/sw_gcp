@@ -229,9 +229,10 @@ app.get('/get-graph', (req, res) => {
   
 
 // 날짜와 몸무게 저장 또는 수정 API
+// 날짜와 몸무게 저장 또는 수정 API
 app.get('/get-graph', (req, res) => {
-    const { date } = req.query; // 클라이언트가 주는 기준 날짜 (예: 2024-12-02)
-  
+    const { date } = req.query; // 클라이언트가 주는 기준 날짜 (예: 2024-12-08)
+    console.log(data);
     if (!date) {
       return res.status(400).json({ message: '날짜를 선택해주세요.' });
     }
@@ -245,10 +246,12 @@ app.get('/get-graph', (req, res) => {
   
       const userId = userResults[0].id;
   
-      // 기준일을 기준으로 주 단위 날짜 범위 생성
-      const startOfWeek = new Date(date);
-      startOfWeek.setDate(startOfWeek.getDate() - 6); // 기준일로부터 6일 전으로 주 범위 계산
+      // 클라이언트에서 받은 날짜를 기준으로 7일 간의 날짜 범위 계산
       const endOfWeek = new Date(date);
+      const startOfWeek = new Date(endOfWeek);
+      startOfWeek.setDate(endOfWeek.getDate() - 6); // 기준일로부터 6일 전 날짜 설정
+  
+      console.log('Start of week:', startOfWeek, 'End of week:', endOfWeek);
   
       const queryGraphData = `
         SELECT DATE(date) AS date, weight 
@@ -305,8 +308,6 @@ app.get('/get-graph', (req, res) => {
     });
   });
   
-  
-
 
 // 날짜별 몸무게와 목표 대비 차이 조회
 app.get('/get-weight', (req, res) => {
