@@ -102,7 +102,7 @@
 
       try {
         // 여러 날짜를 서버로 전송
-        const response = await fetch(`/get-graph?dates=${formattedToday}`);
+        const response = await fetch(`/get-graph?date=${formattedToday}`);
         const data = await response.json();
 
         if (response.ok) {
