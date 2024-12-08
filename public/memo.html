@@ -287,8 +287,8 @@
             editBtn.textContent = '수정';
             editBtn.addEventListener('click', () => editMemo(memo));
             editBtn.style.float = 'right'; // 오른쪽으로 배치
-            editBtn.style.color = 'black';
-            editBtn.style.backgroundColor = 'white';
+            editBtn.style.color = 'black'
+            editBtn.style.backgroundColor = 'white'
             editBtn.style.width = '40px'; // 너비 100px
             editBtn.style.height = '22px'; // 높이 40px
             editBtn.style.position = 'relative'; // 위치 기준 변경
@@ -296,6 +296,9 @@
             editBtn.style.border = '2px solid black'; // 2px, 실선, 검은색
             editBtn.style.borderRadius = '7px'; // 둥근 모서리
             editBtn.style.fontSize = '13px';
+            editBtn.style.writingMode = 'horizontal-tb'; // 텍스트를 가로 방향으로 설정 (기본값)
+            editBtn.style.textAlign = 'center'; // 텍스트 가운데 정렬
+            editBtn.style.whiteSpace = 'nowrap'; // 텍스트 줄바꿈 방지
 
             article.append(date, title, content, editBtn, deleteBtn);
             memoList.append(article);
