@@ -284,6 +284,7 @@
             deleteBtn.style.writingMode = 'horizontal-tb'; // 텍스트를 가로 방향으로 설정 (기본값)
             deleteBtn.style.verticalAlign = 'middle'; // 텍스트 수직 정렬
             deleteBtn.style.whiteSpace = 'nowrap'; // 텍스트 줄바꿈 방지
+            deleteBtn.style.bottom = '1px';
 
 
             const editBtn = document.createElement('button');
@@ -302,6 +303,7 @@
             editBtn.style.writingMode = 'horizontal-tb'; // 텍스트를 가로 방향으로 설정 (기본값)
             editBtn.style.verticalAlign = 'middle'; // 텍스트 수직 정렬
             editBtn.style.whiteSpace = 'nowrap'; // 텍스트 줄바꿈 방지
+            editBtn.style.bottom = '1px';
 
             article.append(date, title, content, editBtn, deleteBtn);
             memoList.append(article);
