@@ -140,27 +140,6 @@ app.put('/update-notes/:id', (req, res) => {
   });
 
 // 목표 몸무게 설정 API
-app.post("/save-target-weight", (req, res) => {
-  if (!req.session.username) {
-    return res.status(401).json({ message: "로그인이 필요합니다" });
-  }
-
-  const { targetWeight } = req.body;
-  if (!targetWeight) {
-    return res.status(400).json({ message: "Invalid target weight" });
-  }
-
-  const query = "UPDATE users SET target_weight = ? WHERE username = ?";
-  db.query(query, [targetWeight, req.session.username], (err, result) => {
-    if (err) {
-      return res.status(500).json({ message: "Error updating target weight", error: err });
-    }
-
-    res.status(200).json({ message: "Success" });
-  });
-});
-
-// 오늘 날짜를 가지고 이번주를 출력해줌
 app.get('/get-graph', (req, res) => {
     // 로그인 확인
     if (!req.session || !req.session.username) {
@@ -187,48 +166,51 @@ app.get('/get-graph', (req, res) => {
       const userId = userResults[0].id;
       console.log(`사용자 ID: ${userId}`);
   
-      // 날짜 범위에 대한 쿼리
-      const queryGraphData = `
-        SELECT date, weight FROM DateWeight 
-        WHERE user_id = ? AND date BETWEEN ? AND ?
-      `;
-      db.query(queryGraphData, [userId, startDate.toISOString().split('T')[0], endDate.toISOString().split('T')[0]], (err, weightResults) => {
-        if (err) {
-          console.error('데이터 조회 중 에러', err);
-          return res.status(500).json({ message: '데이터 조회 실패' });
-        }
+      // 날짜 배열 생성
+      const dateArray = [];
+      const currentDate = new Date(startDate);
+      while (currentDate <= endDate) {
+        dateArray.push(currentDate.toISOString().split('T')[0]);
+        currentDate.setDate(currentDate.getDate() + 1); // 하루씩 증가
+      }
   
-        console.log(`조회된 데이터 수: ${weightResults.length}`);
+      console.log('조회할 날짜 배열:', dateArray);
   
-        // 날짜 범위 내 모든 날짜를 생성
-        const result = [];
-        const currentDate = new Date(startDate);
-        console.log('날짜 범위 내 모든 날짜:');
-        while (currentDate <= endDate) {
-          const dateString = currentDate.toISOString().split('T')[0];
-          console.log(dateString); // 생성된 날짜를 콘솔에 출력
-          const weightData = weightResults.find(result => result.date.split('T')[0] === dateString);
-          if (weightData) {
-            result.push({ date: dateString, weight: weightData.weight });
+      // 결과 배열
+      const result = [];
+      let queriesCompleted = 0; // 완료된 쿼리 수 카운터
+  
+      // 각 날짜에 대해 데이터 조회
+      dateArray.forEach(dateString => {
+        const querySingleDate = `
+          SELECT weight FROM DateWeight 
+          WHERE user_id = ? AND date = ?
+        `;
+  
+        db.query(querySingleDate, [userId, dateString], (err, weightResults) => {
+          if (err) {
+            console.error('데이터 조회 중 에러', err);
+            return res.status(500).json({ message: '데이터 조회 실패' });
+          }
+  
+          // 결과 처리
+          if (weightResults.length > 0) {
+            result.push({ date: dateString, weight: weightResults[0].weight });
           } else {
             result.push({ date: dateString, weight: 0 }); // 데이터가 없으면 0으로 채움
           }
   
-          // push 후 결과를 콘솔에 출력
-          const lastAdded = result[result.length - 1];
-          console.log(`추가된 데이터: ${JSON.stringify(lastAdded)}`); // 추가된 데이터 출력
-  
-          currentDate.setDate(currentDate.getDate() + 1); // 하루씩 증가
-        }
-  
-        // 최종 결과 반환
-        console.log('최종 결과:', result);
-        return res.json(result);
+          // 모든 쿼리가 완료되었는지 확인
+          queriesCompleted++;
+          if (queriesCompleted === dateArray.length) {
+            console.log('최종 결과:', result);
+            return res.json(result);
+          }
+        });
       });
     });
   });
   
-
 // 날짜와 몸무게 저장 또는 수정 API
 app.get('/get-graph', (req, res) => {
     const { date } = req.params; // 클라이언트가 주는 기준 날짜 (예: 2024-12-08)
