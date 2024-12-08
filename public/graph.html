@@ -60,7 +60,7 @@
         const response = await fetch('/get-target-weight', {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include', // 로그인 세션 유지
+          credentials: 'include',
         });
 
         if (response.status === 401) {
@@ -84,13 +84,6 @@
       }
     }
 
-    // 요일을 계산하는 함수
-    function getDayOfWeek(dateString) {
-      const date = new Date(dateString);
-      const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
-      return daysOfWeek[date.getDay()];
-    }
-
     // 주간 데이터 조회
     async function fetchWeeklyData() {
       const today = new Date();
@@ -99,14 +92,18 @@
         month: '2-digit',
         day: '2-digit',
       }).replace(/\./g, '').replace(/\s/g, '-'); // yyyy-mm-dd 형식으로 변환
+
       try {
         const response = await fetch(`/get-graph?date=${formattedDate}`);
         if (response.ok) {
           const data = await response.json();
           console.log('Received weekly data:', data);
 
-          // Extract labels (dates and days of the week) and weights
-          const labels = data.map(entry => `${entry.date} (${getDayOfWeek(entry.date)})`);
+          // Extract labels (dates with weekdays) and weights
+          const labels = data.map(entry => {
+            const weekday = new Date(entry.date).toLocaleDateString('ko-KR', { weekday: 'short' }); // 요일 가져오기
+            return `${entry.date} (${weekday})`; // 날짜와 요일 결합
+          });
           const weights = data.map(entry => entry.weight);
 
           // 목표 몸무게 배열 생성 (데이터 길이만큼 반복)
@@ -132,7 +129,7 @@
       chartInstance = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: labels, // 날짜와 요일
+          labels: labels, // 날짜 (요일 포함)
           datasets: [
             {
               label: '체중 (kg)',
