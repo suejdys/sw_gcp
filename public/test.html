@@ -1,84 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weight Graph</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        canvas {
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Weight Graph</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js 추가 -->
 </head>
 <body>
-    <h1>Weight Graph</h1>
-    <p>캘린더에서 입력된 데이터를 기반으로 몸무게 그래프를 작성합니다.</p>
+  <h1>주간 체중 데이터</h1>
+  
+  <!-- 그래프 캔버스 -->
+  <canvas id="weightGraph" width="400" height="200"></canvas>
 
-    <!-- 그래프 표시 영역 -->
-    <canvas id="weightChart" width="400" height="200"></canvas>
+  <script>
+    async function fetchGraphData() {
+      const today = new Date(); // 오늘 날짜 가져오기
+      const formattedToday = today.toISOString().split('T')[0]; // "YYYY-MM-DD" 형식으로 변환
 
-    <script>
-        const apiBaseUrl = 'https://your-api-url.com'; // API 서버 URL
-        const userId = 'user123'; // 로그인된 사용자 ID (예시)
+      try {
+        // 백엔드로 오늘 날짜 기준 데이터 요청
+        const response = await fetch(`/get-graph?date=${formattedToday}`);
+        const data = await response.json();
 
-        const labels = []; // 날짜 데이터
-        const weights = []; // 몸무게 데이터
-
-        // Chart.js 초기화
-        const ctx = document.getElementById('weightChart').getContext('2d');
-        const weightChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Weight (kg)',
-                    data: weights,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        title: { display: true, text: 'Date' }
-                    },
-                    y: {
-                        beginAtZero: false,
-                        title: { display: true, text: 'Weight (kg)' }
-                    }
-                }
-            }
-        });
-
-        // 서버에서 몸무게 데이터 가져오기
-        async function fetchWeights() {
-            try {
-                // 서버에 요청하여 데이터 가져오기
-                const response = await fetch(`${apiBaseUrl}/weights?userId=${userId}`);
-                const data = await response.json();
-
-                labels.length = 0;
-                weights.length = 0;
-
-                // 가져온 데이터를 날짜 순으로 정렬
-                data.sort((a, b) => new Date(a.date) - new Date(b.date));
-                data.forEach(item => {
-                    labels.push(item.date);
-                    weights.push(item.weight);
-                });
-
-                // 그래프 업데이트
-                weightChart.update();
-            } catch (error) {
-                console.error('Error fetching weights:', error);
-            }
+        if (response.ok) {
+          console.log('서버에서 반환된 데이터:', data);
+          renderGraph(data);
+        } else {
+          alert('데이터를 가져오는 데 실패했습니다.');
         }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('데이터를 가져오는 중 오류가 발생했습니다.');
+      }
+    }
 
-        // 페이지 로드 시 데이터 가져오기
-        window.onload = fetchWeights;
-    </script>
+    function renderGraph(data) {
+      // 날짜 배열과 체중 배열 추출
+      const dates = data.map(entry => entry.date);
+      const weights = data.map(entry => entry.weight);
+
+      // 목표 체중 (예: 70kg) 설정
+      const goalWeight = 70;
+      const goalWeights = Array(dates.length).fill(goalWeight); // 목표 체중 배열 생성
+
+      // Chart.js 그래프 그리기
+      const ctx = document.getElementById('weightGraph').getContext('2d');
+      new Chart(ctx, {
+        type: 'line', // 선형 그래프
+        data: {
+          labels: dates, // x축: 날짜
+          datasets: [
+            {
+              label: '체중 변화 (kg)',
+              data: weights, // y축: 체중
+              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderWidth: 2
+            },
+            {
+              label: '목표 체중 (kg)',
+              data: goalWeights, // y축: 목표 체중
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderDash: [5, 5], // 점선
+              borderWidth: 2,
+              fill: false
+            }
+          ]
+        },
+        options: {
+          scales: {
+            x: { 
+              title: { display: true, text: '날짜' },
+              ticks: { color: 'black' },
+            },
+            y: { 
+              title: { display: true, text: '체중 (kg)' },
+              ticks: { color: 'black' },
+              beginAtZero: true 
+            }
+          },
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: '1주일간 체중 변화 그래프'
+            }
+          }
+        }
+      });
+    }
+
+    // 페이지 로드 시 데이터 가져오기
+    fetchGraphData();
+  </script>
 </body>
 </html>
