@@ -43,6 +43,33 @@
 
   <script>
     let chartInstance;
+    let targetWeight = null;
+
+    // 목표 몸무게 조회
+    async function fetchTargetWeight() {
+      try {
+        const response = await fetch('/get-target-weight', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+        });
+
+        if (response.status === 401) {
+          alert("로그인 필요");
+          window.location.href = '/'; // 401 오류 발생 시 index.html로 리디렉션
+        }
+
+        const data = await response.json();
+
+        if (response.ok) {
+          targetWeight = data.targetWeight || 0; // 목표 몸무게가 없으면 기본값 0 설정
+        } else {
+          console.error('목표 몸무게를 가져오는 데 실패했습니다:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching target weight:', error);
+      }
+    }
 
     // 주간 데이터 조회
     async function fetchWeeklyData() {
@@ -63,7 +90,7 @@
           const weights = data.map(entry => entry.weight);
 
           // 목표 몸무게 배열 생성 (데이터 길이만큼 반복)
-          const targetWeights = Array(labels.length).fill(70); // 목표 몸무게를 그래프에만 표시
+          const targetWeights = Array(labels.length).fill(targetWeight || 0);
 
           renderGraph(labels, weights, targetWeights); // 그래프 렌더링
         } else {
@@ -134,8 +161,13 @@
       });
     }
 
-    // 페이지 로드 시 그래프 데이터 조회
-    fetchWeeklyData();
+    // 페이지 로드 시 목표 몸무게 및 그래프 데이터 조회
+    async function initialize() {
+      await fetchTargetWeight(); // 목표 몸무게 먼저 로드
+      fetchWeeklyData(); // 주간 데이터 로드
+    }
+
+    initialize();
   </script>
 </body>
 </html>
