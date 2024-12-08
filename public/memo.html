@@ -252,7 +252,7 @@
             article.style.backgroundColor = colors[colorIndex];
 
             const date = document.createElement('span');
-            date.textContent = new Date(memo.created_at).toLocaleString(); // 날짜 포맷팅
+            date.textContent = new Date(memo.created_at).toLocaleDateString();
             date.style.fontSize = '16px'; // 제목 글자 크기 설정
             date.style.marginBottom = '6px';
             date.style.display = 'block'; // p 요소를 block으로 설정
