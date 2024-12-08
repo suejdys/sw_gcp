@@ -1,53 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Graph Test</title>
-</head>
-<body>
-  <h1>체중 그래프 테스트</h1>
-
-  <!-- 날짜 입력 필드 -->
-  <label for="date">날짜 선택:</label>
-  <input type="date" id="date" />
-  <button onclick="fetchGraphData()">그래프 데이터 가져오기</button>
-
-  <div>
-    <h2>Graph Data</h2>
-    <pre id="result">데이터를 불러오세요...</pre>
-  </div>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Graph Data</title>
   <script>
+    // Fetch 데이터를 서버에서 가져오는 함수
     async function fetchGraphData() {
-      const selectedDate = document.getElementById('date').value; // 선택된 날짜 가져오기
-
-      if (!selectedDate) {
-        alert('날짜를 선택해 주세요.');
-        return;
-      }
-
       try {
-        const response = await fetch(`/get-graph?date=${selectedDate}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
+        const response = await fetch('/get-graph');
+        
         if (!response.ok) {
           throw new Error('서버 응답 실패');
         }
 
         const data = await response.json();
-        console.log(data);
+        console.log("Server Response Data:", data);
 
-        document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+        // 데이터 확인
+        renderData(data);
       } catch (error) {
-        console.error('데이터 가져오기 실패', error);
-        alert('데이터를 불러오는 중 오류가 발생했습니다.');
+        console.error("Error fetching graph data:", error);
       }
     }
+
+    // 서버에서 반환된 데이터를 화면에 렌더링하는 함수
+    function renderData(data) {
+      const dateContainer = document.getElementById('dateContainer');
+      const weightContainer = document.getElementById('weightContainer');
+
+      dateContainer.innerHTML = `<h4>Dates</h4><pre>${data.date.join(', ')}</pre>`;
+      weightContainer.innerHTML = `<h4>Weights</h4><pre>${data.weight.join(', ')}</pre>`;
+    }
+
+    window.onload = () => {
+      fetchGraphData(); // 페이지 로드 후 데이터 호출
+    };
   </script>
+</head>
+<body>
+  <h1>Test Graph Data - Server Response</h1>
+  <div>
+    <div id="dateContainer" style="border: 1px solid #000; padding: 10px;"></div>
+    <div id="weightContainer" style="border: 1px solid #000; padding: 10px;"></div>
+  </div>
 </body>
 </html>
