@@ -63,7 +63,7 @@
           const weights = data.map(entry => entry.weight);
 
           // 목표 몸무게 배열 생성 (데이터 길이만큼 반복)
-          const targetWeights = Array(labels.length).fill(70); // 목표 몸무게 70kg 고정
+          const targetWeights = Array(labels.length).fill(70); // 목표 몸무게를 그래프에만 표시
 
           renderGraph(labels, weights, targetWeights); // 그래프 렌더링
         } else {
