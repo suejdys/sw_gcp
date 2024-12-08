@@ -230,15 +230,13 @@ app.get('/get-graph', (req, res) => {
 
 // 날짜와 몸무게 저장 또는 수정 API
 app.get('/get-graph', (req, res) => {
-    console.log('클라이언트로부터 전달받은 전체 쿼리:', req.query); // 전달받은 전체 쿼리 확인
-  
-    const { date } = req.query; // 클라이언트로부터 받은 기준 날짜
-  
-    console.log('클라이언트에서 받은 날짜:', date); // 클라이언트로부터 받은 날짜 확인
+    const { date } = req.query; // 클라이언트가 주는 기준 날짜 (예: 2024-12-08)
   
     if (!date) {
       return res.status(400).json({ message: '날짜를 선택해주세요.' });
     }
+  
+    console.log('클라이언트에서 받은 날짜:', date); // 클라이언트에서 보낸 날짜 확인
   
     const queryUserId = 'SELECT id FROM users WHERE username = ?';
     db.query(queryUserId, ['username_placeholder'], (err, userResults) => {
@@ -249,25 +247,16 @@ app.get('/get-graph', (req, res) => {
   
       const userId = userResults[0].id;
   
-      const endOfWeek = new Date(date);
-      const startOfWeek = new Date(endOfWeek);
-      startOfWeek.setDate(endOfWeek.getDate() - 6);
-  
-      console.log('Start of week:', startOfWeek, 'End of week:', endOfWeek);
-  
-      const queryGraphData = `
-        SELECT DATE(date) AS date, weight 
-        FROM DateWeight 
-        WHERE user_id = ? AND date BETWEEN ? AND ?
-        GROUP BY DATE(date);
+      // SQL 쿼리를 활용하여 과거 1주일간 데이터 조회
+      const queryGraphData = `SELECT DATE(date) AS date, weight FROM DateWeight WHERE user_id = ? AND date BETWEEN date(?, INTERVAL -1 WEEK) AND ?GROUP BY DATE(date);
       `;
   
       db.query(
         queryGraphData,
         [
           userId,
-          startOfWeek.toISOString().slice(0, 10),
-          endOfWeek.toISOString().slice(0, 10),
+          date, // 기준 날짜를 SQL 쿼리의 시작일로 사용
+          date, // 현재 날짜 (끝 범위)
         ],
         (err, weightResults) => {
           if (err) {
@@ -285,7 +274,8 @@ app.get('/get-graph', (req, res) => {
           const weekDates = [];
           const weights = [];
   
-          for (let d = new Date(startOfWeek); d <= endOfWeek; d.setDate(d.getDate() + 1)) {
+          // 주간 날짜 목록 생성
+          for (let d = new Date(new Date(date).getTime() - 6 * 24 * 60 * 60 * 1000); d <= new Date(date); d.setDate(d.getDate() + 1)) {
             const formattedDate = new Date(d).toISOString().split('T')[0];
             weekDates.push(formattedDate);
           }
