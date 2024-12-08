@@ -162,10 +162,8 @@
           if (response.ok) {
             alert('메모가 성공적으로 추가되었습니다');
             location.href = "memo.html";
-            document.querySelector('#memo-title').value = '';
-            document.querySelector('#memo-content').value = '';
           } else {
-            alert(`메모 추가 실패: ${result.message}`);
+            alert(`메모 추가 실패: ${result}`);
           }
         } catch (error) {
           console.error('메모 추가 중 문제가 발생했습니다', error);
