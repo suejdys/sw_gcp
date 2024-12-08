@@ -88,8 +88,9 @@
     // 체중 그래프 데이터 가져오기 (오늘 날짜 포함 1주일)
     async function fetchGraphData() {
       const today = new Date();
-      const formattedToday = today.toISOString().split('T')[0];
-      console.log(formattedToday);
+      const local = today.toLocaleDateString('ko-KR');
+      const formattedToday = local.toISOString().split('T')[0];
+      console.log(formattedToday)
       const dates = [];
       const weights = [];
       const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
@@ -102,7 +103,7 @@
       }
 
       try {
-        // 여러 날짜를 서버로 전송
+        // 날짜를 서버로 전송
         const response = await fetch(`/get-graph?date=${formattedToday}`);
         const data = await response.json();
 
