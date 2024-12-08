@@ -1,75 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>메인 화면</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
-    <style>
-        .fc-toolbar.fc-header-toolbar {
-        display: flex;
-        justify-content: center; /* 제목과 화살표를 가운데 정렬 */
-        align-items: center;
-        position: relative;
-  }
-      /* 글자 크기 조정 */
-      .fc-toolbar-title {
-        font-size: 15px !important; /* 년도, 월 글자 크기 */
-        font-weight: 600;
-        }
 
-      .fc-daygrid-day-number {
-        font-size: 10px; /* 날짜 숫자 글자 크기 */
-        display: inline-block; /* 기본 block 구조 수정 */
-        margin: 0 auto; /* 가운데 정렬을 위해 margin 설정 */
-        line-height: 1; /* 줄 간격을 조절해 간격 맞춤 */
-      }
-      .fc-col-header-cell {
-        font-size: 12px !important; /* 요일 글자 크기 */
-        height: 45px;
-        font-weight: 500;
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>메인 화면</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+  <style>
+    .fc-toolbar.fc-header-toolbar {
+      display: flex;
+      justify-content: center;
+      /* 제목과 화살표를 가운데 정렬 */
+      align-items: center;
+      position: relative;
+    }
+
+    /* 글자 크기 조정 */
+    .fc-toolbar-title {
+      font-size: 15px !important;
+      /* 년도, 월 글자 크기 */
+      font-weight: 600;
+    }
+
+    .fc-daygrid-day-number {
+      font-size: 10px;
+      /* 날짜 숫자 글자 크기 */
+      display: inline-block;
+      /* 기본 block 구조 수정 */
+      margin: 0 auto;
+      /* 가운데 정렬을 위해 margin 설정 */
+      line-height: 1;
+      /* 줄 간격을 조절해 간격 맞춤 */
+    }
+
+    .fc-col-header-cell {
+      font-size: 12px !important;
+      /* 요일 글자 크기 */
+      height: 45px;
+      font-weight: 500;
 
     }
-      .fc-button {
-        font-size: 12px !important;
-        color: gray !important; /* 화살표 버튼 텍스트 색을 흰색으로 변경 */
-        background-color: transparent !important; /* 버튼 배경을 투명하게 설정 */
-        border-color: white !important; /* 버튼의 테두리 색을 흰색으로 변경 */
-        
-      }
-  /* FullCalendar의 셀 테두리 색상 변경 */
-  .fc .fc-daygrid-day-frame {
-    border-color: white !important; /* 모든 셀 테두리 흰색 */
-  }
-  /* 다른 테두리 요소를 흰색으로 변경 */
-  .fc .fc-daygrid-day {
-    border-color: white !important; /* 셀 외곽선 흰색 */
-  }
-  .fc .fc-scrollgrid {
-    border-color: white !important; /* 전체 그리드 테두리 흰색 */
-    border-bottom-color: white !important;
-  }
-  /* 요일(일, 월, 화, ...) 영역의 테두리 색상 흰색 */
-  .fc-col-header-cell {
-    border-color: white !important;
-  }
-    </style>
+
+    .fc-button {
+      font-size: 12px !important;
+      color: gray !important;
+      /* 화살표 버튼 텍스트 색을 흰색으로 변경 */
+      background-color: transparent !important;
+      /* 버튼 배경을 투명하게 설정 */
+      border-color: white !important;
+      /* 버튼의 테두리 색을 흰색으로 변경 */
+
+    }
+
+    /* FullCalendar의 셀 테두리 색상 변경 */
+    .fc .fc-daygrid-day-frame {
+      border-color: white !important;
+      /* 모든 셀 테두리 흰색 */
+    }
+
+    /* 다른 테두리 요소를 흰색으로 변경 */
+    .fc .fc-daygrid-day {
+      border-color: white !important;
+      /* 셀 외곽선 흰색 */
+    }
+
+    .fc .fc-scrollgrid {
+      border-color: white !important;
+      /* 전체 그리드 테두리 흰색 */
+      border-bottom-color: white !important;
+    }
+
+    /* 요일(일, 월, 화, ...) 영역의 테두리 색상 흰색 */
+    .fc-col-header-cell {
+      border-color: white !important;
+    }
+  </style>
 
 
-    <script>
-      function openNewPage() {
-        // 새 창 열기
-        window.location.href = "goalsetting.html";
-      }
-    </script>
+  <script>
+    function openNewPage() {
+      // 새 창 열기
+      window.location.href = "goalsetting.html";
+    }
+  </script>
 
 
-    <script>
-      let selectedDate;
-      document.addEventListener('DOMContentLoaded', function () {
-        setTimeout(() => {
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // 오늘 날짜 가져오기
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형태로 변환
+
+      // fetchWeight 함수 호출
+      fetchWeight(todayStr);
+    });
+    let selectedDate;
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(() => {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
@@ -81,160 +110,155 @@
             right: 'next',          // 오른쪽에는 아무 것도 표시하지 않음
           },
           dayCellContent: function (arg) {
-        // 날짜에서 "일" 제거
-        return arg.date.getDate(); // 날짜 숫자만 표시
-        },
-        dateClick: function(info) {
-      selectedDate = info.dateStr; // 클릭한 날짜를 selectedDate에 저장
-      console.log('Clicked on:' + selectedDate);
-      fetchWeight(selectedDate);
+            // 날짜에서 "일" 제거
+            return arg.date.getDate(); // 날짜 숫자만 표시
+          },
+          dateClick: function (info) {
+            selectedDate = info.dateStr; // 클릭한 날짜를 selectedDate에 저장
+            console.log('Clicked on:' + selectedDate);
+            fetchWeight(selectedDate);
+          }
+        });
+        calendar.render();
+      }, 100);
     }
-  });
-  calendar.render();
-}, 100);}
-);
+    );
 
-function fetchWeight(date) {
-    // 날짜 포맷팅 (예: 2024.02.17)
-    const formattedDate = date.split('T')[0].replace(/-/g, '.');
 
-    // 요일 구하기 (예: (수))
-    const dayOfWeek = new Date(date).toLocaleString('ko-KR', { weekday: 'short' });
+    function fetchWeight(date) {
+      // 날짜 포맷팅 (예: 2024.02.17)
+      const formattedDate = date.split('T')[0].replace(/-/g, '.');
 
-    // 날짜와 요일을 HTML에 업데이트
-    document.getElementById('date').textContent = formattedDate;
-    document.getElementById('ddd').textContent = `(${dayOfWeek})`;
+      // 요일 구하기 (예: (수))
+      const dayOfWeek = new Date(date).toLocaleString('ko-KR', { weekday: 'short' });
 
-    // 체중 데이터를 서버에서 가져오기
-    fetch(`/get-weight?date=${date}`)
+      // 날짜와 요일을 HTML에 업데이트
+      document.getElementById('date').textContent = formattedDate;
+      document.getElementById('ddd').textContent = `(${dayOfWeek})`;
+
+      // 체중 데이터를 서버에서 가져오기
+      fetch(`/get-weight?date=${date}`)
         .then(response => response.json())
         .then(data => {
-            const weightElement = document.getElementById('weight_sql');
-            const targetWeightElement = document.getElementById('target_weight');
+          const weightElement = document.getElementById('weight_sql');
+          const targetWeightElement = document.getElementById('target_weight');
 
-            if (data.currentWeight !== null) {
+          if (data.currentWeight !== null) {
             weightElement.innerHTML = `
             ${data.currentWeight}
             <span style=" font-size: 30px;">kg</span>
             `;
-                
-                // 목표 체중 대비 차이 계산
-                const weightDifference = data.weightDifference !== null ? data.weightDifference : 0;
 
-                // 목표 대비 체중 차이 표시
-                const sign = weightDifference >= 0 ? '+' : ''; // 차이가 0 이상일 경우 '+' 표시
-                targetWeightElement.textContent = `목표 대비 ${sign}${weightDifference}kg`;
-            } else {
-                // 데이터가 없을 경우 기본값 설정
-                weightElement.innerHTML = `
+            // 목표 체중 대비 차이 계산
+            const weightDifference = data.weightDifference !== null ? data.weightDifference : 0;
+
+            // 목표 대비 체중 차이 표시
+            const sign = weightDifference >= 0 ? '+' : ''; // 차이가 0 이상일 경우 '+' 표시
+            targetWeightElement.textContent = `목표 대비 ${sign}${weightDifference}kg`;
+          } else {
+            // 데이터가 없을 경우 기본값 설정
+            weightElement.innerHTML = `
             0
             <span style=" font-size: 30px;">kg</span>
             `
-                targetWeightElement.textContent = '목표 대비 0kg';
-            }
+            targetWeightElement.textContent = '목표 대비 0kg';
+          }
         })
         .catch(error => {
-            console.error('데이터 가져오기 오류:', error);
-            location.href = "index.html";
+          console.error('데이터 가져오기 오류:', error);
+          location.href = "index.html";
         });
-}
+    }
 
 
-function openNewPage() {
-  if (selectedDate) {
-    // 날짜가 선택되었을 때 URL에 날짜 전달
-    window.location.href = `goalsetting.html?date=${selectedDate}`;
-  } else {
-    alert('날짜를 선택해 주세요');
-  }
-}
-    </script>
+    function openNewPage() {
+      if (selectedDate) {
+        // 날짜가 선택되었을 때 URL에 날짜 전달
+        window.location.href = `goalsetting.html?date=${selectedDate}`;
+      } else {
+        alert('날짜를 선택해 주세요');
+      }
+    }
+  </script>
 
-  </head>
-  <body class="flex justify-center items-center bg-gray-100 h-screen">
-    <div class="relative bg-white w-full max-w-[390px] h-[844px] overflow-hidden">
-      <!-- 상단 정보 영역 -->
-      <div class="relative w-full h-[199px]">
-        <div
-          class="absolute left-0 top-[568px] w-full h-[270px] bg-gray-50" 
-        ></div>
-        <p
-          class="absolute left-[28px] top-[590px] font-bold text-black text-lg"
-        >
-          <span class="text-xl" id = "date">2024.02.17 </span>
-          <span class="text-lg" id="ddd">(수)</span>
-        </p>
-        <!-- <p
+</head>
+
+<body class="flex justify-center items-center bg-gray-100 h-screen">
+  <div class="relative bg-white w-full max-w-[390px] h-[844px] overflow-hidden">
+    <!-- 상단 정보 영역 -->
+    <div class="relative w-full h-[199px]">
+      <div class="absolute left-0 top-[568px] w-full h-[270px] bg-gray-50"></div>
+      <p class="absolute left-[28px] top-[590px] font-bold text-black text-lg">
+        <span class="text-xl" id="date">2024.02.17 </span>
+        <span class="text-lg" id="ddd">(수)</span>
+      </p>
+      <!-- <p
           class="absolute left-[135px] top-[640.5px] font-bold text-black text-2xl"
         >
         kg
         </p> -->
-        <p
-          class="absolute left-[25px] top-[625.5px] font-bold text-black text-5xl" id ="weight_sql"
-        >
-          0
-        </p>
-      </div>
-
-      <!-- 측정 비교 영역 -->
-      <div class="absolute w-[135px] h-[25px] left-[27.5px] top-[688.5px]">
-        <div class="w-full h-full bg-blue-200 rounded-md"></div>
-        <p
-          class="absolute left-[9px] top-[3px] font-semibold text-sm text-gray-900" id="target_weight"
-        >
-        목표 대비 +0kg
-        </p>
-      </div>
-
-      <!-- 추가 버튼 -->
-      <button
-      onclick="openNewPage()"
-      class="absolute w-12 h-12 left-[320px] top-[700px] flex items-center justify-center bg-gray-700 text-white rounded-full shadow-lg hover: bg-gray-500   focus:outline-none transform hover:scale-110 transition-all duration-300">
-        <span class="material-symbols-rounded">add</span>
-      </button>
-
-
-
-
-
-
-
-      <!-- 하단 영역 (캘린더) -->
-      <div
-      id="calendar"
-      class="absolute left-1/2 top-[137.45px] w-full h-[430px] transform -translate-x-1/2"
-      ></div>
-    <div class="absolute bottom-0 left-0 w-full max-w-[390px] h-[78px] bg-white border-t border-gray-200 flex items-center justify-around">
-        <!-- 그래프 아이콘 -->
-        <div class="flex flex-col items-center text-gray-500">
-            <button class="w-11 h-11 flex items-center justify-center focus:outline-none" onclick="location.href='graph.html'">
-                <span class="material-symbols-rounded">show_chart</span>
-            </button>
-            <p class="text-xs">그래프</p> 
-        </div>
-    
-        <!-- 캘린더 아이콘 -->
-        <div class="flex flex-col items-center text-teal-600">
-            <button class="w-11 h-11 flex items-center justify-center focus:outline-none" onclick="location.href='main.html'">
-                <span class="material-symbols-rounded">calendar_month</span>
-            </button>
-            <p class="text-xs">캘린더</p>
-        </div>
-    
-        <!-- 메모장 아이콘 -->
-        <div class="flex flex-col items-center text-gray-500">
-            <button class="w-11 h-11 flex items-center justify-center focus:outline-none " onclick="location.href='memo.html'">
-                <span class="material-symbols-rounded">description</span>
-            </button>
-            <p class="text-xs">메모장</p>
-        </div>
-    
-        <!-- 목표 설정 아이콘 -->
-        <div class="flex flex-col items-center text-gray-500">
-            <button class="w-11 h-11 flex items-center justify-center focus:outline-none" onclick="location.href='target.html'">
-                <span class="material-symbols-rounded">person</span>
-            </button>
-            <p class="text-xs">목표 설정</p>
-        </div>
+      <p class="absolute left-[25px] top-[625.5px] font-bold text-black text-5xl" id="weight_sql">
+        0
+      </p>
     </div>
-    
+
+    <!-- 측정 비교 영역 -->
+    <div class="absolute w-[135px] h-[25px] left-[27.5px] top-[688.5px]">
+      <div class="w-full h-full bg-blue-200 rounded-md"></div>
+      <p class="absolute left-[9px] top-[3px] font-semibold text-sm text-gray-900" id="target_weight">
+        목표 대비 +0kg
+      </p>
+    </div>
+
+    <!-- 추가 버튼 -->
+    <button onclick="openNewPage()"
+      class="absolute w-12 h-12 left-[320px] top-[700px] flex items-center justify-center bg-gray-700 text-white rounded-full shadow-lg hover: bg-gray-500   focus:outline-none transform hover:scale-110 transition-all duration-300">
+      <span class="material-symbols-rounded">add</span>
+    </button>
+
+
+
+
+
+
+
+    <!-- 하단 영역 (캘린더) -->
+    <div id="calendar" class="absolute left-1/2 top-[137.45px] w-full h-[430px] transform -translate-x-1/2"></div>
+    <div
+      class="absolute bottom-0 left-0 w-full max-w-[390px] h-[78px] bg-white border-t border-gray-200 flex items-center justify-around">
+      <!-- 그래프 아이콘 -->
+      <div class="flex flex-col items-center text-gray-500">
+        <button class="w-11 h-11 flex items-center justify-center focus:outline-none"
+          onclick="location.href='graph.html'">
+          <span class="material-symbols-rounded">show_chart</span>
+        </button>
+        <p class="text-xs">그래프</p>
+      </div>
+
+      <!-- 캘린더 아이콘 -->
+      <div class="flex flex-col items-center text-teal-600">
+        <button class="w-11 h-11 flex items-center justify-center focus:outline-none"
+          onclick="location.href='main.html'">
+          <span class="material-symbols-rounded">calendar_month</span>
+        </button>
+        <p class="text-xs">캘린더</p>
+      </div>
+
+      <!-- 메모장 아이콘 -->
+      <div class="flex flex-col items-center text-gray-500">
+        <button class="w-11 h-11 flex items-center justify-center focus:outline-none "
+          onclick="location.href='memo.html'">
+          <span class="material-symbols-rounded">description</span>
+        </button>
+        <p class="text-xs">메모장</p>
+      </div>
+
+      <!-- 목표 설정 아이콘 -->
+      <div class="flex flex-col items-center text-gray-500">
+        <button class="w-11 h-11 flex items-center justify-center focus:outline-none"
+          onclick="location.href='target.html'">
+          <span class="material-symbols-rounded">person</span>
+        </button>
+        <p class="text-xs">목표 설정</p>
+      </div>
+    </div>
