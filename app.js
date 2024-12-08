@@ -270,7 +270,12 @@ app.get('/get-graph', (req, res) => {
             return res.status(500).json({ message: '데이터 조회 실패' });
           }
   
-          console.log('Weight results from DB:', weightResults);
+          const dbData = weightResults.map((row) => ({
+            date: row.date,
+            weight: row.weight,
+          }));
+  
+          console.log('Weight results from DB:', dbData);
   
           const weekDates = [];
           const weights = [];
@@ -281,18 +286,15 @@ app.get('/get-graph', (req, res) => {
             weekDates.push(formattedDate);
           }
   
-          const cleanedWeightResults = weightResults.map((row) => ({
-            date: row.date,
-            weight: row.weight,
-          }));
+          console.log('Week Dates to Compare:', weekDates);
   
-          // 날짜 매핑
+          // 데이터 매핑: DB에서 반환된 데이터와 weekDates 비교
           weekDates.forEach((dateStr) => {
-            const weightForDate = cleanedWeightResults.find((w) => w.date === dateStr);
+            const weightForDate = dbData.find((w) => w.date === dateStr);
             weights.push(weightForDate ? weightForDate.weight : 0);
           });
   
-          console.log('Mapped data:', { weekDates, weights });
+          console.log('Mapped weights:', weights);
   
           return res.status(200).json({
             dates: weekDates,
@@ -302,6 +304,7 @@ app.get('/get-graph', (req, res) => {
       );
     });
   });
+  
   
 
 
