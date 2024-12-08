@@ -1,38 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Weight Data (JSON)</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Weight Graph</title>
 </head>
 <body>
-  <h1>Weight Data (JSON)</h1>
-  <p>
-    Select a date to fetch the data for the last 7 days:
-    <input type="date" id="datePicker" />
-    <button onclick="fetchWeightData()">Fetch Data</button>
-  </p>
-  <pre id="output" style="background: #f0f0f0; padding: 10px; border: 1px solid #000;"></pre>
+  <h1>주간 체중 데이터</h1>
+  
+  <!-- 날짜 입력 폼 -->
+  <label for="date">기준 날짜를 선택하세요 (예: 2024-12-08):</label>
+  <input type="date" id="date" />
+  <button onclick="fetchGraphData()">데이터 가져오기</button>
+  
+  <div id="results">
+    <!-- 결과를 표시할 영역 -->
+    <h2>결과</h2>
+    <pre id="output"></pre>
+  </div>
 
   <script>
-    async function fetchWeightData() {
+    async function fetchGraphData() {
+      const selectedDate = document.getElementById('date').value; // 선택한 날짜 가져오기
+
+      if (!selectedDate) {
+        alert('날짜를 선택해 주세요.');
+        return;
+      }
+
       try {
-        const dateInput = document.getElementById('datePicker').value;
-        if (!dateInput) {
-          alert('Please select a date');
-          return;
-        }
+        const response = await fetch(`/get-graph?date=${selectedDate}`);
+        const data = await response.json();
 
-        const response = await fetch(`/get-graph?date=${dateInput}`);
-        if (!response.ok) {
-          throw new Error('Error fetching data');
+        if (response.ok) {
+          console.log('서버에서 반환된 데이터:', data);
+          renderData(data);
+        } else {
+          alert('데이터를 가져오는 데 실패했습니다.');
         }
-
-        const jsonResponse = await response.json();
-        document.getElementById('output').innerText = JSON.stringify(jsonResponse, null, 2);
       } catch (error) {
         console.error('Error:', error);
+        alert('데이터를 가져오는 중 오류가 발생했습니다.');
       }
+    }
+
+    function renderData(data) {
+      const output = document.getElementById('output');
+      output.textContent = JSON.stringify(data, null, 2);
     }
   </script>
 </body>
