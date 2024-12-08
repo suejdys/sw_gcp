@@ -64,6 +64,10 @@
           credentials: 'include', // 로그인 세션 유지
         });
 
+        if (response.status === 401) {
+          window.location.href = '/'; // 401 오류 발생 시 index.html로 리디렉션
+        }
+
         const data = await response.json();
 
         if (response.ok) {
@@ -81,21 +85,13 @@
       }
     }
 
-    // 체중 그래프 데이터 가져오기
+    // 체중 그래프 데이터 가져오기 (오늘 날짜만 전송)
     async function fetchGraphData() {
       const today = new Date();
-      const startDate = new Date(today);
-      startDate.setDate(today.getDate() - 6);  // 1주일 전 날짜 계산
-
-      const dates = [];
-      for (let i = 0; i < 7; i++) {
-        const date = new Date(startDate);
-        date.setDate(startDate.getDate() + i);
-        dates.push(date.toISOString().split('T')[0]);  // yyyy-mm-dd 형식
-      }
+      const formattedDate = today.toISOString().split('T')[0];  // yyyy-mm-dd 형식
 
       try {
-        const response = await fetch(`/get-graph?dates=${dates.join(',')}`);
+        const response = await fetch(`/get-graph?date=${formattedDate}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -103,13 +99,9 @@
 
           // 요일 추가
           const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
-          const labelsWithDays = dates.map((dateStr, index) => {
-            const date = new Date(dateStr);
-            const day = daysOfWeek[date.getDay()];
-            return `${dateStr} (${day})`;
-          });
+          const label = `${formattedDate} (${daysOfWeek[today.getDay()]})`;
 
-          renderGraph(labelsWithDays, weights);
+          renderGraph([label], weights);  // 날짜와 체중 데이터를 그래프에 전달
         } else {
           alert('그래프 데이터를 가져오지 못했습니다.');
         }
