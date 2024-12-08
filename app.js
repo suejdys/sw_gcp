@@ -188,7 +188,10 @@ app.get('/get-graph', (req, res) => {
       console.log(`사용자 ID: ${userId}`);
   
       // 날짜 범위에 대한 쿼리
-      const queryGraphData = `SELECT date, weight FROM DateWeight WHERE user_id = ? AND date BETWEEN ? AND ?`;
+      const queryGraphData = `
+        SELECT date, weight FROM DateWeight 
+        WHERE user_id = ? AND date BETWEEN ? AND ?
+      `;
       db.query(queryGraphData, [userId, startDate.toISOString().split('T')[0], endDate.toISOString().split('T')[0]], (err, weightResults) => {
         if (err) {
           console.error('데이터 조회 중 에러', err);
@@ -210,6 +213,11 @@ app.get('/get-graph', (req, res) => {
           } else {
             result.push({ date: dateString, weight: 0 }); // 데이터가 없으면 0으로 채움
           }
+  
+          // push 후 결과를 콘솔에 출력
+          const lastAdded = result[result.length - 1];
+          console.log(`추가된 데이터: ${JSON.stringify(lastAdded)}`); // 추가된 데이터 출력
+  
           currentDate.setDate(currentDate.getDate() + 1); // 하루씩 증가
         }
   
