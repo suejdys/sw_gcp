@@ -230,79 +230,79 @@ app.get('/get-graph', (req, res) => {
 
 // 날짜와 몸무게 저장 또는 수정 API
 app.get('/get-graph', (req, res) => {
-    if (!req.session || !req.session.username) {
-        return res.status(401).json({ message: '로그인이 필요합니다.' });
+    const { date } = req.query; // 클라이언트가 주는 기준 날짜 (예: 2024-12-02)
+  
+    if (!date) {
+      return res.status(400).json({ message: '날짜를 선택해주세요.' });
     }
-
+  
     const queryUserId = 'SELECT id FROM users WHERE username = ?';
-    db.query(queryUserId, [req.session.username], (err, userResults) => {
-        if (err || userResults.length === 0) {
-            console.error(err || '사용자를 찾을 수 없습니다.');
-            return res.status(500).json({ message: '사용자 조회 실패' });
+    db.query(queryUserId, ['username_placeholder'], (err, userResults) => {
+      if (err || userResults.length === 0) {
+        console.error(err || '사용자 조회 실패');
+        return res.status(500).json({ message: '사용자 조회 실패' });
+      }
+  
+      const userId = userResults[0].id;
+  
+      // 기준일을 기준으로 주 단위 날짜 범위 생성
+      const startOfWeek = new Date(date);
+      startOfWeek.setDate(startOfWeek.getDate() - 6); // 기준일로부터 6일 전으로 주 범위 계산
+      const endOfWeek = new Date(date);
+  
+      const queryGraphData = `
+        SELECT DATE(date) AS date, weight 
+        FROM DateWeight 
+        WHERE user_id = ? AND date BETWEEN ? AND ?
+        GROUP BY DATE(date);
+      `;
+  
+      db.query(
+        queryGraphData,
+        [
+          userId,
+          startOfWeek.toISOString().slice(0, 10),
+          endOfWeek.toISOString().slice(0, 10),
+        ],
+        (err, weightResults) => {
+          if (err) {
+            console.error('데이터 조회 중 에러', err);
+            return res.status(500).json({ message: '데이터 조회 실패' });
+          }
+  
+          console.log('Weight results from DB:', weightResults);
+  
+          const weekDates = [];
+          const weights = [];
+  
+          // 주간 날짜 목록 생성
+          for (let d = new Date(startOfWeek); d <= endOfWeek; d.setDate(d.getDate() + 1)) {
+            const formattedDate = new Date(d).toISOString().split('T')[0];
+            weekDates.push(formattedDate);
+          }
+  
+          const cleanedWeightResults = weightResults.map((row) => ({
+            date: row.date,
+            weight: row.weight,
+          }));
+  
+          // 날짜 매핑
+          weekDates.forEach((dateStr) => {
+            const weightForDate = cleanedWeightResults.find((w) => w.date === dateStr);
+            weights.push(weightForDate ? weightForDate.weight : 0);
+          });
+  
+          console.log('Mapped data:', { weekDates, weights });
+  
+          return res.status(200).json({
+            dates: weekDates,
+            weights,
+          });
         }
-
-        const userId = userResults[0].id;
-
-        // 클라이언트로부터 특정 날짜를 받음
-        const clientDate = req.query.date; 
-        if (!clientDate) {
-            return res.status(400).json({ message: '클라이언트에서 기준 날짜를 제공해야 합니다.' });
-        }
-
-        const clientDateObj = new Date(clientDate);
-        const weekStart = new Date(clientDateObj); 
-        weekStart.setDate(clientDateObj.getDate() - 6); // 기준 날짜로부터 일주일 전까지 계산
-        weekStart.setHours(0, 0, 0, 0);
-
-        const weekEnd = new Date(clientDateObj);
-        weekEnd.setHours(23, 59, 59, 999);
-
-        console.log("주간 범위 시작일:", weekStart, "종료일:", weekEnd);
-
-        const queryGraphData = `
-            SELECT DATE(date) AS date, weight 
-            FROM DateWeight 
-            WHERE user_id = ? AND date BETWEEN ? AND ?;
-        `;
-        
-        db.query(
-            queryGraphData,
-            [
-                userId,
-                weekStart.toISOString().slice(0, 19).replace('T', ' '),
-                weekEnd.toISOString().slice(0, 19).replace('T', ' '),
-            ],
-            (err, weightResults) => {
-                if (err) {
-                    console.error('데이터 조회 중 에러', err);
-                    return res.status(500).json({ message: '데이터 조회 실패' });
-                }
-
-                console.log('Weight results from DB:', weightResults);
-
-                const cleanedWeightResults = weightResults.map(row => ({
-                    date: new Date(row.date).toISOString().split('T')[0],
-                    weight: row.weight,
-                }));
-
-                const weekDates = [];
-                const weights = [];
-
-                for (let d = new Date(weekStart); d <= weekEnd; d.setDate(d.getDate() + 1)) {
-                    const formattedDate = new Date(d).toISOString().split('T')[0];
-                    weekDates.push(formattedDate);
-
-                    const weightForDate = cleanedWeightResults.find(w => w.date === formattedDate);
-                    weights.push(weightForDate ? weightForDate.weight : 0);
-                }
-
-                console.log('Week Dates to Compare:', weekDates);
-
-                return res.status(200).json({ date: weekDates, weight: weights });
-            }
-        );
+      );
     });
-});
+  });
+  
 
 
 // 날짜별 몸무게와 목표 대비 차이 조회
