@@ -281,6 +281,9 @@
             deleteBtn.style.border = '2px solid black'; // 2px, 실선, 검은색
             deleteBtn.style.borderRadius = '7px'; // 둥근 모서리
             deleteBtn.style.fontSize = '13px';
+            deleteBtn.style.writingMode = 'horizontal-tb'; // 텍스트를 가로 방향으로 설정 (기본값)
+            deleteBtn.style.textAlign = 'center'; // 텍스트 가운데 정렬
+            deleteBtn.style.whiteSpace = 'nowrap'; // 텍스트 줄바꿈 방지
 
 
             const editBtn = document.createElement('button');
