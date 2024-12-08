@@ -230,9 +230,11 @@ app.get('/get-graph', (req, res) => {
 
 // 날짜와 몸무게 저장 또는 수정 API
 app.get('/get-graph', (req, res) => {
-    const { date } = req.query; // 클라이언트가 주는 기준 날짜 (예: 2024-12-08)
+    console.log('클라이언트로부터 전달받은 전체 쿼리:', req.query); // 전달받은 전체 쿼리 확인
   
-    console.log('클라이언트에서 받은 날짜:', date); // 클라이언트로부터 받은 날짜를 서버 콘솔에 출력
+    const { date } = req.query; // 클라이언트로부터 받은 기준 날짜
+  
+    console.log('클라이언트에서 받은 날짜:', date); // 클라이언트로부터 받은 날짜 확인
   
     if (!date) {
       return res.status(400).json({ message: '날짜를 선택해주세요.' });
@@ -247,10 +249,9 @@ app.get('/get-graph', (req, res) => {
   
       const userId = userResults[0].id;
   
-      // 클라이언트에서 받은 날짜를 기준으로 7일 간의 날짜 범위 계산
       const endOfWeek = new Date(date);
       const startOfWeek = new Date(endOfWeek);
-      startOfWeek.setDate(endOfWeek.getDate() - 6); // 기준일로부터 6일 전 날짜 설정
+      startOfWeek.setDate(endOfWeek.getDate() - 6);
   
       console.log('Start of week:', startOfWeek, 'End of week:', endOfWeek);
   
@@ -284,7 +285,6 @@ app.get('/get-graph', (req, res) => {
           const weekDates = [];
           const weights = [];
   
-          // 주간 날짜 목록 생성
           for (let d = new Date(startOfWeek); d <= endOfWeek; d.setDate(d.getDate() + 1)) {
             const formattedDate = new Date(d).toISOString().split('T')[0];
             weekDates.push(formattedDate);
@@ -292,7 +292,6 @@ app.get('/get-graph', (req, res) => {
   
           console.log('Week Dates to Compare:', weekDates);
   
-          // 데이터 매핑: DB에서 반환된 데이터와 weekDates 비교
           weekDates.forEach((dateStr) => {
             const weightForDate = dbData.find((w) => w.date === dateStr);
             weights.push(weightForDate ? weightForDate.weight : 0);
