@@ -232,6 +232,7 @@ app.get('/get-graph', (req, res) => {
 // 날짜와 몸무게 저장 또는 수정 API
 app.get('/get-graph', (req, res) => {
     const { date } = req.query; // 클라이언트가 주는 기준 날짜 (예: 2024-12-08)
+    console.log(date);
     console.log(data);
     if (!date) {
       return res.status(400).json({ message: '날짜를 선택해주세요.' });
