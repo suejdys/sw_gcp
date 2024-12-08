@@ -88,8 +88,7 @@
     // 체중 그래프 데이터 가져오기 (오늘 날짜 포함 1주일)
     async function fetchGraphData() {
       const today = new Date();
-      const local = today.toLocaleDateString('ko-KR');
-      const formattedToday = local.toISOString().split('T')[0];
+      const formattedToday = today.toLocaleDateString('ko-KR'); // 한국 시간대로 오늘 날짜 출력 (yyyy-mm-dd 형식)
       console.log(formattedToday)
       const dates = [];
       const weights = [];
@@ -99,7 +98,8 @@
       for (let i = 6; i >= 0; i--) {
         const date = new Date(today);
         date.setDate(today.getDate() - i); // 오늘을 포함한 7일
-        dates.push(date.toISOString().split('T')[0]);  // yyyy-mm-dd 형식
+        dates.push(date.toLocaleDateString('ko-KR'));  // yyyy-mm-dd 형식으로 로컬 시간대 기준 날짜 추가
+
       }
 
       try {
