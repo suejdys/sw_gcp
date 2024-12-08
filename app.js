@@ -164,13 +164,18 @@ app.post("/save-target-weight", (req, res) => {
 app.get('/get-graph', (req, res) => {
     // 로그인 확인
     if (!req.session || !req.session.username) {
+      console.log('로그인 필요: 세션 정보 없음');
       return res.status(401).json({ message: '로그인이 필요합니다.' });
     }
   
     const requestedDate = req.query.date; // 요청된 날짜
-    const startDate = new Date(requestedDate);
-    const endDate = new Date(startDate);
-    endDate.setDate(endDate.getDate() + 7); // 1주일 후 날짜 설정
+    console.log(`요청된 날짜: ${requestedDate}`); // 요청된 날짜 콘솔 출력
+    const endDate = new Date(requestedDate); // 요청된 날짜를 종료일로 설정
+    const startDate = new Date(endDate); // 시작일은 종료일로 설정
+    startDate.setDate(startDate.getDate() - 6); // 1주일 전 날짜 계산 (6일 전)
+  
+    console.log(`1주일 전 날짜: ${startDate.toISOString().split('T')[0]}`);
+    console.log(`종료 날짜: ${endDate.toISOString().split('T')[0]}`);
   
     const queryUserId = 'SELECT id FROM users WHERE username = ?';
     db.query(queryUserId, [req.session.username], (err, userResults) => {
@@ -180,6 +185,7 @@ app.get('/get-graph', (req, res) => {
       }
   
       const userId = userResults[0].id;
+      console.log(`사용자 ID: ${userId}`);
   
       // 날짜 범위에 대한 쿼리
       const queryGraphData = `
@@ -192,12 +198,16 @@ app.get('/get-graph', (req, res) => {
           return res.status(500).json({ message: '데이터 조회 실패' });
         }
   
+        console.log(`조회된 데이터 수: ${weightResults.length}`);
+  
         // 데이터가 없을 경우 0 반환
         if (weightResults.length === 0) {
+          console.log('데이터가 없습니다. 0 반환');
           return res.json({ weight: 0 });
         }
   
         // 결과 반환
+        console.log('조회된 데이터:', weightResults);
         return res.json(weightResults);
       });
     });
