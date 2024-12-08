@@ -163,78 +163,67 @@ app.post("/save-target-weight", (req, res) => {
 // 오늘 날짜를 가지고 이번주를 출력해줌
 app.get('/get-graph', (req, res) => {
     if (!req.session || !req.session.username) {
-        return res.status(401).json({ message: '로그인이 필요합니다.' });
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
     }
-
+  
     const queryUserId = 'SELECT id FROM users WHERE username = ?';
     db.query(queryUserId, [req.session.username], (err, userResults) => {
-        if (err || userResults.length === 0) {
-            console.error(err || '사용자를 찾을 수 없습니다.');
-            return res.status(500).json({ message: '사용자 조회 실패' });
+      if (err || userResults.length === 0) {
+        console.error(err || '사용자를 찾을 수 없습니다.');
+        return res.status(500).json({ message: '사용자 조회 실패' });
+      }
+  
+      const userId = userResults[0].id;
+  
+      const queryGraphData = `SELECT date, weight FROM DateWeight WHERE user_id = ?`;
+      db.query(queryGraphData, [userId], (err, weightResults) => {
+        if (err) {
+          console.error('데이터 조회 중 에러', err);
+          return res.status(500).json({ message: '데이터 조회 실패' });
         }
-
-        const userId = userResults[0].id;
-
-        // 기준 날짜 및 주간 범위 계산
+  
+        console.log('Weight results from DB:', weightResults);
+  
+        // DB에서 가져온 데이터를 정리
+        const cleanedWeightResults = weightResults.map(row => ({
+          date: row.date.toISOString().split('T')[0], // 시간 제거, 날짜만 유지
+          weight: row.weight,
+        }));
+  
+        // 오늘 날짜를 기준으로 이번 주 (월요일 ~ 일요일) 계산
         const today = new Date();
+        const dayOfWeek = today.getDay(); // 요일 가져오기 (0: 일요일, 1: 월요일 ...)
+  
         const startOfWeek = new Date(today);
-        startOfWeek.setDate(today.getDate() - 6); // 오늘 기준 6일 전
-        startOfWeek.setHours(0, 0, 0, 0); // 시간 초기화
-        today.setHours(23, 59, 59, 999); // 시간 끝 설정
-
-        console.log("주간 범위 시작일:", startOfWeek, "종료일:", today);
-
-        const queryGraphData = `
-            SELECT DATE(date) AS date, weight 
-            FROM DateWeight 
-            WHERE user_id = ? AND date BETWEEN ? AND ?;
-        `;
-        db.query(
-            queryGraphData,
-            [
-                userId,
-                startOfWeek.toISOString().slice(0, 19).replace('T', ' '),
-                today.toISOString().slice(0, 19).replace('T', ' '),
-            ],
-            (err, weightResults) => {
-                if (err) {
-                    console.error('데이터 조회 중 에러', err);
-                    return res.status(500).json({ message: '데이터 조회 실패' });
-                }
-
-                console.log('Weight results from DB:', weightResults);
-
-                const weekDates = [];
-                const weights = [];
-                const allDatesInWeek = [];
-
-                // 주간 범위 날짜 생성
-                for (let d = new Date(startOfWeek); d <= today; d.setDate(d.getDate() + 1)) {
-                    const formattedDate = new Date(d).toISOString().split('T')[0];
-                    allDatesInWeek.push(formattedDate);
-                }
-
-                const cleanedWeightResults = weightResults.map(row => ({
-                    date: new Date(row.date).toISOString().split('T')[0],
-                    weight: row.weight,
-                }));
-
-                console.log('Cleaned weight data:', cleanedWeightResults);
-
-                // 클라이언트에 반환할 데이터 매핑
-                allDatesInWeek.forEach((date) => {
-                    const weightForDate = cleanedWeightResults.find((w) => w.date === date);
-                    weekDates.push(date);
-                    weights.push(weightForDate ? weightForDate.weight : 0);
-                });
-
-                console.log('Week Dates to Compare:', allDatesInWeek);
-
-                return res.status(200).json({ date: weekDates, weight: weights });
-            }
-        );
+        startOfWeek.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+  
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+  
+        const weekDates = [];
+        for (let d = new Date(startOfWeek); d <= endOfWeek; d.setDate(d.getDate() + 1)) {
+          weekDates.push(d.toISOString().split('T')[0]); // 날짜 리스트 생성
+        }
+  
+        console.log('Week Dates to Compare:', weekDates);
+  
+        // 주간 데이터와 DB 데이터를 매핑
+        const result = weekDates.map(date => {
+          const weightForDate = cleanedWeightResults.find(w => w.date === date);
+          return {
+            date,
+            weight: weightForDate ? weightForDate.weight : 0, // 값이 없으면 0 반환
+          };
+        });
+  
+        console.log('Final Weekly Data:', result);
+  
+        // 응답 반환
+        return res.status(200).json({ date: weekDates, weight: result.map(r => r.weight) });
+      });
     });
-});
+  });
+  
 
   
   
