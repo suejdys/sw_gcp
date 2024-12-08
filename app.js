@@ -160,8 +160,7 @@ app.post("/save-target-weight", (req, res) => {
   });
 });
 
-
-// 그래프 데이터 반환(클라이언트가 보낸 날짜를 기준으로 해당 주 데이터 반환)
+// 그래프 데이터 이번주거 반환
 app.get('/get-graph', (req, res) => {
     // 세션 확인
     if (!req.session || !req.session.username) {
@@ -178,12 +177,15 @@ app.get('/get-graph', (req, res) => {
   
       const userId = userResults[0].id; // userId 가져오기
   
-      // 오늘 날짜를 기준으로 주간 범위를 계산
-      const today = new Date();
+      // 오늘 날짜 기준 주간 범위 계산
+      const today = new Date(); 
+      const currentDay = today.getDay(); // 오늘 요일 값 (0: 일요일, 1: 월요일, ...)
       const startOfWeek = new Date(today);
-      startOfWeek.setDate(today.getDate() - today.getDay() + 1); // 오늘 기준으로 월요일
+  
+      // 월요일부터 주간 범위 시작
+      startOfWeek.setDate(today.getDate() - currentDay + 1); // 월요일 날짜로 설정
       const endOfWeek = new Date(startOfWeek);
-      endOfWeek.setDate(startOfWeek.getDate() + 6); // 일요일까지
+      endOfWeek.setDate(startOfWeek.getDate() + 6); // 주의 끝인 일요일까지
   
       console.log("주간 범위 시작일:", startOfWeek, "종료일:", endOfWeek);
   
@@ -238,9 +240,6 @@ app.get('/get-graph', (req, res) => {
       );
     });
   });
-  
-  
-  
   
   
   
