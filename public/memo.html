@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
   <title>Memo App</title>
-  
+
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -47,30 +48,40 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
     }
+
     .add-button:hover {
       background-color: #a9a9a9;
     }
 
     .memo-list {
-    margin-top: 140px; /* 원하는 만큼 아래로 내리기 */
-    max-height: calc(100vh - 170px); /* 화면 높이에 맞춰 최대 높이 설정 */
-    overflow-y: auto; /* 세로 스크롤 */
-    overflow-x: hidden;
+      margin-top: 140px;
+      /* 원하는 만큼 아래로 내리기 */
+      max-height: calc(100vh - 170px);
+      /* 화면 높이에 맞춰 최대 높이 설정 */
+      overflow-y: auto;
+      /* 세로 스크롤 */
+      overflow-x: hidden;
     }
 
     *::-webkit-scrollbar {
-    display: none;
+      display: none;
     }
 
     .memo-list article {
-      margin: 0 10px 15px; /* 좌우 마진을 5px로 설정 */
+      margin: 0 10px 15px;
+      /* 좌우 마진을 5px로 설정 */
       padding: 20px;
       border-radius: 15px;
-      min-height: 100px; /* 최소 높이를 설정 */
+      min-height: 100px;
+      /* 최소 높이를 설정 */
     }
-    .memo-list h2, .memo-list span, .memo-list p {
+
+    .memo-list h2,
+    .memo-list span,
+    .memo-list p {
       margin: 0;
     }
+
     .memo-list button {
       margin-right: 5px;
       border-radius: 7px;
@@ -90,19 +101,22 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      }
+    }
 
     .icon-button {
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: #6b7280; /* text-gray-500에 해당하는 색상 */
+      color: #6b7280;
+      /* text-gray-500에 해당하는 색상 */
       text-align: center;
-      justify-content: center; /* 세로로 중앙 정렬 */
+      justify-content: center;
+      /* 세로로 중앙 정렬 */
     }
 
     .icon-button.active {
-      color: #319795; /* text-teal-600 색상 */
+      color: #319795;
+      /* text-teal-600 색상 */
     }
 
     .icon-button button {
@@ -112,38 +126,49 @@
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      background-color: transparent; /* 배경을 투명으로 설정 */
-      border: none; /* 테두리 제거 */
-      color: inherit; /* 부모 색상 상속 */
-      outline: none; /* 포커스 스타일 제거 */
-      margin: 0; /* 버튼에 기본 마진 제거 */
-      transform: translateY(4px); /* 아이콘을 아래로 내리기 위해 추가 */
+      background-color: transparent;
+      /* 배경을 투명으로 설정 */
+      border: none;
+      /* 테두리 제거 */
+      color: inherit;
+      /* 부모 색상 상속 */
+      outline: none;
+      /* 포커스 스타일 제거 */
+      margin: 0;
+      /* 버튼에 기본 마진 제거 */
+      transform: translateY(4px);
+      /* 아이콘을 아래로 내리기 위해 추가 */
     }
 
     .icon-button p {
-      font-size: 12px !important; 
+      font-size: 12px !important;
       margin-top: 4px;
     }
-    
-  .memo-header {
-  position: relative; /* 위치를 기준으로 조정 */
-  top: 100px; /* 텍스트를 위로 이동 */
-  left : 8px;
-  font-weight: bold; /* 강조 */
-}
 
-.memo-header p {
-  font-size: 25px; /* 텍스트 크기 */
-  color: #2d3748; /* 어두운 회색 텍스트 색상 */
-}
+    .memo-header {
+      position: relative;
+      /* 위치를 기준으로 조정 */
+      top: 100px;
+      /* 텍스트를 위로 이동 */
+      left: 8px;
+      font-weight: bold;
+      /* 강조 */
+    }
 
+    .memo-header p {
+      font-size: 25px;
+      /* 텍스트 크기 */
+      color: #2d3748;
+      /* 어두운 회색 텍스트 색상 */
+    }
   </style>
 </head>
+
 <body>
   <div class="main">
-  <div class="memo-header">
-    <p>메모장</p>
-  </div>
+    <div class="memo-header">
+      <p>메모장</p>
+    </div>
     <!-- 메모 리스트 -->
     <div class="memo-list"></div>
     <!-- 추가 버튼 -->
@@ -198,117 +223,129 @@
     const memoList = document.querySelector('.memo-list');
 
     function setMemo() {
-    memoList.innerHTML = ''; // 기존 메모 리스트 초기화
-    const colors = ['#FE9B72', '#FDC771', '#E1EC8C', '#80DEEA', '#CF93D9'];
+      memoList.innerHTML = ''; // 기존 메모 리스트 초기화
+      const colors = ['#FE9B72', '#FDC771', '#E1EC8C', '#80DEEA', '#CF93D9'];
 
-    // 서버에서 메모 데이터 가져오기
-    fetch('/get-notes')
+      // 서버에서 메모 데이터 가져오기
+      fetch('/get-notes')
         .then(response => {
           if (response.status === 401) {
             // 401 에러 처리
             alert('로그인을 해주세요.');
             window.location.href = 'index.html'; // index.html로 리디렉션
             return; // 이후 코드 실행 방지
-        }
-          
-            if (!response.ok) {
-                throw new Error('메모를 가져오는 데 실패했습니다.');
-            }
-            return response.json();
+          }
+
+          if (!response.ok) {
+            throw new Error('메모를 가져오는 데 실패했습니다.');
+          }
+          return response.json();
         })
         .then(memos => {
-          
-            memos.slice().reverse().forEach((memo, index) => {
-                const article = document.createElement('article'); 
-                article.setAttribute('data-id', memo.id);
-                article.style.display = 'block'; // p 요소를 block으로 설정
 
-                const colorIndex = (memos.length - 1 - index) % 5; // 최신 메모부터 색상 지정
-                article.style.backgroundColor = colors[colorIndex];
+          memos.slice().reverse().forEach((memo, index) => {
+            const article = document.createElement('article');
+            article.setAttribute('data-id', memo.id);
+            article.style.display = 'block'; // p 요소를 block으로 설정
 
-                const date = document.createElement('span');
-                date.textContent = new Date(memo.created_at).toLocaleString(); // 날짜 포맷팅
-                date.style.fontSize = '16px'; // 제목 글자 크기 설정
-                date.style.marginBottom = '6px';
-                date.style.display = 'block'; // p 요소를 block으로 설정
+            const colorIndex = (memos.length - 1 - index) % 5; // 최신 메모부터 색상 지정
+            article.style.backgroundColor = colors[colorIndex];
 
-                const title = document.createElement('h2');
-                title.textContent = memo.title;
-                title.style.fontSize = '16px'; // 제목 글자 크기 설정
-                title.style.marginBottom = '6px';
-                title.style.display = 'block'; // p 요소를 block으로 설정
+            const date = document.createElement('span');
+            date.textContent = new Date(memo.created_at).toLocaleString(); // 날짜 포맷팅
+            date.style.fontSize = '16px'; // 제목 글자 크기 설정
+            date.style.marginBottom = '6px';
+            date.style.display = 'block'; // p 요소를 block으로 설정
 
-                const content = document.createElement('p');
-                content.textContent = memo.contents; // 서버에서 가져온 내용
-                content.style.fontSize = '13px'; // 제목 글자 크기 설정
-                content.style.marginBottom = '20px';
+            const title = document.createElement('h2');
+            title.textContent = memo.title;
+            title.style.fontSize = '16px'; // 제목 글자 크기 설정
+            title.style.marginBottom = '6px';
+            title.style.display = 'block'; // p 요소를 block으로 설정
 
-                const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = '삭제';
-                deleteBtn.addEventListener('click', () => deleteMemo(memo.id));
-                deleteBtn.style.float = 'right'; // 오른쪽으로 배치
-                deleteBtn.style.color = 'black';
-                deleteBtn.style.backgroundColor = 'white';
-                deleteBtn.style.width = '40px'; // 너비 100px
-                deleteBtn.style.height = '22px'; // 높이 40px
-                deleteBtn.style.position = 'relative'; // 위치 기준 변경
-                deleteBtn.style.bottom = '4px'; // 현재 위치에서 아래로 10px
-                deleteBtn.style.border = '2px solid black'; // 2px, 실선, 검은색
-                deleteBtn.style.borderRadius = '7px'; // 둥근 모서리
+            const content = document.createElement('p');
+            content.textContent = memo.contents; // 서버에서 가져온 내용
+            content.style.fontSize = '13px'; // 제목 글자 크기 설정
+            content.style.marginBottom = '20px';
 
-                const editBtn = document.createElement('button');
-                editBtn.textContent = '수정';
-                editBtn.addEventListener('click', () => editMemo(memo));
-                editBtn.style.float = 'right'; // 오른쪽으로 배치
-                editBtn.style.color = 'black';
-                editBtn.style.backgroundColor = 'white';
-                editBtn.style.width = '40px'; // 너비 100px
-                editBtn.style.height = '22px'; // 높이 40px
-                editBtn.style.position = 'relative'; // 위치 기준 변경
-                editBtn.style.bottom = '4px'; // 현재 위치에서 아래로 10px
-                editBtn.style.border = '2px solid black'; // 2px, 실선, 검은색
-                editBtn.style.borderRadius = '7px'; // 둥근 모서리
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = '삭제';
+            deleteBtn.addEventListener('click', () => deleteMemo(memo.id));
+            deleteBtn.style.float = 'right'; // 오른쪽으로 배치
+            deleteBtn.style.color = 'black';
+            deleteBtn.style.backgroundColor = 'white';
+            deleteBtn.style.width = '40px'; // 너비 100px
+            deleteBtn.style.height = '22px'; // 높이 40px
+            deleteBtn.style.position = 'relative'; // 위치 기준 변경
+            deleteBtn.style.bottom = '4px'; // 현재 위치에서 아래로 10px
+            deleteBtn.style.border = '2px solid black'; // 2px, 실선, 검은색
+            deleteBtn.style.borderRadius = '7px'; // 둥근 모서리
 
-                article.append(date, title, content, editBtn, deleteBtn);
-                memoList.append(article);
-            });
+            const editBtn = document.createElement('button');
+            editBtn.textContent = '수정';
+            editBtn.addEventListener('click', () => editMemo(memo));
+            editBtn.style.float = 'right'; // 오른쪽으로 배치
+            editBtn.style.color = 'black';
+            editBtn.style.backgroundColor = 'white';
+            editBtn.style.width = '40px'; // 너비 100px
+            editBtn.style.height = '22px'; // 높이 40px
+            editBtn.style.position = 'relative'; // 위치 기준 변경
+            editBtn.style.bottom = '4px'; // 현재 위치에서 아래로 10px
+            editBtn.style.border = '2px solid black'; // 2px, 실선, 검은색
+            editBtn.style.borderRadius = '7px'; // 둥근 모서리
+
+            article.append(date, title, content, editBtn, deleteBtn);
+            memoList.append(article);
+          });
         })
         .catch(error => {
-            console.error('메모를 불러오는 중 오류 발생:', error);
-            alert('메모를 불러오는 중 오류가 발생했습니다.');
+          console.error('메모를 불러오는 중 오류 발생:', error);
+          alert('메모를 불러오는 중 오류가 발생했습니다.');
         });
-}
+    }
+    // 메모 수정(새창으로 이동 & 쿼리파라미터로 넘겨줌)
+    function editMemo(memo) {
+      const url = new URL("memoedit.html", window.location.origin);
+      url.searchParams.set("id", memo.id);
+      url.searchParams.set("title", memo.title);
+      url.searchParams.set("contents", memo.contents);
+
+      // memosetting 페이지로 이동하며 메모 데이터 전달
+      location.href = url.toString();
+    }
+
 
 
     function deleteMemo(id) {
-    // API 호출로 메모 삭제 요청
-    fetch(`/delete-note/${id}`, {
+      // API 호출로 메모 삭제 요청
+      fetch(`/delete-note/${id}`, {
         method: 'DELETE',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
-    })
-    .then(response => {
-        if (!response.ok) {
+      })
+        .then(response => {
+          if (!response.ok) {
             throw new Error('메모 삭제 실패: ' + response.statusText);
-        }
-        return response.json();
-    })
-    .then(data => {
-        alert(data.message); // 성공 메시지 출력
-        // UI에서 삭제된 메모 제거 (예: 다시 목록 불러오기)
-        setMemo(); // 이 함수에서 메모 목록을 갱신하도록 구현
-    })
-    .catch(error => {
-        console.error('삭제 오류:', error);
-        alert('메모를 삭제하는 중 오류가 발생했습니다.');
-    });
-}
+          }
+          return response.json();
+        })
+        .then(data => {
+          alert(data.message); // 성공 메시지 출력
+          // UI에서 삭제된 메모 제거 (예: 다시 목록 불러오기)
+          setMemo(); // 이 함수에서 메모 목록을 갱신하도록 구현
+        })
+        .catch(error => {
+          console.error('삭제 오류:', error);
+          alert('메모를 삭제하는 중 오류가 발생했습니다.');
+        });
+    }
 
 
-    window.onload = function() {
+    window.onload = function () {
       setMemo();
     };
   </script>
 </body>
+
 </html>

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>memoadd</title>
+  <title>memoedit</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
   <style>
@@ -119,68 +119,78 @@
       <span class="absolute absolute-position"
         style="top: 75px; left: 1px; font-size: 15px; font-weight: bold;">내용</span>
       <textarea id="memoContent" class="memo-content" placeholder="메모 내용을 입력하세요"></textarea>
-      <button id="memoBtn" class="memo-btn">메모 추가</button>
+      <button id="memoBtn" class="memo-btn">메모 수정</button>
     </div>
     <script>
-
-      // 제목과 내용 입력 감지
-      const titleInput = document.getElementById("memoTitle");
-      const contentInput = document.getElementById("memoContent");
-      const memoBtn = document.getElementById("memoBtn");
-
-      function updateButtonState() {
-        // 제목과 내용이 비어있지 않으면 버튼 활성화
-        if (titleInput.value.trim() && contentInput.value.trim()) {
-          memoBtn.classList.add("active");
-          memoBtn.disabled = false;  // 버튼 활성화
-          memoBtn.onclick = addMemo;  // 버튼 클릭 시 addMemo 함수 호출
-        } else {
-          memoBtn.classList.remove("active");
-          memoBtn.disabled = true;  // 버튼 비활성화
-          memoBtn.onclick = null;   // 비활성화 상태에서는 클릭 이벤트 제거
+        const titleInput = document.getElementById("memoTitle");
+        const contentInput = document.getElementById("memoContent");
+        const memoBtn = document.getElementById("memoBtn");
+      
+        // URL에서 쿼리 파라미터 읽기
+        const params = new URLSearchParams(window.location.search);
+        const memoId = params.get("id");
+        const memoTitle = params.get("title");
+        const memoContents = params.get("contents");
+      
+        // 수정 모드 확인
+        if (memoId && memoTitle && memoContents) {
+          // 수정 모드 활성화: 제목과 내용을 필드에 채우기
+          titleInput.value = memoTitle;
+          contentInput.value = memoContents;
+          memoBtn.textContent = "메모 수정"; // 버튼 텍스트 변경
+          memoBtn.classList.add("active"); // 버튼 활성화
+          memoBtn.disabled = false; // 버튼 클릭 가능
         }
-      }
-
-
-      async function addMemo() {
-        const title = titleInput.value; // 메모 제목 내용
-        const content = contentInput.value; // 메모 내용
-
-
-        if (!titleInput || !contentInput) {
-          alert('제목과 내용을 모두 입력해주세요');
-          return;
-        }
-
-        try {
-          const response = await fetch('/add-note', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: title, contents: content }),
-          });
-
-          const result = await response.json();
-
-          if (response.ok) {
-            alert('메모가 성공적으로 추가되었습니다');
-            location.href = "memo.html";
-          } else {
-            alert(`메모 추가 실패: ${result.message}`);
+      
+        // 버튼 동작 설정
+        memoBtn.onclick = async () => {
+          const title = titleInput.value.trim();
+          const content = contentInput.value.trim();
+      
+          if (!title || !content) {
+            alert("제목과 내용을 모두 입력해주세요.");
+            return;
           }
-        } catch (error) {
-          console.error('메모 추가 중 문제가 발생했습니다', error);
-          alert('메모 추가 중 문제가 발생했습니다');
+      
+          if (memoId) {
+            // 수정 API 호출
+            try {
+              const response = await fetch(`/update-notes/${memoId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title, content }),
+              });
+      
+              if (response.ok) {
+                alert("메모가 성공적으로 수정되었습니다.");
+                location.href = "memo.html"; // 메모 목록 페이지로 이동
+              } else {
+                const errorData = await response.json();
+                alert(`메모 수정 실패: ${errorData.message}`);
+              }
+            } catch (error) {
+              console.error("메모 수정 중 문제가 발생했습니다:", error);
+              alert("메모 수정 중 문제가 발생했습니다.");
+            }
+          }
+        };
+      
+        // 제목과 내용 입력 시 버튼 상태 업데이트
+        function updateButtonState() {
+          if (titleInput.value.trim() && contentInput.value.trim()) {
+            memoBtn.classList.add("active");
+            memoBtn.disabled = false;
+          } else {
+            memoBtn.classList.remove("active");
+            memoBtn.disabled = true;
+          }
         }
-      }
-
-
-
-
-      // 입력 이벤트 리스너 추가
-      titleInput.addEventListener("input", updateButtonState);
-      contentInput.addEventListener("input", updateButtonState);
-    </script>
-
+      
+        titleInput.addEventListener("input", updateButtonState);
+        contentInput.addEventListener("input", updateButtonState);
+      </script>
+      
+    
 
 
     <!-- 
