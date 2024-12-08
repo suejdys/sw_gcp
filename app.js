@@ -190,7 +190,7 @@ app.get('/get-graph', (req, res) => {
       console.log("주간 범위 시작일:", startOfWeek, "종료일:", endOfWeek);
   
       // DB에서 해당 주의 데이터 조회
-      const queryGraphData = `SELECT date, weight FROM DateWeight WHERE user_id = ? AND date BETWEEN ? AND ?`;
+      const queryGraphData = `SELECT date, weight FROM DateWeight WHERE user_id = ? AND DATE(date) BETWEEN ? AND ?;`;
       db.query(
         queryGraphData,
         [
