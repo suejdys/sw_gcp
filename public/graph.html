@@ -86,7 +86,11 @@
     // 주간 데이터 조회
     async function fetchWeeklyData() {
       const today = new Date();
-      const formattedDate = today.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
+      const formattedDate = today.toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).replace(/\./g, '').replace(/\s/g, '-'); // yyyy-mm-dd 형식으로 변환
       try {
         const response = await fetch(`/get-graph?date=${formattedDate}`);
         if (response.ok) {
