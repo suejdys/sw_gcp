@@ -160,6 +160,18 @@
   </div>
 
   <script>
+    const Utils = {
+      CHART_COLORS: {
+        red: 'rgba(255, 99, 132, 1)',
+        blue: 'rgba(54, 162, 235, 1)',
+      },
+      transparentize: (color, opacity) => {
+        const alpha = opacity || 0.5;
+        return color.replace(/[^,]+(?=\))/, alpha);
+      },
+      numbers: (cfg) => Array.from({ length: cfg.count }, () => Math.random() * (cfg.max - cfg.min) + cfg.min),
+    };
+
     // Chart.js에서 사용할 데이터 및 레이블 초기화
     const ctx = document.getElementById('weightChart').getContext('2d');
     let weightChart;
@@ -251,8 +263,12 @@
   
     // 페이지 로드 시 현재 날짜로 API 호출
     document.addEventListener('DOMContentLoaded', () => {
-      const today = new Date().toISOString().split('T')[0]; // 오늘 날짜 가져오기
-      fetchData(today); // 그래프 데이터 요청
+      const todayStr = today.toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).replace(/\./g, '').replace(/\s/g, '-'); // yyyy-mm-dd 형식으로 변환
+      fetchData(todayStr); // 그래프 데이터 요청
     });
   </script>
   
