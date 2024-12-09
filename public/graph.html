@@ -1,173 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>주간 체중 그래프</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background-color: #f9f9f9;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주간 체중 그래프</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f7fafc;
+        }
 
-    h1 {
-      margin-top: 20px;
-    }
+        .container {
+            width: 100%;
+            max-width: 390px;
+            height: 844px;
+            background-color: white;
+            box-sizing: border-box;
+            position: relative;
+        }
 
-    canvas {
-      max-width: 100%;
-      height: auto;
-    }
+        p {
+            font-weight: 700;
+            font-size: 20px;
+            margin-left: 12px;
+            margin-top: 120px;
+        }
 
-    #chart-container {
-      width: 90vw;
-      max-width: 600px;
-      height: 400px;
-    }
-  </style>
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #chart-container {
+            margin-top: 50px;
+            width: 370px;
+            max-width: 390px;
+            height: 270px;
+        }
+
+        /* 하단 아이콘 영역 */
+        .bottom-icons {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            max-width: 390px;
+            height: 78px;
+            background-color: white;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .icon-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6b7280;
+            /* text-gray-500에 해당하는 색상 */
+            text-align: center;
+            justify-content: center;
+            /* 세로로 중앙 정렬 */
+        }
+
+        .icon-button.active {
+            color: #319795;
+            /* text-teal-600 색상 */
+        }
+
+        .icon-button button {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            background-color: transparent;
+            /* 배경을 투명으로 설정 */
+            border: none;
+            /* 테두리 제거 */
+            color: inherit;
+            /* 부모 색상 상속 */
+            outline: none;
+            /* 포커스 스타일 제거 */
+            margin: 0;
+            /* 버튼에 기본 마진 제거 */
+            transform: translateY(4px);
+            /* 아이콘을 아래로 내리기 위해 추가 */
+        }
+
+        .icon-button p {
+            font-size: 12px !important;
+            margin-top: 4px;
+            margin-right: 10px !important;
+        }
+
+        .graph-header {
+            position: relative;
+            /* 위치를 기준으로 조정 */
+            top: 20px;
+            /* 텍스트를 위로 이동 */
+            left: 15px;
+            font-weight: 600;
+            /* 굵은 텍스트 */
+        }
+
+        .graph-header p {
+            font-size: 23px;
+            /* 텍스트 크기 */
+            color: #2d3748;
+            /* 어두운 회색 텍스트 색상 */
+            line-height: 1.4;
+            /* 줄 간격 */
+        }
+
+        .graph-header p span {
+            font-size: 23px;
+            /* 텍스트 크기 */
+            color: #2d3748;
+            /* 어두운 회색 텍스트 색상 */
+        }
+    </style>
 </head>
+
 <body>
-  <h1>주간 체중 그래프</h1>
+    <div class="container">
+        <div class="graph-header">
+            <p>
+                몸무게를<br />
+                <span>그래프로 나타냈어요</span>
+            </p>
+        </div>
 
-  <!-- 그래프 -->
-  <div id="chart-container">
-    <canvas id="weightChart"></canvas>
-  </div>
+        <!-- 그래프 -->
+        <div id="chart-container">
+            <canvas id="weightChart"></canvas>
+        </div>
 
-  <script>
-    let chartInstance;
-    let targetWeight = null;
+        <!-- 하단 아이콘 영역 -->
+        <div class="bottom-icons">
+            <div class="icon-button active">
+                <button onclick="location.href='graph.html'">
+                    <span class="material-symbols-rounded">show_chart</span>
+                </button>
+                <p>그래프</p>
+            </div>
+            <div class="icon-button">
+                <button onclick="location.href='main.html'">
+                    <span class="material-symbols-rounded">calendar_month</span>
+                </button>
+                <p>캘린더</p>
+            </div>
+            <div class="icon-button">
+                <button onclick="location.href='memo.html'">
+                    <span class="material-symbols-rounded">description</span>
+                </button>
+                <p>메모장</p>
+            </div>
+            <div class="icon-button">
+                <button onclick="location.href='target.html'">
+                    <span class="material-symbols-rounded">person</span>
+                </button>
+                <p>목표 설정</p>
+            </div>
+        </div>
+    </div>
 
-    // 목표 몸무게 조회
-    async function fetchTargetWeight() {
-      try {
-        const response = await fetch('/get-target-weight', {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
+    <script>
+        const Utils = {
+            CHART_COLORS: {
+                red: 'rgba(255, 99, 132, 1)',
+                blue: 'rgba(54, 162, 235, 1)',
+            },
+            transparentize: (color, opacity) => {
+                const alpha = opacity || 0.5;
+                return color.replace(/[^,]+(?=\))/, alpha);
+            },
+            numbers: (cfg) => Array.from({ length: cfg.count }, () => Math.random() * (cfg.max - cfg.min) + cfg.min),
+        };
+
+        // Chart.js에서 사용할 데이터 및 레이블 초기화
+        const ctx = document.getElementById('weightChart').getContext('2d');
+        let weightChart;
+
+        // 그래프 렌더링 함수
+        function renderGraph(data) {
+            const labels = data.map(entry => {
+        const [year, month, day] = entry.date.split('-'); // yyyy-mm-dd 형식을 분리
+        return `${month}.${day}`; // MM.DD 형식으로 반환
+    });
+            const weights = data.map(item => item.weight); // 체중 배열
+
+            // 그래프가 이미 존재하면 업데이트
+            if (weightChart) {
+                weightChart.data.labels = labels;
+                weightChart.data.datasets[0].data = weights;
+                weightChart.update();
+                return;
+            }
+
+            // Chart.js 초기화
+            weightChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '체중',
+                            data: weights,
+                            borderColor: Utils.CHART_COLORS.red,
+                            backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.5),
+                            borderWidth: 2,
+                            tension: 0.4,
+                            pointRadius: 2.5,
+                        },
+                        {
+                            label: '목표 몸무게',
+                            data: Array(weights.length).fill(70), // 목표 몸무게를 고정값으로 설정
+                            borderColor: Utils.CHART_COLORS.blue,
+                            backgroundColor: Utils.transparentize(Utils.CHART_COLORS.blue, 0.5),
+                            borderWidth: 2,
+                            tension: 0.4,
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            align: 'end',
+                            labels: {
+                                boxWidth: 12,
+                                boxHeight: 3,
+                                padding: 10,
+                                boxBorderRadius: 10,
+                                font: { size: 10 },
+                                color: '#333',
+                            },
+                        },
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true },
+                        },
+                        y: {
+                            title: { display: true, font: { size: 14 } },
+                            beginAtZero: false,
+                        },
+                    },
+                },
+            });
+        }
+
+        // API 호출 함수
+        async function fetchData(date) {
+            try {
+                const response = await fetch(`/get-graph?date=${date}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                renderGraph(data); // 그래프에 데이터 반영
+            } catch (error) {
+                console.error('데이터 가져오기 실패:', error);
+            }
+        }
+
+        // 페이지 로드 시 현재 날짜로 API 호출
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const todayStr = today.toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+            }).replace(/\./g, '').replace(/\s/g, '-'); // yyyy-mm-dd 형식으로 변환
+            fetchData(todayStr); // 그래프 데이터 요청
         });
+    </script>
 
-        if (response.status === 401) {
-          alert("로그인 필요");
-          window.location.href = '/'; // 401 오류 발생 시 index.html로 리디렉션
-        }
-
-        const data = await response.json();
-
-        if (response.ok) {
-          targetWeight = data.targetWeight || 0; // 목표 몸무게가 없으면 기본값 0 설정
-        } else {
-          console.error('목표 몸무게를 가져오는 데 실패했습니다:', data.message);
-        }
-      } catch (error) {
-        console.error('Error fetching target weight:', error);
-      }
-    }
-
-    // 주간 데이터 조회
-    async function fetchWeeklyData() {
-      const today = new Date();
-      const formattedDate = today.toISOString().split('T')[0]; // yyyy-mm-dd 형식으로 변환
-      try {
-        const response = await fetch(`/get-graph?date=${formattedDate}`);
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Received weekly data:', data);
-
-          // 날짜 형식을 MM.DD로 변경
-          const labels = data.map(entry => {
-            const [year, month, day] = entry.date.split('-'); // yyyy-mm-dd 형식을 분리
-            return `${month}.${day}`; // MM.DD 형식으로 반환
-          });
-
-          const weights = data.map(entry => entry.weight);
-
-          // 목표 몸무게 배열 생성 (데이터 길이만큼 반복)
-          const targetWeights = Array(labels.length).fill(targetWeight || 0);
-
-          renderGraph(labels, weights, targetWeights); // 그래프 렌더링
-        } else {
-          console.error('Failed to fetch weekly data:', await response.text());
-        }
-      } catch (error) {
-        console.error('Error fetching weekly data:', error);
-      }
-    }
-
-    // 그래프 그리기
-    function renderGraph(labels, weights, targetWeights) {
-      const ctx = document.getElementById('weightChart').getContext('2d');
-
-      if (chartInstance) {
-        chartInstance.destroy(); // 기존 그래프 제거
-      }
-
-      chartInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels, // MM.DD 형식의 날짜
-          datasets: [
-            {
-              label: '체중 (kg)',
-              data: weights,
-              borderColor: 'rgba(75, 192, 192, 1)',
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              borderWidth: 2,
-              tension: 0.4,
-            },
-            {
-              label: '목표 몸무게 (kg)',
-              data: targetWeights,
-              borderColor: 'rgba(255, 99, 132, 1)',
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              borderWidth: 2,
-              tension: 0.4,
-              borderDash: [5, 5], // 점선 스타일
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: true,
-              position: 'top',
-            },
-          },
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: '날짜',
-              },
-            },
-            y: {
-              title: {
-                display: true,
-                text: '체중 (kg)',
-              },
-              beginAtZero: false,
-            },
-          },
-        },
-      });
-    }
-
-    // 페이지 로드 시 목표 몸무게 및 그래프 데이터 조회
-    async function initialize() {
-      await fetchTargetWeight(); // 목표 몸무게 먼저 로드
-      fetchWeeklyData(); // 주간 데이터 로드
-    }
-
-    initialize();
-  </script>
 </body>
+
 </html>
