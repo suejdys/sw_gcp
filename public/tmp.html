@@ -272,6 +272,10 @@
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const data = await response.json();
+                const labels = data.map(entry => {
+            const [year, month, day] = entry.date.split('-'); // yyyy-mm-dd 형식을 분리
+            return `${month}.${day}`; // MM.DD 형식으로 반환
+          });
                 renderGraph(data); // 그래프에 데이터 반영
             } catch (error) {
                 console.error('데이터 가져오기 실패:', error);
