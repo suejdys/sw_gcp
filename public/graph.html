@@ -31,23 +31,14 @@
       max-width: 600px;
       height: 400px;
     }
-
-    #target-weight {
-      margin-top: 10px;
-      font-size: 18px;
-      color: #555;
-    }
   </style>
 </head>
 <body>
   <h1>주간 체중 그래프</h1>
 
-  <!-- 목표 몸무게 -->
-  <div id="target-weight">목표 몸무게: 로딩 중...</div>
-
   <!-- 그래프 -->
-  <div id="chart-container" background-color: #f0f0f0>
-    <canvas id="weightChart" ></canvas>
+  <div id="chart-container">
+    <canvas id="weightChart"></canvas>
   </div>
 
   <script>
@@ -60,7 +51,7 @@
         const response = await fetch('/get-target-weight', {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include', // 로그인 세션 유지
+          credentials: 'include',
         });
 
         if (response.status === 401) {
@@ -71,11 +62,7 @@
         const data = await response.json();
 
         if (response.ok) {
-          targetWeight = data.targetWeight;
-          document.getElementById('target-weight').innerText = 
-            targetWeight === null
-              ? '목표 몸무게가 설정되지 않았습니다'
-              : `목표 몸무게: ${targetWeight}kg`;
+          targetWeight = data.targetWeight || 0; // 목표 몸무게가 없으면 기본값 0 설정
         } else {
           console.error('목표 몸무게를 가져오는 데 실패했습니다:', data.message);
         }
@@ -84,29 +71,22 @@
       }
     }
 
-    // 요일을 계산하는 함수
-    function getDayOfWeek(dateString) {
-      const date = new Date(dateString);
-      const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
-      return daysOfWeek[date.getDay()];
-    }
-
     // 주간 데이터 조회
     async function fetchWeeklyData() {
       const today = new Date();
-      const formattedDate = today.toLocaleDateString('ko-KR', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      }).replace(/\./g, '').replace(/\s/g, '-'); // yyyy-mm-dd 형식으로 변환
+      const formattedDate = today.toISOString().split('T')[0]; // yyyy-mm-dd 형식으로 변환
       try {
         const response = await fetch(`/get-graph?date=${formattedDate}`);
         if (response.ok) {
           const data = await response.json();
           console.log('Received weekly data:', data);
 
-          // Extract labels (dates and days of the week) and weights
-          const labels = data.map(entry => `${entry.date} (${getDayOfWeek(entry.date)})`);
+          // 날짜 형식을 MM.DD로 변경
+          const labels = data.map(entry => {
+            const [year, month, day] = entry.date.split('-'); // yyyy-mm-dd 형식을 분리
+            return `${month}.${day}`; // MM.DD 형식으로 반환
+          });
+
           const weights = data.map(entry => entry.weight);
 
           // 목표 몸무게 배열 생성 (데이터 길이만큼 반복)
@@ -132,7 +112,7 @@
       chartInstance = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: labels, // 날짜와 요일
+          labels: labels, // MM.DD 형식의 날짜
           datasets: [
             {
               label: '체중 (kg)',
@@ -149,7 +129,7 @@
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
               borderWidth: 2,
               tension: 0.4,
-              borderDash: [5, 5], // 점선
+              borderDash: [5, 5], // 점선 스타일
             },
           ],
         },
