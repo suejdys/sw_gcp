@@ -195,7 +195,10 @@
 
         // 그래프 렌더링 함수
         function renderGraph(data) {
-            const labels = data.map(item => item.date); // 날짜 배열
+            const labels = data.map(entry => {
+        const [year, month, day] = entry.date.split('-'); // yyyy-mm-dd 형식을 분리
+        return `${month}.${day}`; // MM.DD 형식으로 반환
+    });
             const weights = data.map(item => item.weight); // 체중 배열
 
             // 그래프가 이미 존재하면 업데이트
@@ -272,10 +275,7 @@
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const data = await response.json();
-                const labels = data.map(entry => {
-            const [year, month, day] = entry.date.split('-'); // yyyy-mm-dd 형식을 분리
-            return `${month}.${day}`; // MM.DD 형식으로 반환
-          });
+                
                 renderGraph(data); // 그래프에 데이터 반영
             } catch (error) {
                 console.error('데이터 가져오기 실패:', error);
