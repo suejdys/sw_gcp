@@ -2,15 +2,15 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>주간 체중 그래프</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주간 체중 그래프</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
-    <style>
-        body {
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+  <style>
+    body {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
@@ -37,13 +37,15 @@
       background-color: white;
       box-sizing: border-box;
       position: relative;
-      overflow-y: auto; /* 세로 스크롤 */
+      overflow-y: auto;
+      /* 세로 스크롤 */
       overflow-x: hidden;
-      padding-bottom: 20px; /* 마지막 부분에 20px 여백 추가 */
+      padding-bottom: 20px;
+      /* 마지막 부분에 20px 여백 추가 */
     }
 
     *::-webkit-scrollbar {
-    display: none;
+      display: none;
     }
 
     p {
@@ -63,18 +65,24 @@
       width: 370px;
       max-width: 370px;
       height: 270px;
-      
+
     }
 
     #ageWeightChart {
-    max-width: 390px !important;
-    width: 390px !important;  /* 원하는 너비 */
-    height: 210px !important; /* 원하는 높이 */
-    display: block;  /* block으로 설정 */
-    margin-left: auto;  /* 자동 왼쪽 여백 */
-    margin-right: auto;  /* 자동 오른쪽 여백 */
-    padding-bottom: 20px; /* 마지막 부분에 20px 여백 추가 */
-}
+      max-width: 390px !important;
+      width: 390px !important;
+      /* 원하는 너비 */
+      height: 210px !important;
+      /* 원하는 높이 */
+      display: block;
+      /* block으로 설정 */
+      margin-left: auto;
+      /* 자동 왼쪽 여백 */
+      margin-right: auto;
+      /* 자동 오른쪽 여백 */
+      padding-bottom: 20px;
+      /* 마지막 부분에 20px 여백 추가 */
+    }
 
 
 
@@ -97,13 +105,16 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: #6b7280; /* text-gray-500에 해당하는 색상 */
+      color: #6b7280;
+      /* text-gray-500에 해당하는 색상 */
       text-align: center;
-      justify-content: center; /* 세로로 중앙 정렬 */
+      justify-content: center;
+      /* 세로로 중앙 정렬 */
     }
 
     .icon-button.active {
-      color: #319795; /* text-teal-600 색상 */
+      color: #319795;
+      /* text-teal-600 색상 */
     }
 
     .icon-button button {
@@ -113,88 +124,110 @@
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      background-color: transparent; /* 배경을 투명으로 설정 */
-      border: none; /* 테두리 제거 */
-      color: inherit; /* 부모 색상 상속 */
-      outline: none; /* 포커스 스타일 제거 */
-      margin: 0; /* 버튼에 기본 마진 제거 */
-      transform: translateY(4px); /* 아이콘을 아래로 내리기 위해 추가 */
+      background-color: transparent;
+      /* 배경을 투명으로 설정 */
+      border: none;
+      /* 테두리 제거 */
+      color: inherit;
+      /* 부모 색상 상속 */
+      outline: none;
+      /* 포커스 스타일 제거 */
+      margin: 0;
+      /* 버튼에 기본 마진 제거 */
+      transform: translateY(4px);
+      /* 아이콘을 아래로 내리기 위해 추가 */
     }
 
     .icon-button p {
-      font-size: 12px !important; 
+      font-size: 12px !important;
       margin-top: 4px;
       margin-right: 10px !important;
     }
 
     .graph-header {
-      position: relative; /* 위치를 기준으로 조정 */
-      top: 20px; /* 텍스트를 위로 이동 */
+      position: relative;
+      /* 위치를 기준으로 조정 */
+      top: 20px;
+      /* 텍스트를 위로 이동 */
       left: 15px;
-      font-weight: 600; /* 굵은 텍스트 */
+      font-weight: 600;
+      /* 굵은 텍스트 */
     }
 
-    
+
 
     .graph-header p {
-      font-size: 20px; /* 텍스트 크기 */
-      color: #2d3748; /* 어두운 회색 텍스트 색상 */
-      line-height: 1.4; /* 줄 간격 */
+      font-size: 20px;
+      /* 텍스트 크기 */
+      color: #2d3748;
+      /* 어두운 회색 텍스트 색상 */
+      line-height: 1.4;
+      /* 줄 간격 */
     }
 
     .graph-header p span {
-      font-size: 20px; /* 텍스트 크기 */
-      color: #2d3748; /* 어두운 회색 텍스트 색상 */
+      font-size: 20px;
+      /* 텍스트 크기 */
+      color: #2d3748;
+      /* 어두운 회색 텍스트 색상 */
     }
-    
+
     .boxgraph-header {
-      position: relative; /* 위치를 기준으로 조정 */
-      bottom: 70px; /* 텍스트를 위로 이동 */
+      position: relative;
+      /* 위치를 기준으로 조정 */
+      bottom: 70px;
+      /* 텍스트를 위로 이동 */
       left: 15px;
-      font-weight: 600; /* 굵은 텍스트 */
+      font-weight: 600;
+      /* 굵은 텍스트 */
     }
 
     .boxgraph-header p {
-      font-size: 20px; /* 텍스트 크기 */
-      color: #2d3748; /* 어두운 회색 텍스트 색상 */
-      line-height: 1.4; /* 줄 간격 */
+      font-size: 20px;
+      /* 텍스트 크기 */
+      color: #2d3748;
+      /* 어두운 회색 텍스트 색상 */
+      line-height: 1.4;
+      /* 줄 간격 */
     }
 
     .boxgraph-header p span {
-      font-size: 20px; /* 텍스트 크기 */
-      color: #2d3748; /* 어두운 회색 텍스트 색상 */
+      font-size: 20px;
+      /* 텍스트 크기 */
+      color: #2d3748;
+      /* 어두운 회색 텍스트 색상 */
     }
 
 
     .boxgray {
       width: 100%;
       height: 12px;
-      background-color: #F2F3F5; /* 회색 배경 */
-      margin-top: 10px; /* 그래프와의 간격 */
+      background-color: #F2F3F5;
+      /* 회색 배경 */
+      margin-top: 10px;
+      /* 그래프와의 간격 */
     }
-
-
-
   </style>
 </head>
+
 <body>
   <div class="container">
-  <div class="scrollbox">
-    
-    <div class="graph-header">
+    <div class="scrollbox">
+
+      <div class="graph-header">
         <p>
-            몸무게를<br />
-            <span style="color:rgba(0, 184, 169, 1);">그래프로</span> 나타냈어요
+          몸무게를<br />
+          <span style="color:rgba(0, 184, 169, 1);">그래프로</span> 나타냈어요
         </p>
       </div>
-      
+
 
       <!-- 그래프 -->
-    <div id="chart-container">
+      <div id="chart-container">
         <canvas id="weightChart"></canvas>
       </div>
       <div class="boxgray"></div>
-      
+
 
       <div class="boxgraph-header">
         <p>
@@ -202,234 +235,240 @@
           몸무게를 확인해보세요
         </p>
       </div>
-      
-      <div id="age-weight-chart" >
+
+      <div id="age-weight-chart">
         <canvas id="ageWeightChart"></canvas>
       </div>
 
-  </div>
-
-        <!-- 하단 아이콘 영역 -->
-        <div class="bottom-icons">
-            <div class="icon-button active">
-                <button onclick="location.href='graph.html'">
-                    <span class="material-symbols-rounded">show_chart</span>
-                </button>
-                <p>그래프</p>
-            </div>
-            <div class="icon-button">
-                <button onclick="location.href='main.html'">
-                    <span class="material-symbols-rounded">calendar_month</span>
-                </button>
-                <p>캘린더</p>
-            </div>
-            <div class="icon-button">
-                <button onclick="location.href='memo.html'">
-                    <span class="material-symbols-rounded">description</span>
-                </button>
-                <p>메모장</p>
-            </div>
-            <div class="icon-button">
-                <button onclick="location.href='target.html'">
-                    <span class="material-symbols-rounded">person</span>
-                </button>
-                <p>목표 설정</p>
-            </div>
-        </div>
     </div>
 
-    <script>
-      Chart.register(ChartDataLabels);
-        const Utils = {
-            CHART_COLORS: {
-                red: 'rgba(255, 99, 132, 1)',
-                blue: 'rgba(54, 162, 235, 1)',
-            },
-            transparentize: (color, opacity) => {
-                const alpha = opacity || 0.5;
-                return color.replace(/[^,]+(?=\))/, alpha);
-            },
-            numbers: (cfg) => Array.from({ length: cfg.count }, () => Math.random() * (cfg.max - cfg.min) + cfg.min),
-        };
+    <!-- 하단 아이콘 영역 -->
+    <div class="bottom-icons">
+      <div class="icon-button active">
+        <button onclick="location.href='graph.html'">
+          <span class="material-symbols-rounded">show_chart</span>
+        </button>
+        <p>그래프</p>
+      </div>
+      <div class="icon-button">
+        <button onclick="location.href='main.html'">
+          <span class="material-symbols-rounded">calendar_month</span>
+        </button>
+        <p>캘린더</p>
+      </div>
+      <div class="icon-button">
+        <button onclick="location.href='memo.html'">
+          <span class="material-symbols-rounded">description</span>
+        </button>
+        <p>메모장</p>
+      </div>
+      <div class="icon-button">
+        <button onclick="location.href='target.html'">
+          <span class="material-symbols-rounded">person</span>
+        </button>
+        <p>목표 설정</p>
+      </div>
+    </div>
+  </div>
 
-        // Chart.js에서 사용할 데이터 및 레이블 초기화
-        const ctx = document.getElementById('weightChart').getContext('2d');
-        let weightChart;
+  <script>
+    Chart.register(ChartDataLabels);
+    const Utils = {
+      CHART_COLORS: {
+        red: 'rgba(255, 99, 132, 1)',
+        blue: 'rgba(54, 162, 235, 1)',
+      },
+      transparentize: (color, opacity) => {
+        const alpha = opacity || 0.5;
+        return color.replace(/[^,]+(?=\))/, alpha);
+      },
+      numbers: (cfg) => Array.from({ length: cfg.count }, () => Math.random() * (cfg.max - cfg.min) + cfg.min),
+    };
 
-        // 그래프 렌더링 함수
-        function renderGraph(data) {
-            const labels = data.map(entry => {
+    // Chart.js에서 사용할 데이터 및 레이블 초기화
+    const ctx = document.getElementById('weightChart').getContext('2d');
+    let weightChart;
+
+    // 그래프 렌더링 함수
+    function renderGraph(data) {
+      const labels = data.map(entry => {
         const [year, month, day] = entry.date.split('-'); // yyyy-mm-dd 형식을 분리
         return `${month}.${day}`; // MM.DD 형식으로 반환
+      });
+      const weights = data.map(item => item.weight); // 체중 배열
+
+      // 그래프가 이미 존재하면 업데이트
+      if (weightChart) {
+        weightChart.data.labels = labels;
+        weightChart.data.datasets[0].data = weights;
+        weightChart.update();
+        return;
+      }
+
+      // Chart.js 초기화
+      weightChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: '체중',
+              data: weights,
+              borderColor: Utils.CHART_COLORS.red,
+              backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.5),
+              borderWidth: 2,
+              tension: 0.4,
+              pointRadius: 2.5,
+              datalabels: { // 선형 차트의 데이터 라벨 비활성화
+                display: false,
+              },
+            },
+            {
+              label: '목표 몸무게',
+              data: Array(weights.length).fill(70), // 목표 몸무게를 고정값으로 설정
+              borderColor: Utils.CHART_COLORS.blue,
+              backgroundColor: Utils.transparentize(Utils.CHART_COLORS.blue, 0.5),
+              borderWidth: 2,
+              tension: 0.4,
+              borderDash: [5, 5],
+              pointRadius: 0,
+              datalabels: { // 선형 차트의 데이터 라벨 비활성화
+                display: false,
+              },
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              align: 'end',
+              labels: {
+                boxWidth: 12,
+                boxHeight: 3,
+                padding: 10,
+                boxBorderRadius: 10,
+                font: { size: 10 },
+                color: '#333',
+              },
+            },
+          },
+          scales: {
+            x: {
+              title: { display: true },
+            },
+            y: {
+              title: { display: true, font: { size: 14 } },
+              beginAtZero: false,
+            },
+          },
+        },
+      });
+      // 두 번째 연령별 평균 몸무게 그래프 (막대 그래프)
+      const ageWeightCtx = document.getElementById('ageWeightChart').getContext('2d');
+      new Chart(ageWeightCtx, {
+        type: 'bar',
+        data: {
+          labels: ['나', '20대(남성)', '20대(여성)'],  // 연령대
+          datasets: [
+            {
+              label: '평균 몸무게',
+              data: [70, 74, 58],  // 각 연령대의 평균 몸무게
+              backgroundColor: [
+                'rgba(0, 184, 169, 1)',  // 첫 번째 막대의 색상 (빨간색)
+                'rgba(242, 243, 245, 1)',  // 두 번째 막대의 색상 (파란색)
+                'rgba(242, 243, 245, 1)',  // 세 번째 막대의 색상 (초록색)
+              ],
+            },
+          ],
+        },
+        options: {
+          layout: {
+            padding: {
+              top: 25, // 위쪽 여백
+            },
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              display: true,  // x축 숨기기
+              grid: {
+                color: 'rgba(255, 255, 255, 1)',  // x축 그리드 선 색상을 흰색으로 설정
+              },
+            },
+
+            y: {
+              display: false,  // y축 숨기기
+              grid: {
+                color: 'rgba(255, 255, 255, 1)',  // y축 그리드 선 색상을 흰색으로 설정
+              },
+            },
+          },
+          plugins: {
+            legend: {
+              display: false,  // 범례 숨기기
+            },
+            tooltip: {
+              enabled: false,  // 툴팁 숨기기
+            },
+            datalabels: {
+              display: true,  // 값 표시 활성화
+              color: '#000',  // 텍스트 색상
+              font: {
+                weight: 700,  // 텍스트 두께
+                size: 13,  // 텍스트 크기
+              },
+              anchor: 'end',  // 값이 막대 끝에 표시되도록 설정
+              align: 'top',  // 막대 위에 값 표시
+              formatter: function (value) {
+                return value;  // 값 그대로 표시
+              },
+            },
+          },
+          elements: {
+            bar: {
+              borderWidth: 0,  // 막대의 테두리 제거
+              borderRadius: 5,  // 막대의 모서리를 둥글게 처리
+            },
+          },
+          barPercentage: 0.5,  // 막대의 두께
+          categoryPercentage: 0.5,  // 카테고리 내에서 각 막대의 비율
+        },
+      });
+    }
+
+    // API 호출 함수
+    async function fetchData(date) {
+      try {
+        const response = await fetch(`/get-graph?date=${date}`);
+        if (response.status === 401) {
+          alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+          location.href = 'index.html'; // index.html로 리다이렉트
+          return;
+        }
+        const data = await response.json();
+
+        renderGraph(data); // 그래프에 데이터 반영
+      } catch (error) {
+        console.error('데이터 가져오기 실패:', error);
+      }
+    }
+
+    // 페이지 로드 시 현재 날짜로 API 호출
+    document.addEventListener('DOMContentLoaded', () => {
+      const today = new Date();
+      const todayStr = today.toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).replace(/\./g, '').replace(/\s/g, '-'); // yyyy-mm-dd 형식으로 변환
+      fetchData(todayStr); // 그래프 데이터 요청
     });
-            const weights = data.map(item => item.weight); // 체중 배열
-
-            // 그래프가 이미 존재하면 업데이트
-            if (weightChart) {
-                weightChart.data.labels = labels;
-                weightChart.data.datasets[0].data = weights;
-                weightChart.update();
-                return;
-            }
-
-            // Chart.js 초기화
-            weightChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: '체중',
-                            data: weights,
-                            borderColor: Utils.CHART_COLORS.red,
-                            backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.5),
-                            borderWidth: 2,
-                            tension: 0.4,
-                            pointRadius: 2.5,
-                        },
-                        {
-                            label: '목표 몸무게',
-                            data: Array(weights.length).fill(70), // 목표 몸무게를 고정값으로 설정
-                            borderColor: Utils.CHART_COLORS.blue,
-                            backgroundColor: Utils.transparentize(Utils.CHART_COLORS.blue, 0.5),
-                            borderWidth: 2,
-                            tension: 0.4,
-                            borderDash: [5, 5],
-                            pointRadius: 0,
-                        },
-                    ],
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            align: 'end',
-                            labels: {
-                                boxWidth: 12,
-                                boxHeight: 3,
-                                padding: 10,
-                                boxBorderRadius: 10,
-                                font: { size: 10 },
-                                color: '#333',
-                            },
-                        },
-                    },
-                    scales: {
-                        x: {
-                            title: { display: true },
-                        },
-                        y: {
-                            title: { display: true, font: { size: 14 } },
-                            beginAtZero: false,
-                        },
-                    },
-                },
-            });
-            // 두 번째 연령별 평균 몸무게 그래프 (막대 그래프)
-    const ageWeightCtx = document.getElementById('ageWeightChart').getContext('2d');
-    new Chart(ageWeightCtx, {
-      type: 'bar',
-      data: {
-        labels: ['나','20대(남성)', '20대(여성)'],  // 연령대
-        datasets: [
-          {
-            label: '평균 몸무게',
-            data: [70, 74, 58],  // 각 연령대의 평균 몸무게
-            backgroundColor: [
-        'rgba(0, 184, 169, 1)',  // 첫 번째 막대의 색상 (빨간색)
-        'rgba(242, 243, 245, 1)',  // 두 번째 막대의 색상 (파란색)
-        'rgba(242, 243, 245, 1)',  // 세 번째 막대의 색상 (초록색)
-      ],
-          },
-        ],
-      },
-      options: {
-        layout: {
-    padding: {
-      top: 25, // 위쪽 여백
-    },
-  },
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: {
-        display: true,  // x축 숨기기
-        grid: {
-            color: 'rgba(255, 255, 255, 1)',  // x축 그리드 선 색상을 흰색으로 설정
-          },
-      },
-
-      y: {
-        display: false,  // y축 숨기기
-        grid: {
-            color: 'rgba(255, 255, 255, 1)',  // y축 그리드 선 색상을 흰색으로 설정
-          },
-      },
-    },
-    plugins: {
-      legend: {
-        display: false,  // 범례 숨기기
-      },
-      tooltip: {
-        enabled: false,  // 툴팁 숨기기
-      },
-      datalabels: {
-        display: true,  // 값 표시 활성화
-        color: '#000',  // 텍스트 색상
-        font: {
-          weight: 700,  // 텍스트 두께
-          size: 13,  // 텍스트 크기
-        },
-        anchor: 'end',  // 값이 막대 끝에 표시되도록 설정
-        align: 'top',  // 막대 위에 값 표시
-        formatter: function (value) {
-          return value;  // 값 그대로 표시
-        },
-      },
-    },
-    elements: {
-      bar: {
-        borderWidth: 0,  // 막대의 테두리 제거
-        borderRadius: 5,  // 막대의 모서리를 둥글게 처리
-      },
-    },
-    barPercentage: 0.5,  // 막대의 두께
-    categoryPercentage: 0.5,  // 카테고리 내에서 각 막대의 비율
-  },
-});
-        }
-
-        // API 호출 함수
-        async function fetchData(date) {
-            try {
-                const response = await fetch(`/get-graph?date=${date}`);
-                if (response.status === 401) {
-            alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
-            location.href = 'index.html'; // index.html로 리다이렉트
-            return;
-        }
-                const data = await response.json();
-                
-                renderGraph(data); // 그래프에 데이터 반영
-            } catch (error) {
-                console.error('데이터 가져오기 실패:', error);
-            }
-        }
-
-        // 페이지 로드 시 현재 날짜로 API 호출
-        document.addEventListener('DOMContentLoaded', () => {
-            const today = new Date();
-            const todayStr = today.toLocaleDateString('ko-KR', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-            }).replace(/\./g, '').replace(/\s/g, '-'); // yyyy-mm-dd 형식으로 변환
-            fetchData(todayStr); // 그래프 데이터 요청
-        });
-    </script>
+  </script>
 
 </body>
 
