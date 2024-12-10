@@ -367,6 +367,7 @@
           },
         },
       });
+      console.log(weights);
       // 두 번째 연령별 평균 몸무게 그래프 (막대 그래프)
       const ageWeightCtx = document.getElementById('ageWeightChart').getContext('2d');
       new Chart(ageWeightCtx, {
@@ -440,7 +441,7 @@
         },
       });
     }
-    console.log(weights);
+    
     // API 호출 함수
     async function fetchData(date) {
       try {
