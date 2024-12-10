@@ -9,145 +9,189 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f7fafc;
-        }
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f7fafc;
+    }
 
-        .container {
-            width: 100%;
-            max-width: 390px;
-            height: 844px;
-            background-color: white;
-            box-sizing: border-box;
-            position: relative;
-        }
+    .container {
+      width: 100%;
+      max-width: 390px;
+      height: 844px;
+      background-color: white;
+      box-sizing: border-box;
+      position: relative;
+    }
 
-        p {
-            font-weight: 700;
-            font-size: 20px;
-            margin-left: 12px;
-            margin-top: 120px;
-        }
+    .scrollbox {
+      width: 100%;
+      max-width: 390px;
+      height: 766px;
+      background-color: white;
+      box-sizing: border-box;
+      position: relative;
+      overflow-y: auto; /* 세로 스크롤 */
+      overflow-x: hidden;
+      padding-bottom: 20px; /* 마지막 부분에 20px 여백 추가 */
+    }
 
-        canvas {
-            max-width: 100%;
-            height: auto;
-        }
+    *::-webkit-scrollbar {
+    display: none;
+    }
 
-        #chart-container {
-            margin-top: 50px;
-            width: 370px;
-            max-width: 390px;
-            height: 270px;
-        }
+    p {
+      font-weight: 700;
+      font-size: 20px;
+      margin-left: 12px;
+      margin-top: 120px;
+    }
 
-        /* 하단 아이콘 영역 */
-        .bottom-icons {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            max-width: 390px;
-            height: 78px;
-            background-color: white;
-            border-top: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
+    canvas {
+      max-width: 100%;
+      height: auto;
+    }
 
-        .icon-button {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #6b7280;
-            /* text-gray-500에 해당하는 색상 */
-            text-align: center;
-            justify-content: center;
-            /* 세로로 중앙 정렬 */
-        }
+    #chart-container {
+      margin-top: 50px;
+      width: 370px;
+      max-width: 370px;
+      height: 270px;
+      
+    }
 
-        .icon-button.active {
-            color: #319795;
-            /* text-teal-600 색상 */
-        }
+    #ageWeightChart {
+    max-width: 390px !important;
+    width: 390px !important;  /* 원하는 너비 */
+    height: 210px !important; /* 원하는 높이 */
+    display: block;  /* block으로 설정 */
+    margin-left: auto;  /* 자동 왼쪽 여백 */
+    margin-right: auto;  /* 자동 오른쪽 여백 */
+    padding-bottom: 20px; /* 마지막 부분에 20px 여백 추가 */
+}
 
-        .icon-button button {
-            width: 44px;
-            height: 44px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            background-color: transparent;
-            /* 배경을 투명으로 설정 */
-            border: none;
-            /* 테두리 제거 */
-            color: inherit;
-            /* 부모 색상 상속 */
-            outline: none;
-            /* 포커스 스타일 제거 */
-            margin: 0;
-            /* 버튼에 기본 마진 제거 */
-            transform: translateY(4px);
-            /* 아이콘을 아래로 내리기 위해 추가 */
-        }
 
-        .icon-button p {
-            font-size: 12px !important;
-            margin-top: 4px;
-            margin-right: 10px !important;
-        }
 
-        .graph-header {
-            position: relative;
-            /* 위치를 기준으로 조정 */
-            top: 20px;
-            /* 텍스트를 위로 이동 */
-            left: 15px;
-            font-weight: 600;
-            /* 굵은 텍스트 */
-        }
+    /* 하단 아이콘 영역 */
+    .bottom-icons {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      max-width: 390px;
+      height: 78px;
+      background-color: white;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
 
-        .graph-header p {
-            font-size: 23px;
-            /* 텍스트 크기 */
-            color: #2d3748;
-            /* 어두운 회색 텍스트 색상 */
-            line-height: 1.4;
-            /* 줄 간격 */
-        }
+    .icon-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #6b7280; /* text-gray-500에 해당하는 색상 */
+      text-align: center;
+      justify-content: center; /* 세로로 중앙 정렬 */
+    }
 
-        .graph-header p span {
-            font-size: 23px;
-            /* 텍스트 크기 */
-            color: #2d3748;
-            /* 어두운 회색 텍스트 색상 */
-        }
-    </style>
+    .icon-button.active {
+      color: #319795; /* text-teal-600 색상 */
+    }
+
+    .icon-button button {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      background-color: transparent; /* 배경을 투명으로 설정 */
+      border: none; /* 테두리 제거 */
+      color: inherit; /* 부모 색상 상속 */
+      outline: none; /* 포커스 스타일 제거 */
+      margin: 0; /* 버튼에 기본 마진 제거 */
+      transform: translateY(4px); /* 아이콘을 아래로 내리기 위해 추가 */
+    }
+
+    .icon-button p {
+      font-size: 12px !important; 
+      margin-top: 4px;
+      margin-right: 10px !important;
+    }
+
+    .graph-header {
+      position: relative; /* 위치를 기준으로 조정 */
+      top: 20px; /* 텍스트를 위로 이동 */
+      left: 15px;
+      font-weight: 600; /* 굵은 텍스트 */
+    }
+
+    
+
+    .graph-header p {
+      font-size: 20px; /* 텍스트 크기 */
+      color: #2d3748; /* 어두운 회색 텍스트 색상 */
+      line-height: 1.4; /* 줄 간격 */
+    }
+
+    .graph-header p span {
+      font-size: 20px; /* 텍스트 크기 */
+      color: #2d3748; /* 어두운 회색 텍스트 색상 */
+    }
+    
+    .boxgraph-header {
+      position: relative; /* 위치를 기준으로 조정 */
+      bottom: 70px; /* 텍스트를 위로 이동 */
+      left: 15px;
+      font-weight: 600; /* 굵은 텍스트 */
+    }
+
+    .boxgraph-header p {
+      font-size: 20px; /* 텍스트 크기 */
+      color: #2d3748; /* 어두운 회색 텍스트 색상 */
+      line-height: 1.4; /* 줄 간격 */
+    }
+
+    .boxgraph-header p span {
+      font-size: 20px; /* 텍스트 크기 */
+      color: #2d3748; /* 어두운 회색 텍스트 색상 */
+    }
+
+
+    .boxgray {
+      width: 100%;
+      height: 12px;
+      background-color: #F2F3F5; /* 회색 배경 */
+      margin-top: 10px; /* 그래프와의 간격 */
+    }
+
+
+
+  </style>
 </head>
-
 <body>
-    <div class="container">
-        <div class="scrollbox">
-        <div class="graph-header">
-            <p>
-                몸무게를<br />
-                <span style="color:rgba(0, 184, 169, 1);">그래프로</span> 나타냈어요
-            </p>
-        </div>
+  <div class="container">
+  <div class="scrollbox">
+    
+    <div class="graph-header">
+        <p>
+            몸무게를<br />
+            <span style="color:rgba(0, 184, 169, 1);">그래프로</span> 나타냈어요
+        </p>
+      </div>
+      
 
-        <!-- 그래프 -->
-        <div id="chart-container">
-            <canvas id="weightChart"></canvas>
-        </div>
-        <div class="boxgray"></div>
+      <!-- 그래프 -->
+    <div id="chart-container">
+        <canvas id="weightChart"></canvas>
+      </div>
+      <div class="boxgray"></div>
       
 
       <div class="boxgraph-header">
@@ -160,7 +204,9 @@
       <div id="age-weight-chart" >
         <canvas id="ageWeightChart"></canvas>
       </div>
-    </div>
+
+  </div>
+
         <!-- 하단 아이콘 영역 -->
         <div class="bottom-icons">
             <div class="icon-button active">
