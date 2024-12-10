@@ -135,10 +135,11 @@
 
 <body>
     <div class="container">
+        <div class="scrollbox">
         <div class="graph-header">
             <p>
                 몸무게를<br />
-                <span>그래프로 나타냈어요</span>
+                <span style="color:rgba(0, 184, 169, 1);">그래프로</span> 나타냈어요
             </p>
         </div>
 
@@ -146,7 +147,20 @@
         <div id="chart-container">
             <canvas id="weightChart"></canvas>
         </div>
+        <div class="boxgray"></div>
+      
 
+      <div class="boxgraph-header">
+        <p>
+          <span style="color: rgba(0, 184, 169, 1);">연령별</span> 평균<br />
+          몸무게를 확인해보세요
+        </p>
+      </div>
+      
+      <div id="age-weight-chart" >
+        <canvas id="ageWeightChart"></canvas>
+      </div>
+    </div>
         <!-- 하단 아이콘 영역 -->
         <div class="bottom-icons">
             <div class="icon-button active">
