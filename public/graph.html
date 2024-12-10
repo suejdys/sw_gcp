@@ -265,6 +265,78 @@
                     },
                 },
             });
+            // 두 번째 연령별 평균 몸무게 그래프 (막대 그래프)
+    const ageWeightCtx = document.getElementById('ageWeightChart').getContext('2d');
+    new Chart(ageWeightCtx, {
+      type: 'bar',
+      data: {
+        labels: ['나','20대(남성)', '20대(여성)'],  // 연령대
+        datasets: [
+          {
+            label: '평균 몸무게',
+            data: [70, 74, 58],  // 각 연령대의 평균 몸무게
+            backgroundColor: [
+        'rgba(0, 184, 169, 1)',  // 첫 번째 막대의 색상 (빨간색)
+        'rgba(242, 243, 245, 1)',  // 두 번째 막대의 색상 (파란색)
+        'rgba(242, 243, 245, 1)',  // 세 번째 막대의 색상 (초록색)
+      ],
+          },
+        ],
+      },
+      options: {
+        layout: {
+    padding: {
+      top: 25, // 위쪽 여백
+    },
+  },
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        display: true,  // x축 숨기기
+        grid: {
+            color: 'rgba(255, 255, 255, 1)',  // x축 그리드 선 색상을 흰색으로 설정
+          },
+      },
+
+      y: {
+        display: false,  // y축 숨기기
+        grid: {
+            color: 'rgba(255, 255, 255, 1)',  // y축 그리드 선 색상을 흰색으로 설정
+          },
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,  // 범례 숨기기
+      },
+      tooltip: {
+        enabled: false,  // 툴팁 숨기기
+      },
+      datalabels: {
+        display: true,  // 값 표시 활성화
+        color: '#000',  // 텍스트 색상
+        font: {
+          weight: 700,  // 텍스트 두께
+          size: 13,  // 텍스트 크기
+        },
+        anchor: 'end',  // 값이 막대 끝에 표시되도록 설정
+        align: 'top',  // 막대 위에 값 표시
+        formatter: function (value) {
+          return value;  // 값 그대로 표시
+        },
+      },
+    },
+    elements: {
+      bar: {
+        borderWidth: 0,  // 막대의 테두리 제거
+        borderRadius: 5,  // 막대의 모서리를 둥글게 처리
+      },
+    },
+    barPercentage: 0.5,  // 막대의 두께
+    categoryPercentage: 0.5,  // 카테고리 내에서 각 막대의 비율
+  },
+});
         }
 
         // API 호출 함수

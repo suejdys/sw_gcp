@@ -56,7 +56,7 @@
     .memo-list {
       margin-top: 130px;
       /* 원하는 만큼 아래로 내리기 */
-      max-height: calc(100vh - 160px);
+      max-height: calc(100vh - 150px);
       /* 화면 높이에 맞춰 최대 높이 설정 */
       overflow-y: auto;
       /* 세로 스크롤 */
@@ -160,6 +160,18 @@
       /* 텍스트 크기 */
       color: #2d3748;
       /* 어두운 회색 텍스트 색상 */
+    }
+
+    .scrollbox {
+      width: 100%;
+      max-width: 390px;
+      height: 766px;
+      background-color: white;
+      box-sizing: border-box;
+      position: relative;
+      overflow-y: auto; /* 세로 스크롤 */
+      overflow-x: hidden;
+      padding-bottom: 20px; /* 마지막 부분에 20px 여백 추가 */
     }
   </style>
 </head>
@@ -281,11 +293,9 @@
             deleteBtn.style.border = '2px solid black'; // 2px, 실선, 검은색
             deleteBtn.style.borderRadius = '7px'; // 둥근 모서리
             deleteBtn.style.fontSize = '12px';
-            deleteBtn.style.writingMode = 'horizontal-tb'; // 텍스트를 가로 방향으로 설정 (기본값)
-            deleteBtn.style.whiteSpace = 'nowrap'; // 텍스트 줄바꿈 방지
             deleteBtn.style.display = 'flex';
-            deleteBtn.style.justifyContent = 'center'; // 가로 중앙 정렬
-            deleteBtn.style.alignItems = 'center'; // 세로 중앙 정렬
+        deleteBtn.style.justifyContent = 'center'; // 가로 중앙 정렬
+        deleteBtn.style.alignItems = 'center'; // 세로 중앙 정렬
             
 
 
@@ -300,13 +310,8 @@
             editBtn.style.position = 'relative'; // 위치 기준 변경
             editBtn.style.bottom = '4px'; // 현재 위치에서 아래로 10px
             editBtn.style.border = '2px solid black'; // 2px, 실선, 검은색
-            editBtn.style.borderRadius = '7px'; // 둥근 모서리
-            editBtn.style.fontSize = '12px';
-            editBtn.style.writingMode = 'horizontal-tb'; // 텍스트를 가로 방향으로 설정 (기본값)
-            editBtn.style.whiteSpace = 'nowrap'; // 텍스트 줄바꿈 방지
-            editBtn.style.display = 'flex';
-            editBtn.style.justifyContent = 'center'; // 가로 중앙 정렬
-            editBtn.style.alignItems = 'center'; // 세로 중앙 정렬
+        editBtn.style.borderRadius = '7px'; // 둥근 모서리
+        editBtn.style.fontSize = '12px';
           
             article.append(date, title, content, editBtn, deleteBtn);
             memoList.append(article);
