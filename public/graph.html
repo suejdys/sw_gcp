@@ -367,7 +367,10 @@
           },
         },
       });
-      console.log(weights);
+      //배열 합 & 7로 나눠주기
+      const sum = numbers.reduce((acc, current) => acc + current, 0);
+      const average = sum / numbers.length;
+
       // 두 번째 연령별 평균 몸무게 그래프 (막대 그래프)
       const ageWeightCtx = document.getElementById('ageWeightChart').getContext('2d');
       new Chart(ageWeightCtx, {
@@ -377,7 +380,7 @@
           datasets: [
             {
               label: '평균 몸무게',
-              data: [70, 74, 58],  // 각 연령대의 평균 몸무게
+              data: [average, 74, 58],  // 각 연령대의 평균 몸무게
               backgroundColor: [
                 'rgba(0, 184, 169, 1)',  // 첫 번째 막대의 색상 (빨간색)
                 'rgba(242, 243, 245, 1)',  // 두 번째 막대의 색상 (파란색)
