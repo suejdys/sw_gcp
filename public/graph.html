@@ -369,7 +369,7 @@
       });
       //배열 합 & 7로 나눠주기
       const sum = weights.reduce((acc, current) => acc + current, 0);
-      const average = sum / weights.length;
+      const average = Math.round(sum / weights.length);
 
       // 두 번째 연령별 평균 몸무게 그래프 (막대 그래프)
       const ageWeightCtx = document.getElementById('ageWeightChart').getContext('2d');
