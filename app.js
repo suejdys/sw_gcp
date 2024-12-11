@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const db = require('./db');
 const app = express();
 const PORT = 3000;  
-const HOST = '10.0.2.15'; // 모든 네트워크 인터페이스에서 수신 대기
+const HOST = '0.0.0.0'; // 모든 네트워크 인터페이스에서 수신 대기
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
