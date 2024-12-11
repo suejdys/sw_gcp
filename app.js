@@ -378,6 +378,6 @@ app.get('/session-username', (req, res) => {
 });
 
 // Start the server
-app.listen(PORT, () => {
+app.listen(PORT,HOST, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
