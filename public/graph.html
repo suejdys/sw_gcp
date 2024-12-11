@@ -284,10 +284,22 @@
       },
       numbers: (cfg) => Array.from({ length: cfg.count }, () => Math.random() * (cfg.max - cfg.min) + cfg.min),
     };
-
-    // Chart.js에서 사용할 데이터 및 레이블 초기화
+    // 목표몸무게 불러오는 코드
     const ctx = document.getElementById('weightChart').getContext('2d');
     let weightChart;
+    async function fetchTargetWeight() {
+      try {
+        const response = await fetch('/get-target-weight');
+        if (!response.ok) {
+          throw new Error('목표 몸무게 데이터를 가져오는 데 실패했습니다.');
+        }
+        const data = await response.json();
+        targetWeight = data.targetWeight; // JSON에서 목표 몸무게 추출
+      } catch (error) {
+        console.error('목표 몸무게 가져오기 실패:', error);
+        targetWeight = null; // 실패 시 기본값
+      }
+    }
 
     // 그래프 렌더링 함수
     function renderGraph(data) {
@@ -444,7 +456,7 @@
         },
       });
     }
-    
+
     // API 호출 함수
     async function fetchData(date) {
       try {
@@ -462,14 +474,16 @@
       }
     }
 
-    // 페이지 로드 시 현재 날짜로 API 호출
-    document.addEventListener('DOMContentLoaded', () => {
+    // 페이지 로드 시 현재 날짜로 API 호출 및 목표 몸무게 가져오기
+    document.addEventListener('DOMContentLoaded', async () => {
       const today = new Date();
       const todayStr = today.toLocaleDateString('ko-KR', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
       }).replace(/\./g, '').replace(/\s/g, '-'); // yyyy-mm-dd 형식으로 변환
+
+      await fetchTargetWeight(); // 목표 몸무게 가져오기
       fetchData(todayStr); // 그래프 데이터 요청
     });
   </script>
