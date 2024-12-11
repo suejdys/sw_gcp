@@ -25,7 +25,7 @@ app.post('/register', async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
-        console.log('db 쿼리중');
+        console.log('db 쿼리중(유저 테이블에 아이디 비번 추가)');
         db.query(query, [username, hashedPassword], (err, result) => {
             if (err) {
               console.log(err);
@@ -47,7 +47,7 @@ app.post('/login', async (req, res) => {
 
     try {
         const query = 'SELECT * FROM users WHERE username = ?';
-        console.log('db 쿼리중');
+        console.log('db 쿼리중(아이디(사용자) 찾기)');
         db.query(query, [username], async (err, results) => {
             if (err || results.length === 0) {
                 console.log('사용자가 없습니다.');
@@ -81,7 +81,7 @@ app.post('/add-note', (req, res) => {
 
     const { title, contents } = req.body;
     const query = 'SELECT id FROM users WHERE username = ?';
-    
+    console.log('db 쿼리중(관계형 db 사용자 id찾기)');
     db.query(query, [req.session.username], (err, results) => {
         if (err || results.length === 0) {
             console.log('사용자가 없습니다');
@@ -90,7 +90,7 @@ app.post('/add-note', (req, res) => {
 
         const userId = results[0].id;
         const insertQuery = 'INSERT INTO notes (user_id, title, contents) VALUES (?, ?, ?)';
-        console.log('db 쿼리중');
+        console.log('db 쿼리중(메모 추가)');
         db.query(insertQuery, [userId, title, contents], (err, result) => {
             if (err) {
                 console.error(err); // 메모 추가 오류 로그
@@ -111,7 +111,7 @@ app.get('/get-notes', (req, res) => {
     }
 
     const query = 'SELECT notes.id, notes.title, notes.contents, notes.created_at FROM notes INNER JOIN users ON notes.user_id = users.id WHERE users.username = ?';
-    console.log('db 쿼리중');
+    console.log('db 쿼리중(메모 조회)');
     db.query(query, [req.session.username], (err, results) => {
         if (err) {
             console.log('메모 조회시 오류 발생');
@@ -131,7 +131,7 @@ app.delete('/delete-note/:id', (req, res) => {
     
     const noteId = req.params.id;
     const deleteQuery = 'DELETE FROM notes WHERE id = ?';
-    console.log('db 쿼리중');
+    console.log('db 쿼리중(메모 삭제)');
     db.query(deleteQuery, [noteId], (err, result) => {
         if (err) {
             console.log('메모 삭제시 에러가 발생하였습니다.');
@@ -147,11 +147,13 @@ app.put('/update-notes/:id', (req, res) => {
     const memo_id = req.params.id;
     const { title, content } = req.body;
     const query = 'UPDATE notes SET title = ?, contents = ? WHERE id = ?';
-    console.log('db 쿼리중');
+    console.log('db 쿼리중(메모 수정)');
     db.query(query, [title, content, memo_id], (err, result) => {
       if (err) {
+        console.log(err);
         res.status(500).send(err);
       } else {
+        console.log('메모 수정 완료');
         res.status(200).send({ message: '수정 완료' });
       }
     });
@@ -168,7 +170,7 @@ app.post('/save-weight', (req, res) => {
 
   // username을 통해 userId를 조회
   const query = 'SELECT id FROM users WHERE username = ? ';
-  console.log('db 쿼리중');
+  console.log('db 쿼리중(관계형 db 사용자 id찾기)');
   db.query(query, [req.session.username], (err, results) => {
       if (err || results.length === 0) {
           console.error(err || 'User not found');
@@ -179,7 +181,7 @@ app.post('/save-weight', (req, res) => {
 
       // DateWeight 테이블에서 해당 userId와 date로 이미 존재하는지 확인
       const checkQuery = 'SELECT * FROM DateWeight WHERE user_id = ? AND date = ?';
-      console.log('db 쿼리중');
+      console.log('db 쿼리중(날짜별 몸무게 선택)');
       db.query(checkQuery, [userId, date], (err, existingRecord) => {
           if (err) {
               console.error(err);
@@ -233,7 +235,7 @@ app.get('/get-graph', (req, res) => {
     console.log(`종료 날짜: ${endDate.toISOString().split('T')[0]}`);
   
     const queryUserId = 'SELECT id FROM users WHERE username = ?';
-    console.log('db 쿼리중');
+    console.log('db 쿼리중(사용자 찾기)');
     db.query(queryUserId, [req.session.username], (err, userResults) => {
       if (err || userResults.length === 0) {
         console.error(err || '사용자를 찾을 수 없습니다.');
@@ -261,7 +263,7 @@ app.get('/get-graph', (req, res) => {
       dateArray.forEach(dateString => {
         const querySingleDate = `SELECT weight FROM DateWeight WHERE user_id = ? AND date = ?`;
 
-        console.log('db 쿼리중');
+        console.log('db 쿼리중(날짜에 대한 데이터 일주일치 조회)');
         db.query(querySingleDate, [userId, dateString], (err, weightResults) => {
           if (err) {
             console.error('데이터 조회 중 에러', err);
@@ -291,7 +293,7 @@ app.put('/update-notes/:id', (req, res) => {
   const memo_id = req.params.id;
   const { title, content } = req.body;
   const query = 'UPDATE notes SET title = ?, contents = ? WHERE id = ?';
-  console.log('db 쿼리중');
+  console.log('db 쿼리중(노트 수정)');
   db.query(query, [title, content, memo_id], (err, result) => {
     if (err) {
       console.log(err);
@@ -317,7 +319,7 @@ if (!targetWeight) {
 }
 
 const query = "UPDATE users SET target_weight = ? WHERE username = ?";
-console.log('db 쿼리중');
+console.log('db 쿼리중(목표몸무게 설정 or 수정)');
 db.query(query, [targetWeight, req.session.username], (err, result) => {
   if (err) {
     console.log(err);
@@ -337,7 +339,7 @@ app.get("/get-target-weight", (req, res) => {
   }
 
   const query = "SELECT target_weight FROM users WHERE username = ?";
-  console.log('db 쿼리중');
+  console.log('db 쿼리중(목표별 몸무게 조회중)');
   db.query(query, [req.session.username], (err, results) => {
     if (err) {
       console.log(err);
@@ -372,7 +374,7 @@ app.get('/get-weight', (req, res) => {
 
     // 사용자 ID와 목표 몸무게 조회
     const getUserInfoQuery = 'SELECT id, target_weight FROM users WHERE username = ?';
-    console.log('db 쿼리중');
+    console.log('db 쿼리중(사용자 id & 목표 몸무게 조회)');
     db.query(getUserInfoQuery, [username], (err, userResults) => {
         if (err) {
             console.error(err);
@@ -388,7 +390,7 @@ app.get('/get-weight', (req, res) => {
 
         // 날짜별 몸무게 조회
         const getWeightQuery = 'SELECT weight FROM DateWeight WHERE user_id = ? AND date = ?';
-        console.log('db 쿼리중');
+        console.log('db 쿼리중(사용자 id와 날짜로 날짜별 몸무게 조회중)');
         db.query(getWeightQuery, [userId, date], (err, weightResults) => {
             if (err) {
                 console.error(err);
