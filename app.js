@@ -25,14 +25,18 @@ app.post('/register', async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
+        console.log('db 쿼리중');
         db.query(query, [username, hashedPassword], (err, result) => {
             if (err) {
+              console.log(err);
                 return res.status(500).json({ message: 'Error registering user', error: err });
             } else {
+              console.log('회원가입 성공');
                 return res.status(200).json({ message: 'Registration successful' });
             }
         });
     } catch (error) {
+        console.log(err);
         return res.status(500).json({ message: 'Server error', error: error });
     }
 });
@@ -43,8 +47,10 @@ app.post('/login', async (req, res) => {
 
     try {
         const query = 'SELECT * FROM users WHERE username = ?';
+        console.log('db 쿼리중');
         db.query(query, [username], async (err, results) => {
             if (err || results.length === 0) {
+                console.log('사용자가 없습니다.');
                 return res.status(400).json({ message: 'Invalid username or password' });
             } else {
                 const user = results[0];
@@ -52,14 +58,16 @@ app.post('/login', async (req, res) => {
 
                 if (match) {
                     req.session.username = username;  // Store username in session
-                    
+                    console.log('로그인 성공');
                     return res.status(200).json({ message: 'Login successful', username: user.username });
                 } else {
+                    console.log('비번, 사용자가 없습니다.');
                     return res.status(400).json({ message: 'Invalid username or password' });
                 }
             }
         });
     } catch (error) {
+        console.log(err);
         return res.status(500).json({ message: 'Server error', error: error });
     }
 });
@@ -67,6 +75,7 @@ app.post('/login', async (req, res) => {
 // 메모 추가 API
 app.post('/add-note', (req, res) => {
     if (!req.session.username) {
+        console.log('로그인 필요(세션 만료)');
         return res.status(401).json({ message: '로그인이 필요합니다' });
     }
 
@@ -75,18 +84,20 @@ app.post('/add-note', (req, res) => {
     
     db.query(query, [req.session.username], (err, results) => {
         if (err || results.length === 0) {
+            console.log('사용자가 없습니다');
             return res.status(500).json({ message: 'User not found' });
         }
 
         const userId = results[0].id;
         const insertQuery = 'INSERT INTO notes (user_id, title, contents) VALUES (?, ?, ?)';
-        
+        console.log('db 쿼리중');
         db.query(insertQuery, [userId, title, contents], (err, result) => {
             if (err) {
-                console.error('Error during INSERT query:', err); // 메모 추가 오류 로그
+                console.error(err); // 메모 추가 오류 로그
                 return res.status(500).json({ message: 'Error adding note', error: err });
                 
             }
+            console.log('메모 추가 완료');
             return res.status(200).json({ message: '추가 완료' });
         });
     });
@@ -95,15 +106,18 @@ app.post('/add-note', (req, res) => {
 // 메모 조회 API
 app.get('/get-notes', (req, res) => {
     if (!req.session.username) {
+        console.log('로그인 필요합니다.');
         return res.status(401).json({ message: '로그인이 필요합니다' });
     }
 
     const query = 'SELECT notes.id, notes.title, notes.contents, notes.created_at FROM notes INNER JOIN users ON notes.user_id = users.id WHERE users.username = ?';
-
+    console.log('db 쿼리중');
     db.query(query, [req.session.username], (err, results) => {
         if (err) {
+            console.log('메모 조회시 오류 발생');
             return res.status(500).json({ message: 'Error fetching notes', error: err });
         }
+        console.log('메모 조회 완료');
         res.status(200).json(results);
     });
 });
@@ -111,16 +125,19 @@ app.get('/get-notes', (req, res) => {
 // 메모 삭제 API
 app.delete('/delete-note/:id', (req, res) => {
     if (!req.session.username) {
+        console.log('로그인이 필요합니다.');
         return res.status(401).json({ message: '로그인이 필요합니다' });
     }
     
     const noteId = req.params.id;
     const deleteQuery = 'DELETE FROM notes WHERE id = ?';
-
+    console.log('db 쿼리중');
     db.query(deleteQuery, [noteId], (err, result) => {
         if (err) {
+            console.log('메모 삭제시 에러가 발생하였습니다.');
             return res.status(500).json({ message: 'Error deleting note', error: err });
         }
+        console.log('메모 삭제 완료');
         res.status(200).json({ message: '삭제 완료' });
     });
 });
@@ -130,7 +147,7 @@ app.put('/update-notes/:id', (req, res) => {
     const memo_id = req.params.id;
     const { title, content } = req.body;
     const query = 'UPDATE notes SET title = ?, contents = ? WHERE id = ?';
-
+    console.log('db 쿼리중');
     db.query(query, [title, content, memo_id], (err, result) => {
       if (err) {
         res.status(500).send(err);
@@ -143,6 +160,7 @@ app.put('/update-notes/:id', (req, res) => {
 // 날짜와 몸무게 저장 또는 수정 API
 app.post('/save-weight', (req, res) => {
   if (!req.session.username) {
+      console.log('로그인 필요(세션 만료)');
       return res.status(401).json({ message: '로그인이 필요합니다.' });
   }
 
@@ -150,6 +168,7 @@ app.post('/save-weight', (req, res) => {
 
   // username을 통해 userId를 조회
   const query = 'SELECT id FROM users WHERE username = ? ';
+  console.log('db 쿼리중');
   db.query(query, [req.session.username], (err, results) => {
       if (err || results.length === 0) {
           console.error(err || 'User not found');
@@ -160,6 +179,7 @@ app.post('/save-weight', (req, res) => {
 
       // DateWeight 테이블에서 해당 userId와 date로 이미 존재하는지 확인
       const checkQuery = 'SELECT * FROM DateWeight WHERE user_id = ? AND date = ?';
+      console.log('db 쿼리중');
       db.query(checkQuery, [userId, date], (err, existingRecord) => {
           if (err) {
               console.error(err);
@@ -169,21 +189,25 @@ app.post('/save-weight', (req, res) => {
           if (existingRecord.length > 0) {
               // 기존 기록이 있으면 UPDATE
               const updateQuery = 'UPDATE DateWeight SET weight = ? WHERE user_id = ? AND date = ?';
+              console.log('db 쿼리중(날짜별 몸무게 수정)');
               db.query(updateQuery, [weight, userId, date], (err, result) => {
                   if (err) {
                       console.error(err);
                       return res.status(500).json({ message: '데이터 업데이트 중 오류가 발생했습니다.', error: err });
                   }
+                  console.log('날짜별 몸무게 수정 성공');
                   return res.status(200).json({ message: '저장 성공' });
               });
           } else {
               // 기존 기록이 없으면 INSERT
               const insertQuery = 'INSERT INTO DateWeight (user_id, date, weight) VALUES (?, ?, ?)';
+              console.log('db 쿼리중(날짜별 몸무게 추가)');
               db.query(insertQuery, [userId, date, weight], (err, result) => {
                   if (err) {
                       console.error(err);
                       return res.status(500).json({ message: '데이터 저장 중 오류가 발생했습니다.', error: err });
                   }
+                  console.log('날짜별 몸무게 추가 성공');
                   return res.status(200).json({ message: '저장 성공' });
               });
           }
@@ -209,6 +233,7 @@ app.get('/get-graph', (req, res) => {
     console.log(`종료 날짜: ${endDate.toISOString().split('T')[0]}`);
   
     const queryUserId = 'SELECT id FROM users WHERE username = ?';
+    console.log('db 쿼리중');
     db.query(queryUserId, [req.session.username], (err, userResults) => {
       if (err || userResults.length === 0) {
         console.error(err || '사용자를 찾을 수 없습니다.');
@@ -235,7 +260,8 @@ app.get('/get-graph', (req, res) => {
       // 각 날짜에 대해 데이터 조회
       dateArray.forEach(dateString => {
         const querySingleDate = `SELECT weight FROM DateWeight WHERE user_id = ? AND date = ?`;
-  
+
+        console.log('db 쿼리중');
         db.query(querySingleDate, [userId, dateString], (err, weightResults) => {
           if (err) {
             console.error('데이터 조회 중 에러', err);
@@ -265,11 +291,13 @@ app.put('/update-notes/:id', (req, res) => {
   const memo_id = req.params.id;
   const { title, content } = req.body;
   const query = 'UPDATE notes SET title = ?, contents = ? WHERE id = ?';
-
+  console.log('db 쿼리중');
   db.query(query, [title, content, memo_id], (err, result) => {
     if (err) {
+      console.log(err);
       res.status(500).send(err);
     } else {
+      console.log('메모 수정 완료');
       res.status(200).send({ message: '수정 완료' });
     }
   });
@@ -278,20 +306,24 @@ app.put('/update-notes/:id', (req, res) => {
 // 목표 몸무게 설정 API
 app.post("/save-target-weight", (req, res) => {
 if (!req.session.username) {
+  console.log('로그인 필요(세션 만료)');
   return res.status(401).json({ message: "로그인이 필요합니다" });
 }
 
 const { targetWeight } = req.body;
 if (!targetWeight) {
+  console.log('목표몸무게가 없음');
   return res.status(400).json({ message: "Invalid target weight" });
 }
 
 const query = "UPDATE users SET target_weight = ? WHERE username = ?";
+console.log('db 쿼리중');
 db.query(query, [targetWeight, req.session.username], (err, result) => {
   if (err) {
+    console.log(err);
     return res.status(500).json({ message: "Error updating target weight", error: err });
   }
-
+  console.log('목표몸무게 저장 성공');
   res.status(200).json({ message: "Success" });
 });
 });
@@ -300,25 +332,30 @@ db.query(query, [targetWeight, req.session.username], (err, result) => {
 app.get("/get-target-weight", (req, res) => {
   // 로그인 여부 확인
   if (!req.session.username) {
+    console.log('로그인 필요(세션 만료)');
     return res.status(401).json({ message: "로그인이 필요합니다" });
   }
 
   const query = "SELECT target_weight FROM users WHERE username = ?";
+  console.log('db 쿼리중');
   db.query(query, [req.session.username], (err, results) => {
     if (err) {
+      console.log(err);
       return res.status(500).json({ message: "Error fetching target weight", error: err });
     }
 
     if (results.length === 0) {
+      console.log('사용자 없음');
       return res.status(404).json({ message: "User not found" });
     }
 
     const targetWeight = results[0].target_weight;
 
     if (targetWeight === null) {
+      console.log('목표몸무게 없음');
       return res.status(200).json({ message: "목표 몸무게가 설정되지 않았습니다", targetWeight: null });
     }
-
+    console.log('목표몸무게 조회 성공');
     res.status(200).json({ targetWeight });
   });
 });
@@ -329,11 +366,13 @@ app.get('/get-weight', (req, res) => {
     const username = req.session.username; // 세션에서 사용자명 가져오기
 
     if (!username) {
+      console.log('로그인 필요(세션 만료)');
         return res.status(401).json({ error: '로그인 필요' });
     }
 
     // 사용자 ID와 목표 몸무게 조회
     const getUserInfoQuery = 'SELECT id, target_weight FROM users WHERE username = ?';
+    console.log('db 쿼리중');
     db.query(getUserInfoQuery, [username], (err, userResults) => {
         if (err) {
             console.error(err);
@@ -341,6 +380,7 @@ app.get('/get-weight', (req, res) => {
         }
 
         if (userResults.length === 0) {
+          console.log('사용자 없음');
             return res.status(404).json({ error: '사용자를 찾을 수 없습니다' });
         }
 
@@ -348,6 +388,7 @@ app.get('/get-weight', (req, res) => {
 
         // 날짜별 몸무게 조회
         const getWeightQuery = 'SELECT weight FROM DateWeight WHERE user_id = ? AND date = ?';
+        console.log('db 쿼리중');
         db.query(getWeightQuery, [userId, date], (err, weightResults) => {
             if (err) {
                 console.error(err);
@@ -355,26 +396,18 @@ app.get('/get-weight', (req, res) => {
             }
 
             const currentWeight = weightResults.length > 0 ? weightResults[0].weight : null;
-
+            console.log('조회된 현재 몸무게는? : ',currentWeight);
             // 목표 대비 차이 계산
             const weightDifference = currentWeight !== null ? currentWeight - targetWeight : null;
-
+            console.log('조회된 목표몸무게 차이는? : ',weightDifference);
             res.json({
                 targetWeight,
                 currentWeight, // 데이터가 없을 경우 null 반환
                 weightDifference, // 데이터가 없을 경우 null 반환
             });
+            console.log('날짜별 몸무게 & 차이 조회 성공');
         });
     });
-});
-
-// Session username route
-app.get('/session-username', (req, res) => {
-    if (req.session.username) {
-        res.json({ username: req.session.username });
-    } else {
-        res.status(401).json({ message: '로그인이 필요합니다' });
-    }
 });
 
 // Start the server
